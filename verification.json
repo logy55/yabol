@@ -1492,5 +1492,33 @@
         "../yabol-staff-tabs-removed.png"
       ]
     }
+  },
+  "member_content_fixes_20261010": {
+    "database_migration": "027_member_access_and_content_management.sql",
+    "database": {
+      "passed": true,
+      "findings": [
+        "fresh: guests blocked for posts/comments/profiles/roster/calendar; owners and staff/vice/admin can edit/delete/restore with original authors retained; other/pending/suspended users denied; verified moderator attachments retained; deleted post replies hidden",
+        "Upgrade preserves existing content and timestamps",
+        "upgrade: guests blocked for posts/comments/profiles/roster/calendar; owners and staff/vice/admin can edit/delete/restore with original authors retained; other/pending/suspended users denied; verified moderator attachments retained; deleted post replies hidden"
+      ]
+    },
+    "runtime_syntax_checks": 27,
+    "production_anonymous_reads": {
+      "post_feed": 0,
+      "comment_feed": 0,
+      "profiles": 0
+    },
+    "chrome": [
+      "guest login-required page",
+      "verified photo upload and image display",
+      "post edit preserves attached image",
+      "comment create/edit/delete/restore",
+      "post delete/restore preserves photo and comment",
+      "same-member session refresh keeps current content"
+    ],
+    "media_cause": "Cloudinary server API secret did not match current API key; existing secret reconnected only in Supabase server",
+    "proof": "../repair-proof/post-photo-and-controls.png",
+    "mobile": "Authentication inputs set to 16px; pinch zoom allowed. Real phone focus zoom not verified. Chrome viewport override did not resize connected browser."
   }
 }
