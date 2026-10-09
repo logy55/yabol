@@ -8,14 +8,14 @@
   <title>야구보러갈래?</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23253d5b'/%3E%3Cpath d='M8 9h16v11H15l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
   <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261010-post-comment-meta">
+  <link rel="stylesheet" href="./styles.css?v=20261010-gallery-calendar">
   <link rel="stylesheet" href="./admin.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./roster.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./ladder-room.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./settlement.css?v=20261010-member-fixes">
-  <link rel="stylesheet" href="./calendar.css?v=20261010-member-fixes">
+  <link rel="stylesheet" href="./calendar.css?v=20261010-gallery-calendar">
   <script src="./config.js?v=20261010-production-connected"></script>
-  <script type="module" src="./app.js?v=20261010-post-comment-meta"></script>
+  <script type="module" src="./app.js?v=20261010-gallery-calendar"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
@@ -53,7 +53,7 @@
       <button class="primary full" id="auth-submit" type="submit">로그인</button><button class="text-button full" type="button" id="switch-auth">회원가입으로 전환</button>
     </form>
   </dialog>
-  <dialog id="write-dialog" class="dialog write-dialog"><div class="dialog-top"><h2 id="write-title">새 글 쓰기</h2><button class="icon-button" data-close-dialog aria-label="닫기">×</button></div><form id="write-form"><label>게시판<select name="board" required><option value="free">자유게시판</option><option value="gallery">사진첩</option></select></label><label id="free-category-label">말머리<select name="free_category" required><option value="chat" selected>잡담</option><option value="info">정보</option><option value="question">질문</option></select></label><label id="gallery-category-label" hidden>사진 분류<select name="category"><option value="flash">벙개 사진</option><option value="attendance">직관 사진</option><option value="meetup">정모 사진</option></select></label><label id="staff-category-label" hidden>운영진 게시판<select name="staff_category" required><option value="plot">작당모의</option><option value="minutes">회의록</option></select></label><label id="main-notice-label" class="main-notice-choice" hidden><input type="checkbox" name="main_notice" disabled> 메인 공지로 노출</label><label>제목<input name="title" maxlength="120" placeholder="제목을 입력해 주세요" required></label><div class="editor-label" id="editor-label">내용</div>
+  <dialog id="write-dialog" class="dialog write-dialog"><div class="dialog-top"><h2 id="write-title">새 글 쓰기</h2><button class="icon-button" data-close-dialog aria-label="닫기">×</button></div><form id="write-form"><input type="hidden" name="board" value="free"><label id="free-category-label">말머리<select name="free_category" required><option value="chat" selected>잡담</option><option value="info">정보</option><option value="question">질문</option></select></label><input type="hidden" name="category"><input type="hidden" name="staff_category"><label id="main-notice-label" class="main-notice-choice" hidden><input type="checkbox" name="main_notice" disabled> 메인 공지로 노출</label><label>제목<input name="title" maxlength="120" placeholder="제목을 입력해 주세요" required></label><div class="editor-label" id="editor-label">내용</div>
 <div class="post-editor-shell" id="editor-root">
   <div class="editor-toolbar" role="toolbar" aria-label="본문 편집 도구">
     <select data-editor-style aria-label="문단 스타일"><option value="paragraph">본문</option><option value="2">큰 제목</option><option value="3">작은 제목</option></select>
