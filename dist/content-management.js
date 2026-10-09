@@ -1,7 +1,18 @@
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+function confirmDeletion(kind){
+  return new Promise(resolve=>{
+    const dialog=document.createElement('dialog');dialog.className='dialog';dialog.setAttribute('aria-labelledby','content-delete-title');
+    dialog.innerHTML=`<div class="dialog-top"><h2 id="content-delete-title">${kind==='post'?'게시글':'댓글'} 삭제</h2></div><p>삭제할까요? 내 정보의 삭제한 글·댓글에서 복구할 수 있습니다.</p><div class="form-actions"><button class="secondary" data-cancel type="button">취소</button><button class="primary" data-confirm type="button">삭제</button></div>`;
+    let settled=false;const finish=answer=>{if(settled)return;settled=true;dialog.close();dialog.remove();resolve(answer);};
+    dialog.querySelector('[data-cancel]').onclick=()=>finish(false);dialog.querySelector('[data-confirm]').onclick=()=>finish(true);
+    dialog.addEventListener('cancel',event=>{event.preventDefault();finish(false);});
+    document.body.append(dialog);dialog.showModal();dialog.querySelector('[data-cancel]').focus();
+  });
+}
+
 export async function deleteContent(db,kind,id,{notify,onChanged}){
-  if(!window.confirm(`${kind==='post'?'게시글':'댓글'}을 삭제할까요? 내 정보의 삭제한 글·댓글에서 복구할 수 있습니다.`))return;
+  if(!await confirmDeletion(kind))return;
   const{error}=await db.rpc('manage_deleted_content',{p_kind:kind,p_id:id,p_restore:false});
   if(error){notify('삭제하지 못했어요. 권한과 로그인 상태를 확인해 주세요.');return;}
   await onChanged();notify('삭제했어요. 내 정보에서 복구할 수 있습니다.');
