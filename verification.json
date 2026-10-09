@@ -1520,5 +1520,49 @@
     "media_cause": "Cloudinary server API secret did not match current API key; existing secret reconnected only in Supabase server",
     "proof": "../repair-proof/post-photo-and-controls.png",
     "mobile": "Authentication inputs set to 16px; pinch zoom allowed. Real phone focus zoom not verified. Chrome viewport override did not resize connected browser."
+  },
+  "layout_access_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "e0b9252c16d6ea54a3eab64f2e3bc11e261cd9e9",
+    "workflow_run": 37998694302,
+    "cache_version": "20261010-layout-access",
+    "guest_home": "No popular section, rows or more button; login guidance only",
+    "guest_routes": "Popular route and direct calculator HTML lead to member-only login guidance; expired/back-forward sessions rechecked",
+    "settlement": "Restored actual calculator iframe; zero nested iframes or community headers inside; direct HTML navigation redirects only at top level",
+    "live_calculation": {
+      "expense": 10001,
+      "participants": 2,
+      "transfer": 5000
+    },
+    "comment_count": "[1] verified on production popular and main lists",
+    "focus": "main focused with outline none verified on production Chrome; keyboard control indicators retained",
+    "post_read": "Approved reader can read another member post; editing remains owner/moderator only",
+    "popular_criteria": "Default recommendation-count descending order, no minimum recommendation/age/view/comment threshold, main maximum 8 readable posts",
+    "regression": {
+      "guestHomePopularHidden": true,
+      "approvedHomeCommentBrackets": true,
+      "otherMemberCanReadWithoutEditControls": true
+    },
+    "anonymous_api": [
+      {
+        "table": "post_feed",
+        "status": 200,
+        "body": "[]"
+      },
+      {
+        "table": "comment_feed",
+        "status": 200,
+        "body": "[]"
+      },
+      {
+        "table": "profiles",
+        "status": 200,
+        "body": "[]"
+      }
+    ],
+    "limitations": [
+      "Actual iPhone login/focus behavior has not been directly tested"
+    ],
+    "screenshot": "outputs/repair-proof/settlement-layout-fixed.png"
   }
 }
