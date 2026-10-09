@@ -1,0 +1,4 @@
+const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+export function accessDenied(title,{signedIn=false}={}){
+  return `<section class="access-panel"><div class="access-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1"/></svg></div><p class="access-board-name">${esc(title)}</p><h1>접근 권한이 없습니다</h1><p>${signedIn?'이 페이지를 이용할 권한이 없습니다.<br>운영진에게 접근 권한을 요청해 주세요.':'접근 권한을 받은 회원만 이용할 수 있습니다.<br>로그인 후 권한을 확인해 주세요.'}</p><div class="access-actions">${!signedIn?'<button class="primary" data-auth type="button">로그인</button>':''}<a class="secondary" href="#/">홈으로</a></div></section>`;
+}

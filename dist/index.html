@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="야구 팬들이 게시글과 사진을 함께 나누는 야구보러갈래?">
+  <meta name="theme-color" content="#253d5b">
+  <title>야구보러갈래?</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23253d5b'/%3E%3Cpath d='M8 9h16v11H15l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
+  <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=20261010-community-final">
+  <link rel="stylesheet" href="./admin.css?v=20261010-community-final">
+  <link rel="stylesheet" href="./roster.css?v=20261010-community-final">
+  <link rel="stylesheet" href="./ladder-room.css?v=20261010-community-final">
+  <link rel="stylesheet" href="./settlement.css?v=20261010-community-final">
+  <link rel="stylesheet" href="./calendar.css?v=20261010-community-final">
+  <script src="./config.js?v=20261010-community-final"></script>
+  <script type="module" src="./app.js?v=20261010-community-final"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <div class="header-inner wrap">
+      <a class="brand" href="#/" aria-label="야구보러갈래? 홈"><img class="brand-logo" src="./assets/baseball-logo.png" width="2170" height="725" alt="야구보러갈래? SINCE 2018"></a>
+      <nav class="main-nav" aria-label="주 메뉴">
+        <a href="#/board/notice">공지사항</a>
+        <a href="#/best">인기글</a>
+        <button class="nav-trigger" data-dropdown="boards" aria-expanded="false" aria-controls="nav-dropdown">게시판</button>
+        <button class="nav-trigger" data-dropdown="gallery" aria-expanded="false" aria-controls="nav-dropdown">사진첩</button>
+        <button class="nav-trigger" data-dropdown="tools" aria-expanded="false" aria-controls="nav-dropdown">도구</button>
+        <button class="nav-trigger" data-dropdown="staff" aria-expanded="false" aria-controls="nav-dropdown">운영진 게시판</button>
+        <button class="nav-trigger" data-dropdown="yb" aria-expanded="false" aria-controls="nav-dropdown">YB Holics</button>
+      </nav>
+      <div class="account-actions"><button type="button" class="header-button" id="signup-button">회원가입</button><a class="header-button" id="member-manage-button" href="#/admin" hidden>회원관리</a><button type="button" class="header-button light" id="login-button">로그인</button></div>
+    </div>
+    <div class="sub-header"><div class="wrap sub-inner"><div class="member-strip" id="member-strip" role="group" aria-label="회원 정보"><span class="member-guest">로그인 후 내 정보를 확인할 수 있어요.</span></div><form class="search-form" id="search-form" role="search"><label class="sr-only" for="search">글 검색</label><input id="search" name="search" type="search" placeholder="글 제목·내용 검색" maxlength="100"><button aria-label="검색" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"></circle><path d="m15 15 5 5"></path></svg></button></form></div></div>
+    <nav id="nav-dropdown" class="nav-dropdown" aria-label="하위 메뉴" hidden></nav>
+  </header>
+  <main id="main" class="wrap" tabindex="-1"><div class="loading">게시글을 불러오는 중입니다.</div></main>
+  <footer class="site-footer"><div class="wrap"><p class="copyright">© <span id="copyright-year">2026</span> <span data-site-name>야구보러갈래?</span> All rights reserved.</p></div></footer>
+  <dialog id="auth-dialog" class="dialog auth-dialog">
+    <div class="dialog-top"><h2 id="auth-title">로그인</h2><button class="icon-button" data-close-dialog aria-label="닫기">×</button></div>
+    <form id="auth-form">
+      <p class="approval-notice" id="approval-notice" hidden>가입 신청 후 관리자 승인이 완료되면 이용할 수 있습니다.</p>
+      <label>아이디<input name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" placeholder="영문·숫자·밑줄, 3~24자" required></label>
+      <label>비밀번호<input name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required></label>
+      <label id="password-confirm-label" hidden>비밀번호 확인<input name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="72" disabled></label>
+      <label id="nickname-label" hidden>닉네임<input name="nickname" autocomplete="nickname" minlength="2" maxlength="20"></label>
+      <label id="region-label" hidden>지역<input name="region" maxlength="20"></label>
+      <fieldset id="team-fieldset" class="team-fieldset" hidden disabled><legend>응원 구단</legend><div class="team-options" id="team-options"></div></fieldset>
+      <label id="yb-request-label" class="signup-yb-choice" hidden><input type="checkbox" name="yb_requested" disabled> YB Holics 소속입니다</label>
+      <p class="form-error" id="auth-error" role="alert"></p>
+      <button class="primary full" id="auth-submit" type="submit">로그인</button><button class="text-button full" type="button" id="switch-auth">회원가입으로 전환</button>
+    </form>
+  </dialog>
+  <dialog id="write-dialog" class="dialog write-dialog"><div class="dialog-top"><h2 id="write-title">새 글 쓰기</h2><button class="icon-button" data-close-dialog aria-label="닫기">×</button></div><form id="write-form"><label>게시판<select name="board" required><option value="free">자유게시판</option><option value="gallery">사진첩</option></select></label><label id="free-category-label">말머리<select name="free_category" required><option value="chat" selected>잡담</option><option value="info">정보</option><option value="question">질문</option></select></label><label id="gallery-category-label" hidden>사진 분류<select name="category"><option value="flash">벙개 사진</option><option value="attendance">직관 사진</option><option value="meetup">정모 사진</option></select></label><label id="staff-category-label" hidden>운영진 게시판<select name="staff_category" required><option value="plot">작당모의</option><option value="minutes">회의록</option></select></label><label id="main-notice-label" class="main-notice-choice" hidden><input type="checkbox" name="main_notice" disabled> 메인 공지로 노출</label><label>제목<input name="title" maxlength="120" placeholder="제목을 입력해 주세요" required></label><div class="editor-label" id="editor-label">내용</div>
+<div class="post-editor-shell" id="editor-root">
+  <div class="editor-toolbar" role="toolbar" aria-label="본문 편집 도구">
+    <select data-editor-style aria-label="문단 스타일"><option value="paragraph">본문</option><option value="2">큰 제목</option><option value="3">작은 제목</option></select>
+    <div class="toolbar-group"><button type="button" data-editor="bold" aria-label="굵게" aria-pressed="false"><b>B</b></button><button type="button" data-editor="italic" aria-label="기울임" aria-pressed="false"><i>I</i></button><button type="button" data-editor="underline" aria-label="밑줄" aria-pressed="false"><u>U</u></button><button type="button" data-editor="strike" aria-label="취소선" aria-pressed="false"><s>S</s></button></div>
+    <div class="toolbar-group"><button type="button" data-editor="bullet" aria-label="글머리 목록">• 목록</button><button type="button" data-editor="number" aria-label="번호 목록">1. 목록</button><button type="button" data-editor="quote" aria-label="인용문">❞</button><button type="button" data-editor="rule" aria-label="구분선">―</button></div>
+    <div class="toolbar-group"><button type="button" data-editor="undo" aria-label="실행 취소">↶</button><button type="button" data-editor="redo" aria-label="다시 실행">↷</button></div>
+    <div class="toolbar-group media-tools"><button type="button" data-editor="photo">사진</button><button type="button" data-editor="table" aria-expanded="false" aria-controls="table-picker">표</button><button type="button" data-editor="stickers" aria-expanded="false" aria-controls="yabol-picker">야볼티콘</button></div>
+    <button type="button" data-editor="preview" class="editor-preview-button">미리보기</button>
+  </div>
+  <div class="table-picker editor-panel" id="table-picker" hidden><label>행<input id="table-rows" type="number" min="1" max="20" value="3"></label><label>열<input id="table-columns" type="number" min="1" max="10" value="3"></label><button type="button" data-insert-table class="primary">표 넣기</button></div>
+  <div class="yabol-panel editor-panel"><div class="yabol-picker" id="yabol-picker" aria-label="기본 야볼티콘 8종" hidden></div></div>
+  <div class="table-edit-actions" aria-label="표 편집" hidden><span>표 편집</span><button type="button" data-table-command="addRowAfter">행 추가</button><button type="button" data-table-command="deleteRow">행 삭제</button><button type="button" data-table-command="addColumnAfter">열 추가</button><button type="button" data-table-command="deleteColumn">열 삭제</button><button type="button" data-table-command="deleteTable">표 삭제</button></div>
+  <div id="post-editor" class="rich-body"></div>
+  <input class="sr-only" id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-label="본문 사진 선택">
+  <div class="editor-status"><span>사진 최대 5장 · 각 10MB · 붙여넣기/끌어놓기 가능</span><span id="editor-count" aria-live="polite">0 / 10,000자</span></div>
+</div><p id="write-note" class="form-note"></p><p class="form-error" id="write-error" role="alert"></p><div class="form-actions"><button type="button" class="secondary" data-close-dialog>취소</button><button class="primary" id="write-submit" type="submit">등록하기</button></div></form></dialog>
+  <dialog id="preview-dialog" class="dialog preview-dialog"><div class="dialog-top"><h2>글 미리보기</h2><button type="button" class="icon-button" data-close-dialog aria-label="미리보기 닫기">×</button></div><h3 id="preview-title"></h3><div class="rich-body" id="rich-preview"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

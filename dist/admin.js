@@ -1,0 +1,120 @@
+import {memberName,teams} from './teams.js?v=20261010-community-final';
+import {adminBoards,statusLabels,roleLabels,accessLabels,effectivePermission,fullPermissions,summarizeMemberChanges,canManageMembers,canManageRoster,ybRoleLabels} from './admin-model.js?v=20261010-community-final';
+import {restrictionActive,restrictionLabel,hasRestriction,formatRestrictionDate,toSeoulInput,seoulInputToIso} from './restrictions.js?v=20261010-community-final';
+const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+let previewState;
+function previewData(){
+  if(previewState)return previewState;
+  const members=[];
+  previewState={members,audit:[]};return previewState;
+}
+function previewService(actorId){
+  return {
+    async list({query,status,offset}){const state=previewData(),stats=Object.fromEntries(Object.keys(statusLabels).map(key=>[key,state.members.filter(member=>key==='suspended'?restrictionActive(member):member.status===key&&(key!=='approved'||!restrictionActive(member))).length]));const filtered=state.members.filter(member=>(!status||(status==='suspended'?restrictionActive(member):member.status===status&&(status!=='approved'||!restrictionActive(member))))&&`${member.username} ${member.nickname} ${member.region}`.toLowerCase().includes(query.toLowerCase()));return{members:structuredClone(filtered.slice(offset,offset+20).map(member=>({...member,is_restricted:restrictionActive(member)}))),total:filtered.length,stats};},
+    async update(member,settings){
+      const state=previewData(),index=state.members.findIndex(item=>item.id===member.id),current=state.members[index];
+      if(!current||current.revision!==member.revision)throw new Error('Member settings changed; reload required');
+      if(settings.team!==null&&!teams.some(team=>team.id===settings.team))throw new Error('Invalid member settings');
+      if(!settings.is_yb_member)settings.yb_role='member';
+      if(!Object.hasOwn(ybRoleLabels,settings.yb_role))throw new Error('Invalid member settings');
+      if(settings.permissions.yb_roster==='write'&&!canManageRoster({...settings,status:'approved'}))throw new Error('Roster role required');
+      if(settings.permissions.recruit==='write'&&!canManageMembers({...settings,status:'approved'}))throw new Error('Recruitment moderator required');
+      if(settings.is_admin&&settings.status!=='approved')throw new Error('Administrator must remain approved');
+      const actor=state.members.find(item=>item.id===actorId);
+      if(!canManageMembers(actor))throw new Error('Administrator required');
+      if(!actor.is_admin&&(current.is_admin||settings.is_admin))throw new Error('Only administrators may manage administrator accounts');
+      if(current.id===actorId&&(settings.status!=='approved'||(actor.is_admin&&!settings.is_admin)||(!actor.is_admin&&!['staff','vice_staff'].includes(settings.staff_role))))throw new Error('Cannot remove your own administrator access');
+      const before=structuredClone(current),permissions=Object.fromEntries(Object.entries(settings.permissions).filter(([,value])=>value!=='default'));
+      const updated={...current,...settings,permissions,revision:current.revision+1};
+      state.members[index]=updated;state.audit.unshift({id:state.audit.length+1,actor:actor.nickname,created_at:new Date().toISOString(),detail:{before,after:structuredClone(updated)}});return structuredClone(updated);
+    },
+    async restrict(member,period){return previewRestriction(member,period,actorId);},
+    async clearRestriction(member){return previewRestriction(member,null,actorId);},
+    async audit(){return structuredClone(previewData().audit.slice(0,30));},
+    reset(){previewState=null;return structuredClone(previewData().members);}
+  };
+}
+function previewRestriction(member,period,actorId){
+  const state=previewData(),actor=state.members.find(item=>item.id===actorId),index=state.members.findIndex(item=>item.id===member.id),current=state.members[index];
+  if(!canManageMembers(actor))throw new Error('Administrator required');
+  if(!current||current.revision!==member.revision)throw new Error('Member settings changed; reload required');
+  if(actorId===member.id)throw new Error('Cannot restrict your own account');
+  if(current.is_admin&&!actor.is_admin)throw new Error('Only administrators may manage administrator accounts');
+  if(!['approved','suspended'].includes(current.status))throw new Error('Approved member required');
+  if(period&&(!Number.isFinite(Date.parse(period.start))||!Number.isFinite(Date.parse(period.end))||Date.parse(period.end)<=Date.parse(period.start)||Date.parse(period.end)<=Date.now()||period.reason.length>300))throw new Error('Invalid restriction dates');
+  const before=structuredClone(current),updated={...current,status:'approved',restriction_start:period?.start||null,restriction_end:period?.end||null,restriction_reason:period?.reason||'',revision:current.revision+1};
+  state.members[index]=updated;state.audit.unshift({id:state.audit.length+1,actor:actor.nickname,created_at:new Date().toISOString(),detail:{before,after:structuredClone(updated)}});return structuredClone({...updated,is_restricted:restrictionActive(updated)});
+}
+function liveService(db){
+  const rpc=async(name,args)=>{const{data,error}=await db.rpc(name,args);if(error)throw error;return data;};
+  return {
+    list:({query,status,offset})=>rpc('admin_list_members',{p_query:query,p_status:status||null,p_limit:20,p_offset:offset}),
+    update:(member,settings)=>rpc('admin_update_member',{p_user:member.id,p_status:settings.status,p_staff_role:settings.staff_role,p_is_yb:settings.is_yb_member,p_yb_role:settings.yb_role,p_is_admin:settings.is_admin,p_team:settings.team,p_permissions:settings.permissions,p_revision:member.revision}),
+    restrict:(member,period)=>rpc('admin_set_restriction',{p_user:member.id,p_start:period.start,p_end:period.end,p_reason:period.reason,p_revision:member.revision}),
+    clearRestriction:member=>rpc('admin_clear_restriction',{p_user:member.id,p_revision:member.revision}),
+    audit:()=>rpc('admin_list_audit')
+  };
+}
+function errorText(error){
+  const message=error?.message||'';
+  if(message.includes('Only administrators'))return '어드민 지정과 어드민 계정 수정은 어드민만 할 수 있습니다.';
+  if(message.includes('Invalid member settings'))return '회원 설정을 확인해 주세요. 응원 구단은 목록에서 선택해 주세요.';
+  if(message.includes('Invalid restriction dates'))return '해제 일시를 시작 일시보다 나중으로 지정하고, 아직 지나지 않은 날짜를 선택해 주세요.';
+  if(message.includes('Cannot restrict your own')||message.includes('final administrator'))return '본인 또는 마지막 어드민 계정은 이용 제한할 수 없습니다.';
+  if(message.includes('Approved member required'))return '승인된 회원에게 이용 제한을 설정할 수 있습니다.';
+  if(message.includes('Roster role required'))return '선수단 편집은 어드민·운영진·부운영진과 YB 감독·매니저만 가능합니다.';
+  if(message.includes('Administrator required'))return '회원 관리 권한이 없습니다. 다시 로그인해 주세요.';
+  if(message.includes('reload required'))return '다른 관리자가 먼저 수정했습니다. 새로고침 후 변경 내용을 다시 확인해 주세요.';
+  if(message.includes('Administrator must remain approved'))return '어드민 권한은 승인된 회원에게 부여할 수 있습니다.';
+  if(message.includes('own administrator')||message.includes('final administrator'))return '본인 또는 마지막 관리자의 관리 권한은 해제할 수 없습니다.';
+  return '변경 내용을 저장하지 못했습니다. 입력 내용을 유지했으니 연결을 확인하고 다시 시도해 주세요.';
+}
+
+export async function renderAdmin(main,{db,preview=false,canAdmin=false,isAdmin=false,actorId,isCurrent,onSaved,notify,onRestrictionPreview=()=>{}}){
+  if(!canAdmin){main.innerHTML='<section class="access-panel"><h1>회원 관리</h1><p>로그인한 어드민·운영진·부운영진만 이용할 수 있습니다.</p><a href="#/" class="secondary">홈으로</a></section>';return;}
+  const service=preview?previewService(actorId):liveService(db);
+  let query='',status='',offset=0,selectedId=null,members=[],requestId=0,busy=false;
+  main.innerHTML=`<section class="admin-page"><div class="board-heading"><div><h1>회원 관리</h1><p>가입 신청을 승인하고 회원 등급과 게시판 권한을 관리하세요.</p></div><a class="secondary" href="#/">홈으로</a></div><div class="admin-stats" id="admin-stats"></div><div class="admin-toolbar"><button type="button" class="secondary" id="admin-all">전체 회원</button><form id="admin-search"><label class="sr-only" for="admin-query">회원 검색</label><input id="admin-query" maxlength="100" placeholder="아이디·닉네임·지역 검색"><button class="secondary" type="submit">검색</button></form><button type="button" class="secondary" id="admin-refresh">새로고침</button></div><p class="form-error" id="admin-error" role="alert"></p><div class="admin-workspace"><div class="admin-members-card"><div class="admin-card-heading"><h2 id="admin-list-title">전체 회원</h2><span id="admin-total"></span></div><div id="admin-members" aria-label="회원 목록"></div><div class="page-controls"><button type="button" id="admin-prev">이전</button><span id="admin-page-number"></span><button type="button" id="admin-next">다음</button></div></div><div class="admin-detail-card" id="admin-detail"></div></div><section class="admin-audit-card"><div class="admin-card-heading"><h2>최근 변경 기록</h2><span>최근 30건</span></div><div id="admin-audit"></div></section><p class="admin-footnote">공개 게시판은 비회원도 읽을 수 있습니다. 회원별 ‘접근 불가’는 로그인한 상태에 적용됩니다.</p><dialog class="dialog restriction-dialog" id="admin-restriction-dialog"><div class="dialog-top"><h2>이용 제한</h2><button class="icon-button" type="button" id="restriction-close" aria-label="닫기">×</button></div><p id="restriction-member-name"></p><form id="restriction-form"><div class="restriction-form-dates"><label>제한 시작<input id="restriction-start" name="start" type="datetime-local" required></label><label>해제 일시<input id="restriction-end" name="end" type="datetime-local" required></label></div><p class="form-note">한국 시간 기준이며 해제 일시부터 자동으로 이용할 수 있습니다.</p><label>제한 사유<textarea name="reason" maxlength="300" rows="3"></textarea></label><p class="form-error" id="restriction-form-error" role="alert"></p><button class="primary full" type="submit" id="restriction-submit">이용 제한 적용</button></form></dialog></section>`;
+  const root=main.querySelector('.admin-page'),alive=()=>isCurrent()&&main.contains(root),find=selector=>root.querySelector(selector);
+  function settingsFromForm(form){return{team:form.elements.team.value||null,status:form.elements.status.value,staff_role:form.elements.staff_role.value,is_yb_member:form.elements.is_yb_member.checked,yb_role:form.elements.is_yb_member.checked?form.elements.yb_role.value:'member',is_admin:form.elements.is_admin.checked,permissions:Object.fromEntries(Object.keys(adminBoards).map(board=>[board,form.elements[`permission_${board}`].value]))};}
+  function updateEffective(){const form=find('#admin-member-form');if(!form)return;const yb=form.elements.is_yb_member.checked;if(!yb)form.elements.yb_role.value='member';form.elements.yb_role.disabled=!yb;const settings=settingsFromForm(form),rosterPermission=form.elements.permission_yb_roster,eligible=canManageRoster({...settings,status:'approved'});rosterPermission.querySelector('option[value=write]').disabled=!eligible;if(!eligible&&rosterPermission.value==='write'){rosterPermission.value='default';settings.permissions.yb_roster='default';}const recruitPermission=form.elements.permission_recruit,recruitEligible=canManageMembers({...settings,status:'approved'});recruitPermission.querySelector('option[value=write]').disabled=!recruitEligible;if(!recruitEligible&&recruitPermission.value==='write'){recruitPermission.value='default';settings.permissions.recruit='default';}for(const board of Object.keys(adminBoards)){const badge=form.querySelector(`[data-effective="${board}"]`),mode=effectivePermission({...members.find(item=>item.id===selectedId),...settings},board);badge.textContent=accessLabels[mode];badge.dataset.access=mode;form.elements[`permission_${board}`].disabled=settings.is_admin;}}
+  function drawDetail(){
+    const member=members.find(item=>item.id===selectedId);
+    if(!member){find('#admin-detail').innerHTML='<div class="empty"><strong>회원을 선택해 주세요.</strong>목록에서 관리할 회원을 선택하면 설정이 표시됩니다.</div>';return;}
+    const self=member.id===actorId,protectedTarget=member.is_admin&&!isAdmin;
+    find('#admin-detail').innerHTML=`<div class="admin-card-heading"><div><h2 class="member-identity">${memberName(member.nickname,member.team,member.region,member.staff_role,member.is_yb_member)}</h2><p class="admin-username">${esc(member.username)} · 가입 ${new Date(member.created_at).toLocaleDateString('ko-KR')}</p></div><span class="member-status" data-status="${restrictionActive(member)?'suspended':member.status}">${restrictionLabel(member)||statusLabels[member.status]}</span></div><form id="admin-member-form"><fieldset class="admin-form-fields" ${protectedTarget?'disabled':''}><div class="admin-member-actions">${member.status==='pending'?'<button type="button" class="secondary" id="admin-approve">가입 승인</button><button type="button" class="secondary danger" id="admin-reject">가입 거절</button>':''}${!self&&['approved','suspended'].includes(member.status)?'<button type="button" class="secondary danger" id="admin-restrict">이용 제한</button>':''}${!self&&hasRestriction(member)?'<button type="button" class="secondary" id="admin-restriction-clear">이용 제한 해제</button>':''}</div><div class="admin-form-row"><label>가입 상태<select name="status" ${self?'disabled':''}>${Object.entries(statusLabels).filter(([value])=>value!=='suspended'||member.status==='suspended').map(([value,label])=>`<option value="${value}" ${member.status===value?'selected':''}>${label}</option>`).join('')}</select></label><label>회원 등급<select name="staff_role" ${self&&!isAdmin?'disabled':''}>${Object.entries(roleLabels).map(([value,label])=>`<option value="${value}" ${member.staff_role===value?'selected':''}>${label}</option>`).join('')}</select></label></div><label class="admin-team">응원 구단<select name="team">${!member.team?'<option value="">미선택</option>':''}${teams.map(team=>`<option value="${team.id}" ${member.team===team.id?'selected':''}>${team.name}</option>`).join('')}</select></label><div class="admin-flags"><label><input type="checkbox" name="is_yb_member" ${member.is_yb_member||(member.status==='pending'&&member.yb_requested)?'checked':''}> YB Holics 소속</label><label><input type="checkbox" name="is_admin" ${member.is_admin?'checked':''} ${self||!isAdmin?'disabled':''}> 어드민 권한</label></div>${member.status==='pending'&&member.yb_requested?'<p class="form-note">가입 신청 시 YB Holics 소속을 선택한 회원입니다. 소속을 확인한 뒤 승인해 주세요.</p>':''}<label class="admin-yb-role">YB Holics 직책<select name="yb_role">${Object.entries(ybRoleLabels).map(([value,label])=>`<option value="${value}" ${(member.yb_role||'member')===value?'selected':''}>${label}</option>`).join('')}</select></label><p class="form-note">어드민·운영진·부운영진은 회원을 관리할 수 있어요. 어드민 지정과 어드민 계정 수정은 어드민만 가능합니다. 운영진·부운영진은 운영진 게시판·공지사항·홀릭스 게시판을 읽고 쓸 수 있습니다. 서브메뉴에서 개별 권한을 조정할 수 있습니다.</p><p class="form-note">선수단 편집은 어드민·운영진·부운영진과 YB Holics 감독·매니저만 가능합니다. YB 직책은 소속 회원에게 지정하며 회원관리 권한을 부여하지 않습니다.</p><h3 class="admin-permission-title">서브메뉴별 권한</h3><div class="admin-permission-head"><span>게시판</span><span>설정</span><span>적용 권한</span></div>${Object.entries(adminBoards).map(([board,label])=>`<div class="admin-permission-row"><label for="permission-${board}">${label}</label><select name="permission_${board}" id="permission-${board}" aria-label="${label} 권한"><option value="default">등급·소속 기본값</option>${Object.entries(accessLabels).map(([value,text])=>`<option value="${value}" ${member.permissions?.[board]===value?'selected':''}>${text}</option>`).join('')}</select><span class="access-chip" data-effective="${board}"></span></div>`).join('')}<p class="form-note">읽기만 허용하면 글·댓글 작성과 사진 업로드가 제한됩니다. 모집게시판의 참석·불참은 승인된 회원이 읽기 권한으로도 남길 수 있습니다. ‘기본값’을 선택하면 등급과 소속을 따릅니다.</p>${hasRestriction(member)?`<div class="admin-restriction-info"><strong>${restrictionLabel(member)||'이용 제한 종료'}</strong><p>${esc(formatRestrictionDate(member.restriction_start)||'시작일 미지정')} → ${esc(formatRestrictionDate(member.restriction_end)||'해제일 미지정')}</p>${member.restriction_reason?`<p>${esc(member.restriction_reason)}</p>`:''}<button class="text-button" type="button" id="admin-restriction-preview">제한 안내 보기</button></div>`:''}<p class="form-error" id="admin-save-error" role="alert"></p><div class="admin-save-actions"><span id="admin-save-status" role="status"></span><button type="submit" class="primary" id="admin-save">변경사항 저장</button></div></fieldset>${protectedTarget?'<p class="form-note">어드민 계정은 어드민만 수정할 수 있습니다.</p>':''}</form>`;
+    updateEffective();const form=find('#admin-member-form');form.onchange=updateEffective;form.onsubmit=event=>{event.preventDefault();void save(member,settingsFromForm(form));};find('#admin-approve')?.addEventListener('click',()=>{form.elements.status.value='approved';updateEffective();void save(member,settingsFromForm(form));});find('#admin-reject')?.addEventListener('click',()=>{if(busy)return;form.elements.status.value='rejected';updateEffective();void save(member,settingsFromForm(form));});find('#admin-restrict')?.addEventListener('click',()=>openRestriction(member));find('#admin-restriction-clear')?.addEventListener('click',()=>void applyRestriction(member,null));find('#admin-restriction-preview')?.addEventListener('click',()=>onRestrictionPreview(member));
+  }
+  function drawMembers(result){
+    members=result.members;find('#admin-stats').innerHTML=Object.entries(statusLabels).map(([key,label])=>`<button type="button" data-admin-status="${key}" class="admin-stat ${status===key?'active':''}" aria-pressed="${status===key}"><span>${label}</span><strong>${Number(result.stats[key]||0)}</strong></button>`).join('');
+    find('#admin-all').classList.toggle('active',!status);find('#admin-list-title').textContent=status?statusLabels[status]:'전체 회원';find('#admin-total').textContent=`${result.total}명`;
+    find('#admin-members').innerHTML=members.length?members.map(member=>`<button type="button" class="admin-member-row ${member.id===selectedId?'selected':''}" data-member-id="${esc(member.id)}" aria-pressed="${member.id===selectedId}"><span><strong class="member-identity">${memberName(member.nickname,member.team,member.region,member.staff_role,member.is_yb_member)}</strong><span class="admin-username">${esc(member.username)} · ${roleLabels[member.staff_role]}${member.is_admin?' · 관리자':''}${member.is_yb_member&&member.yb_role&&member.yb_role!=='member'?` · YB ${ybRoleLabels[member.yb_role]}`:''}</span></span><span class="member-status" data-status="${restrictionActive(member)?'suspended':member.status}">${restrictionLabel(member)||statusLabels[member.status]}</span></button>`).join(''):'<div class="empty">해당하는 회원이 없습니다.</div>';
+    find('#admin-prev').disabled=offset===0;find('#admin-next').disabled=offset+20>=result.total;find('#admin-page-number').textContent=`${Math.floor(offset/20)+1} / ${Math.max(1,Math.ceil(result.total/20))}`;
+  }
+  async function refresh(){
+    const id=++requestId;find('#admin-error').textContent='';find('#admin-refresh').disabled=true;
+    try{const result=await service.list({query,status,offset});if(!alive()||id!==requestId)return;if(offset>0&&offset>=result.total){offset=Math.max(0,Math.floor((result.total-1)/20)*20);await refresh();return;}if(!result.members.some(item=>item.id===selectedId))selectedId=result.members[0]?.id||null;drawMembers(result);drawDetail();
+      const log=await service.audit();if(!alive()||id!==requestId)return;find('#admin-audit').innerHTML=log.length?log.map(entry=>`<div class="admin-audit-entry"><div><strong>${esc(entry.detail.after.nickname)}</strong><p>${esc(summarizeMemberChanges(entry.detail.before,entry.detail.after))}</p></div><span>${esc(entry.actor)}<time>${new Date(entry.created_at).toLocaleString('ko-KR')}</time></span></div>`).join(''):'<p class="form-note">아직 변경 기록이 없습니다.</p>';
+    }catch(error){if(alive()&&id===requestId)find('#admin-error').textContent=errorText(error);}finally{if(alive()&&id===requestId)find('#admin-refresh').disabled=false;}
+  }
+  let restrictionMember=null;
+  const restrictionDialog=find('#admin-restriction-dialog'),restrictionForm=find('#restriction-form');
+  function openRestriction(member){if(busy)return;restrictionMember=member;restrictionForm.reset();find('#restriction-member-name').textContent=`${member.nickname} · ${member.region}`;const hasFutureEnd=Date.parse(member.restriction_end)>Date.now();restrictionForm.elements.start.value=toSeoulInput(hasFutureEnd?member.restriction_start:Date.now());restrictionForm.elements.end.value=toSeoulInput(hasFutureEnd?member.restriction_end:Date.now()+86400000);restrictionForm.elements.reason.value=member.restriction_reason||'';find('#restriction-form-error').textContent='';restrictionDialog.showModal();}
+  find('#restriction-close').onclick=()=>{if(!busy)restrictionDialog.close();};restrictionDialog.oncancel=event=>{if(busy)event.preventDefault();};
+  restrictionForm.onsubmit=event=>{event.preventDefault();if(busy)return;try{void applyRestriction(restrictionMember,{start:seoulInputToIso(restrictionForm.elements.start.value),end:seoulInputToIso(restrictionForm.elements.end.value),reason:restrictionForm.elements.reason.value.trim()});}catch(error){find('#restriction-form-error').textContent=errorText(error);}};
+  async function applyRestriction(member,period){if(busy)return;busy=true;const errorElement=period?find('#restriction-form-error'):find('#admin-save-error');errorElement.textContent='';find('#restriction-submit').disabled=true;find('#restriction-close').disabled=true;try{const updated=period?await service.restrict(member,period):await service.clearRestriction(member);if(!alive())return;await onSaved(updated,{preview});if(!alive())return;restrictionDialog.close();notify(period?'이용 제한 기간을 설정했어요.':'이용 제한을 해제했어요.');await refresh();}catch(error){if(alive())errorElement.textContent=errorText(error);}finally{busy=false;if(alive()){find('#restriction-submit').disabled=false;find('#restriction-close').disabled=false;}}}
+  async function save(member,settings){
+    if(busy)return;busy=true;find('#admin-save-error').textContent='';const button=find('#admin-save');button.disabled=true;button.textContent='저장 중…';find('#admin-approve')?.setAttribute('disabled','');
+    try{const updated=await service.update(member,settings);if(!alive())return;await onSaved(updated,{preview});if(!alive())return;notify('회원 설정을 저장했어요.');await refresh();if(alive())find('#admin-save-status').textContent='저장 완료';
+    }catch(error){if(alive())find('#admin-save-error').textContent=errorText(error);}finally{busy=false;if(alive()){find('#admin-save')?.removeAttribute('disabled');if(find('#admin-save'))find('#admin-save').textContent='변경사항 저장';find('#admin-approve')?.removeAttribute('disabled');}}
+  }
+  root.addEventListener('click',event=>{
+    if(busy)return;
+    const tab=event.target.closest('[data-admin-status]');if(tab){status=tab.dataset.adminStatus;offset=0;selectedId=null;void refresh();return;}
+    const row=event.target.closest('[data-member-id]');if(row){selectedId=row.dataset.memberId;root.querySelectorAll('[data-member-id]').forEach(item=>{const selected=item.dataset.memberId===selectedId;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected));});drawDetail();if(window.matchMedia('(max-width:800px)').matches)find('#admin-detail').scrollIntoView({block:'start'});}
+  });
+  find('#admin-search').onsubmit=event=>{event.preventDefault();if(busy)return;query=find('#admin-query').value.trim();offset=0;selectedId=null;void refresh();};
+  find('#admin-all').onclick=()=>{if(busy)return;status='';offset=0;selectedId=null;void refresh();};find('#admin-refresh').onclick=()=>{if(!busy)void refresh();};
+  find('#admin-prev').onclick=()=>{if(!busy){offset=Math.max(0,offset-20);void refresh();}};find('#admin-next').onclick=()=>{if(!busy){offset+=20;void refresh();}};
+  await refresh();
+}

@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
+<title>야볼 정산 계산기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1">
+<meta name="theme-color" content="#FFFFFF">
+<style>
+:root {
+  --bg:         #FFFFFF;
+  --surface:    #FFFFFF;
+  --surface-2:  #F4F5F7;
+  --border:     #E4E7EC;
+  --text:       #23262F;
+  --text-dim:   #9AA1AE;
+  --text-label: #6B7280;
+  --orange:      #F0883E;
+  --orange-soft: rgba(240,136,62,0.12);
+  --orange-bord: rgba(240,136,62,0.35);
+  --blue:        #3E6FEA;
+  --blue-soft:   rgba(62,111,234,0.10);
+  --blue-bord:   rgba(62,111,234,0.30);
+  --green:       #1F9D63;
+  --green-soft:  rgba(31,157,99,0.10);
+  --green-bord:  rgba(31,157,99,0.28);
+  --red:         #E1514F;
+  --red-soft:    rgba(225,81,79,0.08);
+  --red-bord:    rgba(225,81,79,0.28);
+  --mono: 'NanumSquareRound',sans-serif;
+  --sans: 'NanumSquareRound',sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ── HEADER ─── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(20,20,30,0.04);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.header-title span { color: var(--orange); }
+
+.header-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 1px 7px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.btn-reset {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.06em;
+  min-height: 28px;
+  flex-shrink: 0;
+}
+.btn-reset:active { color: var(--red); border-color: var(--red); }
+
+/* ── SECTION DIVIDER ─── */
+.sec-divider {
+  height: 8px;
+  background: var(--surface-2);
+}
+
+/* ── SECTION HEADER ─── */
+.sec-hdr {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px 10px;
+  gap: 8px;
+}
+
+.sec-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.sec-count {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 1px 7px;
+  border-radius: 8px;
+}
+
+/* ── EMPTY ─── */
+.empty {
+  padding: 28px 24px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  line-height: 2.2;
+}
+
+/* ── INPUT ROW ─── */
+.input-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+
+.field {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+  min-height: 44px;
+}
+.field:focus { border-color: var(--blue); }
+.field.mono { font-family: var(--mono); }
+
+.fselect {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  padding: 10px 30px 10px 12px;
+  border-radius: 3px;
+  outline: none;
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239AA1AE'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+.fselect:focus { border-color: var(--blue); }
+
+.btn-plus {
+  background: var(--orange);
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  min-height: 44px;
+  width: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.btn-plus:active { opacity: 0.8; }
+
+/* ── CHIPS ─── */
+.chips-wrap {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 7px 8px 7px 8px;
+  min-height: 38px;
+}
+
+.chip-av {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  border: 1px solid var(--blue-bord);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.chip-name { font-size: 13px; color: var(--text); }
+
+.chip-x {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  min-height: 22px;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 2px;
+}
+.chip-x:active { color: var(--red); }
+
+/* ── EXPENSE FORM ─── */
+.exp-form {
+  background: var(--surface-2);
+  border-top: 2px solid var(--orange);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+  display: none;
+}
+.exp-form.open { display: block; }
+
+.form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  width: 44px;
+  flex-shrink: 0;
+  padding-top: 12px;
+}
+
+.check-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  padding-top: 4px;
+}
+
+.cchip {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-label);
+  font-family: var(--mono);
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.1s;
+  user-select: none;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+.cchip.on { background: var(--blue-soft); border-color: var(--blue-bord); color: var(--blue); }
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.btn-save {
+  flex: 1;
+  background: var(--orange);
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+.btn-save:active { opacity: 0.85; }
+
+.btn-cancel {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 12px 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+.btn-cancel:active { opacity: 0.7; }
+
+/* ── ADD EXPENSE BUTTON ─── */
+.btn-add-exp {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--orange);
+  background: var(--orange-soft);
+  border: 1px solid var(--orange-bord);
+  padding: 5px 13px;
+  border-radius: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+  min-height: 30px;
+  letter-spacing: 0.04em;
+}
+.btn-add-exp:active { opacity: 0.7; }
+
+/* ── EXPENSE CARDS ─── */
+.exp-list {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.exp-card-top {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 8px;
+  background: var(--blue-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.exp-seq-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.exp-desc { flex: 1; font-size: 14px; color: var(--blue); font-weight: 700; }
+
+.exp-amt {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.btn-edit {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  margin: -4px 0 -4px 4px;
+  border-radius: 3px;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-edit:active { color: var(--blue); background: var(--blue-soft); }
+
+.btn-del {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  margin: -4px -6px -4px 0;
+  border-radius: 3px;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-del:active { color: var(--red); background: var(--red-soft); }
+
+.exp-card-bot {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+}
+
+.bot-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+}
+
+.bot-row-members {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.lbl-tiny {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.tag-payer {
+  font-size: 11px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border: 1px solid var(--blue-bord);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: var(--mono);
+}
+
+.tag-members { font-size: 11px; color: var(--text-label); font-family: var(--mono); }
+
+/* ── EXPENSE TOTAL ─── */
+.exp-total {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 22px;
+  margin-top: -4px;
+}
+
+.exp-total-lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.exp-total-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: -0.02em;
+}
+
+/* ── SETTLEMENT ─── */
+#settleSection { padding-bottom: 40px; }
+
+/* balance table */
+.balance-box {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 16px 14px;
+}
+
+.bal-head {
+  display: flex;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.bal-head span {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.bal-head .bh-name { flex: 1; }
+.bal-head .bh-paid { width: 80px; text-align: right; }
+.bal-head .bh-net  { width: 86px; text-align: right; }
+
+.bal-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.bal-row:last-child { border-bottom: none; }
+
+.bal-name { flex: 1; font-size: 13px; color: var(--text); }
+
+.bal-paid {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  width: 80px;
+  text-align: right;
+}
+
+.bal-net {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  width: 86px;
+  text-align: right;
+}
+.bal-net.pos { color: var(--green); }
+.bal-net.neg { color: var(--red); }
+.bal-net.zero { color: var(--text-dim); }
+
+/* transactions (grouped by recipient) */
+.tx-block { padding: 0 16px; }
+
+.tx-hdr {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+
+.tx-hdr-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.tx-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.tx-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--blue-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.tx-group-to-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.tx-group-to {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue);
+  flex: 1;
+}
+
+.tx-group-total {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.tx-group-body { padding: 12px 16px; }
+
+.tx-sender-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.tx-sender-row:last-child { border-bottom: none; }
+
+.tx-sender-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-family: var(--mono);
+}
+
+.tx-sender-amt {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.settled-ok {
+  text-align: center;
+  padding: 32px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  line-height: 2.4;
+}
+
+/* ── BOTTOM ACTIONS ─── */
+.bottom-actions {
+  display: flex;
+  gap: 8px;
+  padding: 16px 16px 36px;
+}
+
+.btn-copy-result {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  min-height: 46px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+  background: var(--blue-soft);
+  color: var(--blue);
+  border: 1px solid var(--blue-bord);
+}
+
+.btn-copy-result:active { opacity: 0.75; }
+
+/* ── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text);
+  border: 1px solid var(--text);
+  color: #FFFFFF;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px 18px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: transform 0.22s ease;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(20,20,30,0.18);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast, .btn-plus, .btn-save, .btn-cancel, .btn-copy-result, .cchip { transition: none; }
+}
+</style><style>
+:root{--orange:#253d5b;--orange-soft:#edf2f8;--orange-bord:#bacadd;--blue:#527296;--blue-soft:#eef3fa;--blue-bord:#c5d4e6;--green:#5e8b71;--red:#b6686d;--text:#33445d;--text-dim:#8290a4;--text-label:#6e7e95;--border:#dde5ef;--surface-2:#f4f7fb;--bg:#fff}body{min-height:0;overflow:hidden}.app{max-width:820px;min-height:0;border:1px solid var(--border);border-radius:12px;overflow:hidden}.header{position:static;padding:16px 24px;box-shadow:none;background:#f4f7fb}.header-title{font-size:15px;letter-spacing:0;font-weight:800}.header-title span{color:var(--text)}.btn-reset{font-size:12px;border-radius:6px;padding:7px 12px;color:#6e7e95}.sec-label{font-size:16px;font-weight:800;letter-spacing:0}.sec-hdr,.input-row,.chips-wrap,.exp-form,.exp-list,.exp-total,.bottom-actions{padding-left:24px;padding-right:24px}.field,.fselect{border-radius:7px}.btn-save,.btn-copy-result,.btn-plus,.btn-add-exp{border-radius:7px}.chip,.check-chip{border-radius:20px}.exp-card,.balance-box,.tx-group{border-radius:10px;overflow:hidden}.form-lbl{font-size:13px}.header-title:before{content:'함께 쓴 금액, 깔끔하게 나누기';font-size:15px}.header-title{font-size:0}.header-title span{display:none}.bottom-actions{padding-bottom:24px}#settleSection{padding:0 24px}#settleSection>.sec-hdr{padding-left:0;padding-right:0}.round-note{padding:0 24px 12px;color:#8290a4;font-size:12px}@media(max-width:520px){.sec-hdr,.input-row,.chips-wrap,.exp-form,.exp-list,.exp-total,.bottom-actions{padding-left:16px;padding-right:16px}.header{padding:14px 16px}#settleSection{padding:0 16px}}
+</style>
+
+</head><body><div class="app">
+
+  <!-- STICKY HEADER -->
+  <header class="header">
+    <span class="header-title">야볼 <span>정산 계산기</span></span>
+    <button class="btn-reset" id="btnReset">초기화</button>
+  </header>
+
+  <!-- SECTION 1: PARTICIPANTS -->
+  <div class="sec-hdr">
+    <span class="sec-label">참여자</span>
+    <span class="sec-count" id="cntP">0명</span>
+  </div>
+  <div class="input-row">
+    <input class="field" type="text" id="inName" placeholder="이름 입력" maxlength="20"
+           autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="btn-plus" id="btnAddP" aria-label="추가">+</button>
+  </div>
+  <div class="chips-wrap" id="chipsList">
+    <div class="empty" id="emptyP" style="padding:4px 0 12px;text-align:left">2명 이상 추가하세요</div>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <!-- SECTION 2: EXPENSES -->
+  <div class="sec-hdr">
+    <span class="sec-label">지출내역</span>
+    <span class="sec-count" id="cntE">0건</span>
+    <button class="btn-add-exp" id="btnOpenForm" style="margin-left:8px">+ 추가</button>
+  </div>
+
+  <div class="exp-form" id="expForm">
+    <div class="form-row">
+      <span class="form-lbl">차수</span>
+      <select class="fselect" id="inRound">
+        <option value="1">1차</option>
+        <option value="2">2차</option>
+        <option value="3">3차</option>
+        <option value="4">4차</option>
+        <option value="5">5차</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <span class="form-lbl">항목</span>
+      <input class="field" type="text" id="inDesc" placeholder="예: 저녁 식사" maxlength="20" autocomplete="off">
+    </div>
+    <div class="form-row">
+      <span class="form-lbl">금액</span>
+      <input class="field mono" type="tel" id="inAmt" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="form-row">
+      <span class="form-lbl">계산자</span>
+      <select class="fselect" id="inPayer"></select>
+    </div>
+    <div class="form-row" style="align-items:flex-start">
+      <span class="form-lbl">참여자</span>
+      <div class="check-chips" id="inParts"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" id="btnCancelExp">취소</button>
+      <button class="btn-save" id="btnSaveExp">저장</button>
+    </div>
+  </div>
+
+  <div class="exp-list" id="expList">
+    <div class="empty" id="emptyE">지출을 추가하면 여기에 표시됩니다</div>
+  </div>
+  <div class="exp-total" id="expTotal">
+    <span class="exp-total-lbl">총 지출</span>
+    <span class="exp-total-val" id="expTotalVal">₩0</span>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <!-- SECTION 3: SETTLEMENT (live) -->
+  <div id="settleSection">
+    <div class="sec-hdr">
+      <span class="sec-label">정산결과</span>
+    </div>
+    <div id="settleContent">
+      <div class="empty">참여자와 지출을 추가하면<br>정산 결과가 실시간으로 표시됩니다</div>
+    </div>
+  </div>
+
+  <div class="bottom-actions">
+    <button class="btn-copy-result" id="btnCopyResult">결과 복사하기</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import {settleGroupExpenses} from "./settlement-logic.js?v=20261010-community-final";
+const $ = id => document.getElementById(id);
+
+const S = { people: [], expenses: [] };
+let formChecked = new Set();
+let editingIndex = null;
+
+function won(n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); }
+function initial(s) { return s.charAt(0).toUpperCase(); }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── UPDATE (call after every state change) ───────────────────
+function update(scrollToSettle) {
+  const total = S.expenses.reduce((s, e) => s + e.amount, 0);
+  const n = S.people.length;
+
+  $('cntP').textContent = n + '명';
+  $('cntE').textContent = S.expenses.length + '건';
+  $('expTotalVal').textContent = won(total);
+  $('expTotal').style.display = S.expenses.length > 0 ? 'flex' : 'none';
+
+  renderPeople();
+  renderExpenses();
+  renderSettle();
+
+  if (scrollToSettle && S.people.length >= 2 && S.expenses.length > 0) {
+    setTimeout(() => $('settleSection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  }
+}
+
+// ── PARTICIPANTS ─────────────────────────────────────────────
+function renderPeople() {
+  const wrap = $('chipsList');
+  wrap.querySelectorAll('.chip').forEach(c => c.remove());
+
+  $('emptyP').style.display = S.people.length === 0 ? '' : 'none';
+
+  S.people.forEach((name, i) => {
+    const div = document.createElement('div');
+    div.className = 'chip';
+    div.innerHTML =
+      '<div class="chip-av">' + initial(name) + '</div>' +
+      '<span class="chip-name">' + esc(name) + '</span>' +
+      '<button class="chip-x" data-i="' + i + '" aria-label="' + esc(name) + ' 제거">×</button>';
+    wrap.appendChild(div);
+  });
+
+  wrap.querySelectorAll('.chip-x').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const removed = S.people[+btn.dataset.i];
+      if (S.expenses.some(exp => exp.payer === removed || exp.members.includes(removed))) {
+        toast('이 참여자의 지출을 먼저 수정하거나 삭제해 주세요');
+        return;
+      }
+      S.people.splice(+btn.dataset.i, 1);
+      update();
+    });
+  });
+}
+
+function addPerson() {
+  if (S.people.length >= 20) { toast('참여자는 최대 20명까지 추가할 수 있습니다'); return; }
+  const inp = $('inName');
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  if (S.people.includes(name)) { toast('이미 있는 이름입니다'); inp.select(); return; }
+  S.people.push(name);
+  inp.value = '';
+  update();
+  inp.focus();
+}
+
+$('btnAddP').addEventListener('click', addPerson);
+$('inName').addEventListener('keydown', e => { if (e.key === 'Enter') addPerson(); });
+
+// ── EXPENSES ─────────────────────────────────────────────────
+function renderExpenses() {
+  const list = $('expList');
+  list.querySelectorAll('.exp-card').forEach(c => c.remove());
+  $('emptyE').style.display = S.expenses.length === 0 ? '' : 'none';
+
+  S.expenses.forEach((exp, i) => {
+    const div = document.createElement('div');
+    div.className = 'exp-card';
+    div.innerHTML =
+      '<div class="exp-card-top">' +
+        '<span class="exp-seq-lbl">' + exp.round + '차</span>' +
+        '<span class="exp-desc">' + esc(exp.desc) + '</span>' +
+        '<span class="exp-amt">' + won(exp.amount) + '</span>' +
+        '<button class="btn-edit" data-i="' + i + '" aria-label="수정">✎</button>' +
+        '<button class="btn-del" data-i="' + i + '" aria-label="삭제">×</button>' +
+      '</div>' +
+      '<div class="exp-card-bot">' +
+        '<div class="bot-row"><span class="lbl-tiny">결제</span><span class="tag-payer">' + esc(exp.payer) + '</span></div>' +
+        '<div class="bot-row bot-row-members"><span class="lbl-tiny">참여</span><span class="tag-members">' + exp.members.map(esc).join(' · ') + '</span></div>' +
+      '</div>';
+    list.appendChild(div);
+  });
+
+  list.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openExpForm(+btn.dataset.i);
+    });
+  });
+
+  list.querySelectorAll('.btn-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = +btn.dataset.i;
+      if (editingIndex === i) closeExpForm();
+      S.expenses.splice(i, 1);
+      update();
+    });
+  });
+}
+
+// expense form (editIndex omitted → new entry, provided → edit existing)
+function openExpForm(editIndex) {
+  if (S.people.length < 2) { toast('참여자를 2명 이상 추가하세요'); return; }
+
+  editingIndex = (typeof editIndex === 'number') ? editIndex : null;
+  const exp = editingIndex !== null ? S.expenses[editingIndex] : null;
+
+  const sel = $('inPayer');
+  sel.innerHTML = '';
+  S.people.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    sel.appendChild(o);
+  });
+  if (exp) sel.value = exp.payer;
+
+  formChecked = new Set(exp ? exp.members : S.people);
+  const box = $('inParts');
+  box.innerHTML = '';
+  S.people.forEach(p => {
+    const chip = document.createElement('div');
+    chip.className = 'cchip' + (formChecked.has(p) ? ' on' : '');
+    chip.textContent = p;
+    chip.addEventListener('click', () => {
+      if (formChecked.has(p)) { formChecked.delete(p); chip.classList.remove('on'); }
+      else { formChecked.add(p); chip.classList.add('on'); }
+    });
+    box.appendChild(chip);
+  });
+
+  $('inRound').value = exp ? exp.round : 1;
+  $('inDesc').value = exp ? exp.desc : '';
+  $('inAmt').value = exp ? exp.amount.toLocaleString('ko-KR') : '';
+  $('btnSaveExp').textContent = exp ? '수정' : '저장';
+
+  $('expForm').classList.add('open');
+  $('btnOpenForm').style.display = 'none';
+  setTimeout(() => $('inDesc').focus(), 50);
+}
+
+function closeExpForm() {
+  $('expForm').classList.remove('open');
+  $('btnOpenForm').style.display = '';
+  $('inDesc').value = '';
+  $('inAmt').value = '';
+  $('btnSaveExp').textContent = '저장';
+  editingIndex = null;
+}
+
+$('btnOpenForm').addEventListener('click', () => openExpForm());
+$('btnCancelExp').addEventListener('click', closeExpForm);
+
+$('inAmt').addEventListener('input', function () {
+  const raw = this.value.replace(/[^0-9]/g, '');
+  this.value = raw ? parseInt(raw, 10).toLocaleString('ko-KR') : '';
+});
+
+$('btnSaveExp').addEventListener('click', () => {
+  const round = parseInt($('inRound').value, 10);
+  const desc = $('inDesc').value.trim();
+  const raw = $('inAmt').value.replace(/[^0-9]/g, '');
+  const amount = parseInt(raw, 10);
+  const payer = $('inPayer').value;
+  const members = [...formChecked];
+
+  if (!desc) { toast('항목명을 입력하세요'); $('inDesc').focus(); return; }
+  if (!raw || !Number.isSafeInteger(amount) || amount <= 0 || amount > 1000000000000) { toast('금액을 입력하세요'); $('inAmt').focus(); return; }
+  if (members.length === 0) { toast('참여자를 1명 이상 선택하세요'); return; }
+
+  if (editingIndex !== null) {
+    Object.assign(S.expenses[editingIndex], { round, desc, amount, payer, members });
+  } else {
+    S.expenses.push({ round, desc, amount, payer, members });
+  }
+  closeExpForm();
+  update(true); // scroll to settlement after saving
+});
+
+// ── SETTLEMENT ───────────────────────────────────────────────
+function calcSettle() {return settleGroupExpenses(S.people,S.expenses);}
+
+// group transactions by recipient so each receiver appears as a single bundled card
+function groupByRecipient(txs) {
+  const map = new Map();
+  txs.forEach(tx => {
+    if (!map.has(tx.to)) map.set(tx.to, { to: tx.to, total: 0, items: [] });
+    const g = map.get(tx.to);
+    g.total += tx.amt;
+    g.items.push(tx);
+  });
+  return [...map.values()];
+}
+
+function renderSettle() {
+  const box = $('settleContent');
+
+  if (S.people.length < 2 || S.expenses.length === 0) {
+    box.innerHTML = '<div class="empty">참여자와 지출을 추가하면<br>정산 결과가 실시간으로 표시됩니다</div>';
+    return;
+  }
+
+  const { bal, txs } = calcSettle();
+  const groups = groupByRecipient(txs);
+
+  let h = '<div class="balance-box">' +
+    '<div class="bal-head">' +
+      '<span class="bh-name">참여자</span>' +
+      '<span class="bh-paid">결제액</span>' +
+      '<span class="bh-net">잔액</span>' +
+    '</div>';
+
+  S.people.forEach(p => {
+    const paid = S.expenses.filter(e => e.payer === p).reduce((s, e) => s + e.amount, 0);
+    const net = bal[p] || 0;
+    const cls = net > 0.5 ? 'pos' : net < -0.5 ? 'neg' : 'zero';
+    const sign = net > 0.5 ? '+' : net < -0.5 ? '−' : '';
+    h += '<div class="bal-row">' +
+      '<span class="bal-name">' + esc(p) + '</span>' +
+      '<span class="bal-paid">' + won(paid) + '</span>' +
+      '<span class="bal-net ' + cls + '">' + sign + won(Math.abs(net)) + '</span>' +
+    '</div>';
+  });
+
+  h += '</div>';
+
+  h += '<div class="tx-block">' +
+    '<div class="tx-hdr">' +
+      '<span class="tx-hdr-lbl">SETTLEMENT — ' + groups.length + '명에게</span>' +
+    '</div>';
+
+  if (groups.length === 0) {
+    h += '<div class="settled-ok">모든 금액이 정산되었습니다<br>추가 송금 없음 ✓</div>';
+  } else {
+    groups.forEach(g => {
+      h += '<div class="tx-group">' +
+        '<div class="tx-group-head">' +
+          '<span class="tx-group-to-lbl">TO</span>' +
+          '<span class="tx-group-to">' + esc(g.to) + '</span>' +
+          '<span class="tx-group-total">' + won(g.total) + '</span>' +
+        '</div>' +
+        '<div class="tx-group-body">' +
+        g.items.map(tx =>
+          '<div class="tx-sender-row">' +
+            '<span class="tx-sender-name">' + esc(tx.from) + '</span>' +
+            '<span class="tx-sender-amt">−' + won(tx.amt) + '</span>' +
+          '</div>'
+        ).join('') +
+        '</div>' +
+      '</div>';
+    });
+  }
+
+  h += '</div>';
+  box.innerHTML = h;
+}
+
+// ── SHARE / COPY (bottom bar) ─────────────────────────────────
+function buildResultText() {
+  if (S.people.length < 2 || S.expenses.length === 0) return null;
+  const total = S.expenses.reduce((s, e) => s + e.amount, 0);
+
+  const lines = ['[야볼 정산 결과]', ''];
+  lines.push('참여자: ' + S.people.join(', ') + ' (' + S.people.length + '명)');
+  lines.push('총 지출: ' + won(total));
+  lines.push('');
+  lines.push('── 지출 내역 ──');
+
+  const {allocations}=calcSettle();
+  S.expenses.forEach((exp,index)=>{
+    lines.push('',exp.round+'차 · '+exp.desc,'결제자: '+exp.payer+' / 총 '+won(exp.amount));
+    lines.push('부담액: '+Object.entries(allocations[index]).map(([name,share])=>name+' '+won(share)).join(', '));
+  });
+
+  lines.push('');
+  lines.push('── 최종 정산 ──');
+
+  const { txs } = calcSettle();
+  const groups = groupByRecipient(txs);
+  if (groups.length === 0) {
+    lines.push('모든 금액이 정산되었습니다. 추가 송금 없음 ✓');
+  } else {
+    groups.forEach(g => {
+      lines.push('');
+      lines.push(g.to + '님이 받을 금액: ' + won(g.total));
+      g.items.forEach(tx => lines.push('  ' + tx.from + ' → ' + won(tx.amt)));
+    });
+  }
+
+  return lines.join('\n').trim();
+}
+
+$('btnCopyResult').addEventListener('click', () => {
+  const text = buildResultText();
+  if (!text) { toast('정산 결과가 없습니다'); return; }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => toast('결과가 복사되었습니다'));
+  } else {
+    toast('복사를 지원하지 않는 환경입니다');
+  }
+});
+
+// ── RESET ────────────────────────────────────────────────────
+$('btnReset').addEventListener('click', () => {
+  if (!confirm('모든 데이터를 초기화할까요?')) return;
+  S.people = [];
+  S.expenses = [];
+  closeExpForm();
+  update();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ── INIT ─────────────────────────────────────────────────────
+update();
+const sendHeight=()=>parent.postMessage({type:'settlement-height',height:document.querySelector('.app').scrollHeight},location.origin);
+new ResizeObserver(sendHeight).observe(document.querySelector('.app'));
+sendHeight();
+</script>
+</body></html>
