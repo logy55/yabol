@@ -4,6 +4,7 @@ import {TableKit} from '@tiptap/extension-table';
 import Image from '@tiptap/extension-image';
 import {normalizeDocument,imageIndexes,documentText,plainDocument} from '../dist/rich-body.js';
 import {yabolticons,getYabolticon} from '../dist/yabolticons.js';
+import {validYoutubeId,youtubeVideoId,youtubeEmbedUrl,youtubeWatchUrl} from '../dist/youtube.js';
 
 const LocalImage=Image.extend({
   addAttributes(){return {...this.parent?.(),assetIndex:{default:null,renderHTML:attrs=>({'data-asset-index':attrs.assetIndex})}};},
@@ -19,16 +20,30 @@ const Yabolticon=Node.create({
     return ['span',mergeAttributes({'data-yabol-id':item.id,class:`yabolticon yabol-${item.id}`,role:'img','aria-label':`야볼티콘 ${item.label}`,title:item.label,contenteditable:'false'})];
   }
 });
+const Youtube=Node.create({
+  name:'youtube',group:'block',atom:true,draggable:true,
+  addAttributes(){return{videoId:{default:null,rendered:false}};},
+  // URLs enter through the dedicated picker, never arbitrary pasted iframe HTML.
+  parseHTML(){return[];},
+  renderHTML({node}){
+    const id=node.attrs.videoId;
+    if(!validYoutubeId(id))return['div',{},'유튜브 주소를 확인해 주세요.'];
+    return['figure',{class:'youtube-video','data-youtube-id':id,contenteditable:'false'},
+      ['div',{class:'youtube-player'},['iframe',{src:youtubeEmbedUrl(id),title:'유튜브 동영상',width:640,height:360,loading:'lazy',referrerpolicy:'strict-origin-when-cross-origin',allow:'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',allowfullscreen:''}]],
+      ['figcaption',['a',{href:youtubeWatchUrl(id),target:'_blank',rel:'noopener noreferrer'},'YouTube에서 보기']]];
+  }
+});
 
 export function createPostEditor({root,onFiles,onUpdate,onError,onPreview}){
   const toolbar=root.querySelector('.editor-toolbar');
   const stickerPicker=root.querySelector('.yabol-picker');
   const tablePicker=root.querySelector('.table-picker');
+  const youtubePicker=root.querySelector('.youtube-picker'),youtubeInput=root.querySelector('#youtube-url'),youtubeError=root.querySelector('#youtube-error');
   let savedSelection=null;
   let editor;
   editor=new Editor({
     element:root.querySelector('#post-editor'),
-    extensions:[StarterKit.configure({link:false,heading:{levels:[2,3]}}),LocalImage.configure({allowBase64:false}),TableKit.configure({table:{resizable:true}}),Yabolticon],
+    extensions:[StarterKit.configure({link:false,heading:{levels:[2,3]}}),LocalImage.configure({allowBase64:false}),TableKit.configure({table:{resizable:true}}),Yabolticon,Youtube],
     content:{type:'doc',content:[{type:'paragraph'}]},
     editorProps:{
       attributes:{role:'textbox','aria-label':'내용','aria-multiline':'true','data-placeholder':'이야기를 적고 사진·표·야볼티콘을 넣어 보세요.'},
@@ -49,16 +64,16 @@ export function createPostEditor({root,onFiles,onUpdate,onError,onPreview}){
 
   function remember(){const {from,to}=editor.state.selection;savedSelection={from,to};}
   function focusChain(){const chain=editor.chain().focus();return savedSelection?chain.setTextSelection(savedSelection):chain;}
-  function finish(){savedSelection=null;stickerPicker.hidden=true;tablePicker.hidden=true;root.querySelector('[data-editor="stickers"]').setAttribute('aria-expanded','false');root.querySelector('[data-editor="table"]').setAttribute('aria-expanded','false');updateUI();}
+  function finish(){savedSelection=null;stickerPicker.hidden=true;tablePicker.hidden=true;youtubePicker.hidden=true;youtubeInput.value='';youtubeError.textContent='';for(const command of ['stickers','table','youtube'])root.querySelector(`[data-editor="${command}"]`).setAttribute('aria-expanded','false');updateUI();}
   toolbar.addEventListener('mousedown',event=>{if(event.target.closest('button')){remember();event.preventDefault();}});
   toolbar.addEventListener('click',event=>{
     const button=event.target.closest('[data-editor]');if(!button)return;
     const command=button.dataset.editor;
     if(command==='photo'){root.querySelector('#photos').click();return;}
     if(command==='preview'){onPreview();return;}
-    if(command==='stickers'||command==='table'){
-      remember();const picker=command==='stickers'?stickerPicker:tablePicker;const show=picker.hidden;
-      finish();remember();picker.hidden=!show;button.setAttribute('aria-expanded',String(show));return;
+    if(command==='stickers'||command==='table'||command==='youtube'){
+      remember();const picker=command==='stickers'?stickerPicker:command==='table'?tablePicker:youtubePicker;const show=picker.hidden;
+      finish();remember();picker.hidden=!show;button.setAttribute('aria-expanded',String(show));if(show&&command==='youtube')youtubeInput.focus();return;
     }
     const methods={bold:'toggleBold',italic:'toggleItalic',underline:'toggleUnderline',strike:'toggleStrike',bullet:'toggleBulletList',number:'toggleOrderedList',quote:'toggleBlockquote',rule:'setHorizontalRule',undo:'undo',redo:'redo'};
     if(methods[command]){focusChain()[methods[command]]().run();finish();}
@@ -68,6 +83,15 @@ export function createPostEditor({root,onFiles,onUpdate,onError,onPreview}){
     const chain=focusChain();event.target.value==='paragraph'?chain.setParagraph().run():chain.setHeading({level:Number(event.target.value)}).run();finish();
   });
   stickerPicker.addEventListener('click',event=>{const button=event.target.closest('[data-sticker]');if(button){focusChain().insertContent({type:'yabolticon',attrs:{id:button.dataset.sticker}}).run();finish();}});
+  function insertYoutube(){
+    const id=youtubeVideoId(youtubeInput.value);
+    if(!id){youtubeError.textContent='올바른 유튜브 영상 주소를 입력해 주세요.';youtubeInput.focus();return;}
+    focusChain().insertContent([{type:'youtube',attrs:{videoId:id}},{type:'paragraph'}]).run();onError('');finish();
+  }
+  root.querySelector('[data-insert-youtube]').onclick=insertYoutube;
+  root.querySelector('[data-cancel-youtube]').onclick=()=>{finish();editor.commands.focus();};
+  youtubeInput.addEventListener('input',()=>{youtubeError.textContent='';});
+  youtubeInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();insertYoutube();}else if(event.key==='Escape'){event.preventDefault();event.stopPropagation();finish();editor.commands.focus();}});
   root.querySelector('[data-insert-table]').addEventListener('click',()=>{
     const rows=Number(root.querySelector('#table-rows').value),cols=Number(root.querySelector('#table-columns').value);
     if(!Number.isInteger(rows)||rows<1||rows>20||!Number.isInteger(cols)||cols<1||cols>10){onError('표는 1~20행, 1~10열로 만들어 주세요.');return;}
