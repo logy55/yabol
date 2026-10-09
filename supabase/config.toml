@@ -1,0 +1,7 @@
+[functions.media-upload]
+# The function verifies the user JWT and approved board access itself.
+verify_jwt = false
+
+# Public username login/signup is validated inside this function.
+[functions.membership-auth]
+verify_jwt = false
