@@ -1594,5 +1594,239 @@
       "outputs/repair-proof/post-comment-meta-fixed.png",
       "outputs/repair-proof/post-comment-three-icons-preview.png"
     ]
+  },
+  "gallery_calendar_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "ea1bd20d57cbbfcad1ea1b78b2e871b91f3e18ca",
+    "workflow_run": 38005258735,
+    "cache_version": "20261010-gallery-calendar",
+    "migration": "028_team_game_results.sql",
+    "production_migration": "Success. No rows returned",
+    "write_editor": "Board, gallery and staff subboard selectors removed; current board/subcategory is fixed, home/popular/search default to free/chat. Editing retains original destination.",
+    "gallery": "First safe attached photo in square cover thumbnail, title underneath, bracket comment count, member badges/name and date; placeholder without photo.",
+    "account": "Deleted posts/comments link outside and 16px below account join-date card",
+    "game_results": "scheduled/win/loss/draw with two integer scores, validated client and server, shown in month labels and day cards; old save RPC retained",
+    "write_context_tests": {
+      "currentBoardDestinations": 12,
+      "editRetainsDestination": true,
+      "subboardUsesWritableFallback": true,
+      "boardSelectorsRemoved": true,
+      "freeTopicPreserved": true
+    },
+    "database_tests": {
+      "clientValidation": "passed",
+      "database": [
+        {
+          "mode": "fresh",
+          "existingSchedulePreserved": true,
+          "validResultsSaved": true,
+          "inconsistentScoresRejected": true,
+          "permissionsPreserved": true,
+          "revisionConflictRejected": true,
+          "legacyEditPreservesResult": true,
+          "deletedEventHidden": true
+        },
+        {
+          "mode": "upgrade",
+          "existingSchedulePreserved": true,
+          "validResultsSaved": true,
+          "inconsistentScoresRejected": true,
+          "permissionsPreserved": true,
+          "revisionConflictRejected": true,
+          "legacyEditPreservesResult": true,
+          "deletedEventHidden": true
+        }
+      ]
+    },
+    "responsive": [
+      {
+        "viewport": 320,
+        "cards": [
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 129.5,
+            "thumbnailWidth": 129.5,
+            "titleBelow": true,
+            "width": 129.5
+          },
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 129.5,
+            "thumbnailWidth": 129.5,
+            "titleBelow": true,
+            "width": 129.5
+          }
+        ],
+        "scrollWidth": 305,
+        "width": 305
+      },
+      {
+        "viewport": 390,
+        "cards": [
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 164.5,
+            "thumbnailWidth": 164.5,
+            "titleBelow": true,
+            "width": 164.5
+          },
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 164.5,
+            "thumbnailWidth": 164.5,
+            "titleBelow": true,
+            "width": 164.5
+          }
+        ],
+        "scrollWidth": 375,
+        "width": 375
+      },
+      {
+        "viewport": 760,
+        "cards": [
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 219,
+            "thumbnailWidth": 219,
+            "titleBelow": true,
+            "width": 219
+          },
+          {
+            "icons": [
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              },
+              {
+                "height": 22,
+                "loaded": true,
+                "width": 22
+              }
+            ],
+            "thumbnailHeight": 219,
+            "thumbnailWidth": 219,
+            "titleBelow": true,
+            "width": 219
+          }
+        ],
+        "scrollWidth": 745,
+        "width": 745
+      }
+    ],
+    "chrome_production": {
+      "writeBoardSelectorAbsent": true,
+      "galleryPhotoCreatedInAttendance": true,
+      "galleryThumbnailPixels": [
+        265,
+        265
+      ],
+      "photoLoaded": true,
+      "trashOutsideAndBelowAccountCard": true,
+      "scheduledGameSaved": true,
+      "mismatchBlocked": true,
+      "win8to3PersistedAfterReload": true,
+      "editFormRetainsResult": true,
+      "testPostRemoved": true,
+      "testEventRemoved": true
+    },
+    "test_content": {
+      "post_id": "3b84272a-c6d2-4199-bc1c-b2f77ca18dd5",
+      "calendar_event_id": "a89d40f1-5af0-4e34-b632-f1453a16f977",
+      "cleanup": "soft-deleted after validation; existing user content not edited"
+    },
+    "screenshots": [
+      "outputs/repair-proof/gallery-cards-fixed.png",
+      "outputs/repair-proof/gallery-three-icons-preview.png",
+      "outputs/repair-proof/calendar-result-saved.png"
+    ],
+    "limitations": [
+      "Responsive iframe previews tested in Chrome; actual phone was not directly operated"
+    ]
   }
 }
