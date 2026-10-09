@@ -210,7 +210,13 @@ document.querySelectorAll('[data-site-name]').forEach(el=>el.textContent=config.
 document.querySelector('#team-options').innerHTML=teamChoices();
 updateAccount();
 if(!ready)await render();
+let identityTask=null,identityTaskKey=null;
 async function refreshIdentity(nextUser){
+  const key=nextUser?.id||'guest';if(identityTask&&identityTaskKey===key)return identityTask;
+  identityTaskKey=key;const task=performIdentityRefresh(nextUser);identityTask=task;
+  try{return await task;}finally{if(identityTask===task){identityTask=null;identityTaskKey=null;}}
+}
+async function performIdentityRefresh(nextUser){
   const changed=user?.id!==nextUser?.id;if(changed){user=null;memberProfile=null;}const epoch=++authEpoch;accessLoading=true;posts=[];menuPermissions={};allowedBoards=new Set();writableBoards=new Set();clearPrivatePhotos();
   if(changed){document.querySelector('#write-dialog').close();document.querySelector('#write-form').reset();}
   updateAccount();await render();
@@ -224,7 +230,7 @@ async function refreshIdentity(nextUser){
   try{const{data,error}=await db.rpc('get_menu_permissions');if(epoch!==authEpoch)return;if(error||!data)throw error||new Error('Missing permissions');menuPermissions=data;allowedBoards=new Set(Object.keys(boards).filter(key=>canReadBoard(key)));writableBoards=new Set(Object.keys(boards).filter(key=>canWriteBoard(key)));}catch{if(epoch!==authEpoch)return;toast('추가 게시판 권한을 확인하지 못했어요. 잠시 뒤 다시 로그인해 주세요.');}
   if(epoch!==authEpoch)return;accessLoading=false;await loadPosts(epoch);if(epoch===authEpoch)await render();
 }
-if(ready){try{const{createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.4');db=createClient(config.supabaseUrl,config.supabasePublishableKey);document.querySelector('#auth-submit').disabled=false;const{data,error}=await db.auth.getSession();if(error)throw error;db.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION')return;queueMicrotask(()=>refreshIdentity(session?.user||null).catch(()=>toast('게시글을 다시 불러오지 못했어요.')));});await refreshIdentity(data.session?.user||null);}catch{main.innerHTML='<div class="error-panel"><strong>커뮤니티에 연결하지 못했어요.</strong><p>저장 서비스 연결을 확인한 뒤 새로고침해 주세요.</p></div>';}}
+if(ready){try{const{createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.4');db=createClient(config.supabaseUrl,config.supabasePublishableKey);document.querySelector('#auth-submit').disabled=false;const{data,error}=await db.auth.getSession();if(error)throw error;db.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION')return;if(session?.user?.id===user?.id&&memberProfile){if(event==='TOKEN_REFRESHED')return;if(event==='SIGNED_IN'){queueMicrotask(()=>checkMembershipStatus().catch(()=>{}));return;}}queueMicrotask(()=>refreshIdentity(session?.user||null).catch(()=>toast('게시글을 다시 불러오지 못했어요.')));});await refreshIdentity(data.session?.user||null);}catch{main.innerHTML='<div class="error-panel"><strong>커뮤니티에 연결하지 못했어요.</strong><p>저장 서비스 연결을 확인한 뒤 새로고침해 주세요.</p></div>';}}
 
 
 if(ready){setInterval(()=>{if(document.visibilityState==='visible')void checkMembershipStatus().catch(()=>{});},60000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkMembershipStatus().catch(()=>{});});}
