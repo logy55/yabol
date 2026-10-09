@@ -1564,5 +1564,35 @@
       "Actual iPhone login/focus behavior has not been directly tested"
     ],
     "screenshot": "outputs/repair-proof/settlement-layout-fixed.png"
+  },
+  "post_comment_meta_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "2cad251e16e99ff4a6be43da93abc7ce6f262ed7",
+    "workflow_run": 37999594204,
+    "cache_version": "20261010-post-comment-meta",
+    "post_controls": "Moved to the right of the creation timestamp, labels 수정/삭제; original owner/moderator conditions retained",
+    "comment_metadata": "Identity and time/actions vertically centered; time/actions grouped; <=360px places metadata on another row",
+    "responsive_preview_widths": [
+      320,
+      390,
+      760
+    ],
+    "preview_source": "Extracted the actual article/comment templates and used the production memberName helper and styles",
+    "three_icons": "Crown, YB and team icons remain 22px wide; all visible without overlap; long nickname case included",
+    "chrome_production": {
+      "comment_vertical_center_difference_px": 0.0078125,
+      "post_controls_beside_time": true,
+      "old_bottom_controls_present": false,
+      "edit_dialog_opened_and_closed": true
+    },
+    "database_changes": false,
+    "production_content_changes": false,
+    "limitations": [
+      "Responsive browser previews verified; actual phone was not directly operated"
+    ],
+    "screenshots": [
+      "outputs/repair-proof/post-comment-meta-fixed.png",
+      "outputs/repair-proof/post-comment-three-icons-preview.png"
+    ]
   }
 }
