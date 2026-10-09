@@ -1,5 +1,5 @@
 export const adminBoards=Object.freeze({free:'게시판 · 자유게시판',humor:'게시판 · 유머게시판',recruit:'게시판 · 모집게시판',gallery_flash:'사진첩 · 벙개 사진',gallery_attendance:'사진첩 · 직관 사진',gallery_meetup:'사진첩 · 정모 사진',notice:'공지사항',staff_plot:'운영진 · 작당모의',staff_minutes:'운영진 · 회의록',yb_roster:'YB Holics · 선수단',yb_calendar:'YB Holics · 경기 일정',yb_holics:'YB Holics · 홀릭스 게시판'});
-export const publicMenus=Object.freeze(['free','humor','recruit','gallery_flash','gallery_attendance','gallery_meetup','notice','yb_roster','yb_calendar']);
+export const publicMenus=Object.freeze([]);
 export const boardMenus=Object.freeze({free:['free'],humor:['humor'],recruit:['recruit'],gallery:['gallery_flash','gallery_attendance','gallery_meetup'],notice:['notice'],staff:['staff_plot','staff_minutes'],yb:['yb_holics']});
 export function postMenu(board,category){if(board==='gallery')return category==='flash'?'gallery_flash':category==='attendance'?'gallery_attendance':category==='meme'?'gallery_flash':'gallery_meetup';if(board==='staff')return category==='minutes'?'staff_minutes':'staff_plot';return board==='yb'?'yb_holics':board;}
 export const statusLabels=Object.freeze({pending:'가입 대기',approved:'승인',rejected:'가입 거절',suspended:'이용 제한'});
@@ -42,6 +42,6 @@ export function summarizeMemberChanges(before,after){
   for(const [board,label] of Object.entries(adminBoards))if((before.permissions?.[board]||'default')!==(after.permissions?.[board]||'default'))changes.push(`${label}: ${accessLabels[after.permissions?.[board]]||'기본값'}`);
   return changes.join(' · ')||'설정 확인';
 }
-import {restrictionActive} from './restrictions.js?v=20261010-community-final';
+import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 
-import {getTeam} from './teams.js?v=20261010-community-final';
+import {getTeam} from './teams.js?v=20261010-member-fixes';

@@ -1,4 +1,4 @@
-import {accessDenied} from './access.js?v=20261010-community-final';
+import {accessDenied} from './access.js?v=20261010-member-fixes';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export const dateKey=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 export function monthCells(year,month){const start=new Date(year,month,1);start.setDate(1-start.getDay());return Array.from({length:42},(_,index)=>dateKey(new Date(start.getFullYear(),start.getMonth(),start.getDate()+index)));}

@@ -68,3 +68,15 @@ html{scrollbar-gutter:stable}@supports not (scrollbar-gutter:stable){html{overfl
 .main-notice-choice{display:flex!important;align-items:center;gap:9px;font-size:14px}.main-notice-choice input{width:auto;margin:0}.main-notice-choice[hidden]{display:none!important}
 
 .signup-yb-choice{display:flex!important;align-items:center;gap:9px}.signup-yb-choice input{width:auto;margin:0}.signup-yb-choice[hidden]{display:none!important}
+
+/* Keep mobile form focus at the normal page scale while retaining pinch zoom. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.comment-controls{display:flex;gap:12px;margin-left:auto}
+.comment-edit-form{display:grid;gap:12px;margin-top:12px}
+.comment-edit-form textarea{display:block;width:100%;margin-top:8px}
+.comment-edit-form>div{display:flex;gap:8px}
+.danger-button{color:#a12d39}
+.deleted-content-item{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:1px solid var(--line,#e2e6ec)}
+.deleted-content-item span{font-size:12px;color:#68758a}
+.deleted-content-item p{white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:700px){input:not([type=checkbox]):not([type=radio]),textarea,select{font-size:16px}.article-actions{flex-wrap:wrap}.comment-header{flex-wrap:wrap}}

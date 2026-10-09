@@ -1,4 +1,4 @@
-import anime from './anime.js?v=20261010-community-final';
+import anime from './anime.js?v=20261010-member-fixes';
 export function animateLadderBoard(holder,elapsed,slotMs,traceMs){
   const animations=[],reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   for(const path of holder.querySelectorAll('[data-ladder-path]')){

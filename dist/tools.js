@@ -1,7 +1,7 @@
-import {renderOnlineLadder} from './ladder-room.js?v=20261010-community-final';
-import {renderSettlement} from './settlement.js?v=20261010-community-final';
-import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-community-final';
-import {teams} from './teams.js?v=20261010-community-final';
+import {renderOnlineLadder} from './ladder-room.js?v=20261010-member-fixes';
+import {renderSettlement} from './settlement.js?v=20261010-member-fixes';
+import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
+import {teams} from './teams.js?v=20261010-member-fixes';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const money = value => `${value.toLocaleString('ko-KR')}원`;
 

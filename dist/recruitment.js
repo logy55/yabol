@@ -1,5 +1,5 @@
-import {memberName} from './teams.js?v=20261010-community-final';
-import {restrictionActive} from './restrictions.js?v=20261010-community-final';
+import {memberName} from './teams.js?v=20261010-member-fixes';
+import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 const previewResponses=new Map();
 export const canRespond=(actor,canRead)=>Boolean(actor&&actor.user_metadata?.status==='approved'&&!restrictionActive(actor.user_metadata)&&canRead);
 export function previewRecruitmentComments(id){return [...(previewResponses.get(id)?.values()||[])].map(item=>({...item.member,body:item.response==='attend'?'참석합니다.':'불참합니다.',created_at:item.created_at}));}

@@ -1,7 +1,7 @@
-import {animateLadderBoard,revealLadderResult} from './ladder-effects.js?v=20261010-community-final';
-import {trace,layout,lanePath,minBoardWidth} from './whozzie.js?v=20261010-community-final';
-import {memberName} from './teams.js?v=20261010-community-final';
-import {restrictionActive} from './restrictions.js?v=20261010-community-final';
+import {animateLadderBoard,revealLadderResult} from './ladder-effects.js?v=20261010-member-fixes';
+import {trace,layout,lanePath,minBoardWidth} from './whozzie.js?v=20261010-member-fixes';
+import {memberName} from './teams.js?v=20261010-member-fixes';
+import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const colours=['#4976b7','#d89445','#7b9a77','#aa79a9','#ca7475','#648c9d','#a79853','#818ac0','#cc925e','#6aab99','#a6816a','#a1718b'];
 const previewRooms=new Map();

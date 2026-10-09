@@ -1,4 +1,5 @@
-import {accessDenied} from './access.js?v=20261010-community-final';
+import {uploadCommunityPhoto} from './media.js?v=20261010-member-fixes';
+import {accessDenied} from './access.js?v=20261010-member-fixes';
 export const rosterRoles=Object.freeze({manager:'감독',coach:'코칭스태프',team_manager:'매니저',pitcher:'투수',catcher:'포수',infielder:'내야수',outfielder:'외야수'});
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const placeholder='./assets/profile-placeholder.svg';
@@ -22,12 +23,7 @@ function rosterGroups(members,{preview,canEdit,editMode=false}){
 }
 function rosterDialog(){return `<dialog class="dialog roster-dialog" id="roster-dialog"><div class="dialog-top"><h2 id="roster-form-title">선수 등록</h2><button class="icon-button" type="button" id="roster-close" aria-label="닫기">×</button></div><form id="roster-form"><fieldset id="roster-fields"><label>이름<input name="name" maxlength="50" required></label><div class="roster-form-row"><label>백넘버<input type="number" name="jersey_number" min="0" max="999" step="1"></label><label>포지션<select name="role">${Object.entries(rosterRoles).map(([role,label])=>`<option value="${role}">${label}</option>`).join('')}</select></label></div><label>프로필 사진<input type="file" name="photo_file" accept="image/jpeg,image/png,image/webp"></label><p class="roster-photo-help">JPG·PNG·WebP, 최대 10MB · 사진은 선수단에 공개됩니다.</p><img id="roster-photo-preview" class="roster-photo" src="${placeholder}" width="200" height="200" alt="프로필 사진 미리보기"><label class="roster-photo-remove"><input type="checkbox" name="remove_photo"> 사진 제거</label></fieldset><p class="form-error" id="roster-save-error" role="alert"></p><div class="roster-form-actions"><button class="text-button danger" id="roster-delete" type="button" hidden>선수 삭제</button><button class="primary" type="submit" id="roster-save">저장</button></div><div class="roster-delete-confirm" id="roster-delete-confirm" hidden><p>이 선수를 선수단에서 삭제할까요?</p><button type="button" class="secondary" id="roster-delete-cancel">취소</button><button type="button" class="primary" id="roster-delete-yes">삭제</button></div></form></dialog>`;}
 const readFile=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Photo read failed'));reader.readAsDataURL(file);});
-async function uploadPhoto(db,config,file,signal){
-  const{data:signature,error}=await db.functions.invoke('media-upload',{body:{action:'sign',board:'yb_roster'}});if(error)throw error;
-  const form=new FormData();form.set('file',file);for(const key of ['timestamp','signature','api_key','public_id','upload_preset','type'])form.set(key,String(signature[key]));
-  const response=await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(config.cloudinaryCloudName)}/image/upload`,{method:'POST',body:form,signal});if(!response.ok)throw new Error('Photo upload failed');
-  const uploaded=await response.json(),{data:asset,error:verifyError}=await db.functions.invoke('media-upload',{body:{action:'verify',upload:uploaded}});if(verifyError||!asset?.url)throw verifyError||new Error('Photo verification failed');return asset.url;
-}
+async function uploadPhoto(db,config,file,signal){if(signal?.aborted)throw new Error('취소되었습니다.');return uploadCommunityPhoto(db,config,file,'yb_roster');}
 
 export async function renderRoster(main,{preview=false,db,config,canRead,signedIn,canEdit=false,isCurrent,signal,notify=()=>{}}){
   if(!canRead){main.innerHTML=accessDenied('선수단',{signedIn});return;}

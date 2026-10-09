@@ -1,6 +1,6 @@
-import {memberName,teams} from './teams.js?v=20261010-community-final';
-import {adminBoards,statusLabels,roleLabels,accessLabels,effectivePermission,fullPermissions,summarizeMemberChanges,canManageMembers,canManageRoster,ybRoleLabels} from './admin-model.js?v=20261010-community-final';
-import {restrictionActive,restrictionLabel,hasRestriction,formatRestrictionDate,toSeoulInput,seoulInputToIso} from './restrictions.js?v=20261010-community-final';
+import {memberName,teams} from './teams.js?v=20261010-member-fixes';
+import {adminBoards,statusLabels,roleLabels,accessLabels,effectivePermission,fullPermissions,summarizeMemberChanges,canManageMembers,canManageRoster,ybRoleLabels} from './admin-model.js?v=20261010-member-fixes';
+import {restrictionActive,restrictionLabel,hasRestriction,formatRestrictionDate,toSeoulInput,seoulInputToIso} from './restrictions.js?v=20261010-member-fixes';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let previewState;
 function previewData(){
