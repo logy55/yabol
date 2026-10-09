@@ -1,5 +1,5 @@
 {
-  "status": "local-preview-unconnected",
+  "status": "deployed-connected",
   "local_url": "http://127.0.0.1:8768/",
   "verified": [
     "HTTP 200",
@@ -12,14 +12,26 @@
     "Search result",
     "Invalid WebMCP query rejected",
     "Photo preview loaded and removed",
-    "Unconnected authentication and submission disabled"
+    "GitHub Pages successful workflow",
+    "Gabia DNS records saved",
+    "HTTPS and Enforce HTTPS",
+    "Production DB schema and RLS",
+    "Server functions deployed",
+    "Cloudinary presets and server secret names saved",
+    "Real signup, initial admin approval, login, member list and identity display",
+    "GitHub Pages successful workflow",
+    "Gabia DNS records saved",
+    "HTTPS and Enforce HTTPS",
+    "Production DB schema and RLS",
+    "Server functions deployed",
+    "Cloudinary presets and server secret names saved",
+    "Real signup, initial admin approval, login, member list and identity display"
   ],
   "not_verified": [
-    "Supabase SQL execution and permissions in a real project",
-    "Real account signup and sign-in",
-    "Cross-user durable post/comment storage",
-    "Cloudinary upload and signature verification",
-    "GitHub Pages deployment"
+    "Production photo upload and private delivery",
+    "Durable posts/comments across two real members",
+    "Recruitment response across real members",
+    "Internet multi-device ladder synchronization"
   ],
   "public_config_has_credentials": false,
   "screenshots_requested": false,
@@ -1410,8 +1422,75 @@
       "limits": "Loopback-only test database with two synthetic accounts; real Supabase authentication and external devices not connected"
     },
     "limitations": [
-      "Production Supabase authentication, Cloudinary upload and internet multi-device latency are unverified until service connection",
-      "No GitHub Pages deployment or live domain DNS change performed"
+      "Production photo upload and private delivery",
+      "Durable posts/comments across two real members",
+      "Recruitment response across real members",
+      "Internet multi-device ladder synchronization"
     ]
+  },
+  "public_config_has_connection_settings": true,
+  "production_deployment_20261010": {
+    "date": "2026-10-10",
+    "status": "deployed-connected",
+    "site_url": "https://yabol.co.kr/",
+    "repository": "https://github.com/logy55/yabol",
+    "supabase_project": "yiosmfdqsvnadauxcxto",
+    "database_schema_through_migration": "026",
+    "site_tables_rls_enabled": "16/16",
+    "edge_functions": [
+      "membership-auth",
+      "media-upload"
+    ],
+    "cloudinary": {
+      "plan": "Free",
+      "cloud_name": "rvu3qaha",
+      "public_preset": "yabol_public",
+      "private_preset": "yabol_private",
+      "server_secret_saved": true
+    },
+    "first_admin": {
+      "username": "iris2you",
+      "approved": true,
+      "is_admin": true,
+      "real_login_and_member_list_verified": true
+    },
+    "verified": [
+      "GitHub Pages successful workflow",
+      "Gabia DNS records saved",
+      "HTTPS and Enforce HTTPS",
+      "Production DB schema and RLS",
+      "Server functions deployed",
+      "Cloudinary presets and server secret names saved",
+      "Real signup, initial admin approval, login, member list and identity display"
+    ],
+    "not_verified": [
+      "Production photo upload and private delivery",
+      "Durable posts/comments across two real members",
+      "Recruitment response across real members",
+      "Internet multi-device ladder synchronization"
+    ],
+    "screenshots": [
+      "../yabol-admin-live.png",
+      "../yabol-admin-approved.png",
+      "../photo-service-connected.png",
+      "../gabia-dns-connected.png"
+    ],
+    "secrets_in_public_source": false,
+    "latest_ui_deployment": {
+      "commit": "3666ff83e57d0df9534b3b1998ec308f73b44b83",
+      "workflow_run": "https://github.com/logy55/yabol/actions/runs/37969844694",
+      "status": "success",
+      "app_cache_version": "20261010-production-boardtabs",
+      "verified_in_live_chrome": [
+        "Gallery flash/attendance/meetup pages have no category tabs",
+        "Staff plot/minutes pages have no category tabs",
+        "Header dropdowns and free-board topic tabs retained"
+      ],
+      "auth_loading_fix": "Submit becomes enabled when createClient completes; signup dialog enabled in local browser",
+      "screenshots": [
+        "../yabol-gallery-tabs-removed.png",
+        "../yabol-staff-tabs-removed.png"
+      ]
+    }
   }
 }

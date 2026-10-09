@@ -1,6 +1,6 @@
 # 아이디 가입·승인·응원 구단 연결
 
-현재 로컬 시안에서는 가입 신청과 로그인이 비활성화되어 있습니다. 실제 프로젝트에 연결하려면 아래 서버 코드와 SQL을 함께 적용합니다.
+2026-10-10에 실제 Supabase 프로젝트에 연결했습니다. `iris2you`의 가입 신청·최초 어드민 승인·로그인과 회원관리 조회를 실제 도메인에서 확인했습니다. 아래 적용 순서는 새 프로젝트를 구성하거나 기존 프로젝트를 이관할 때 참고합니다.
 
 ## 가입과 표시
 
@@ -13,7 +13,7 @@
 1. 새 프로젝트는 `supabase/schema.sql`을 한 번 실행합니다. 기존 프로젝트는 적용한 버전 다음부터 `003_username_approval_and_teams.sql`, `004_staff_badges.sql`, `005_yb_badges.sql`, `006_free_board_topics.sql`, `007_gallery_attendance.sql`, `008_rich_post_body.sql`, `009_member_admin_permissions.sql`, `010_staff_member_management.sql`, `011_staff_subboards_and_roster.sql`, `012_humor_board_and_calendar.sql`, `013_submenu_permissions.sql`, `014_roster_editor.sql`, `015_roster_edit_roles.sql`, `016_timed_member_restrictions.sql`, `017_staff_holics_access.sql`, `018_public_team_calendar.sql`, `019_admin_member_team.sql` → 020부터 026까지의 후속 마이그레이션을 순서대로 실행합니다. 각 파일은 `supabase/migrations/`에 있으며 기존 회원 승인 상태는 유지합니다.
 2. `membership-auth` Edge Function을 배포합니다. 로그인 전 호출이 필요하므로 `supabase/config.toml`의 해당 함수 설정을 함께 적용합니다. 함수 안에서는 입력 검증·허용 Origin·시도 횟수 제한을 확인합니다.
 3. 서버에 `ALLOWED_ORIGINS`를 설정합니다. `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`는 서버 전용 환경값입니다. 서비스 키는 `dist/`에 넣지 않습니다. 프로젝트의 일반 공개 회원가입은 비활성화하고 이 가입 함수만 사용합니다. 관리자 Auth API로 내부 식별자를 만들기 때문에 사용자 이메일 인증과 SMTP는 가입에 사용하지 않습니다.
-4. `dist/config.js`에 Supabase URL과 공개 키를 입력합니다. 공개 배포와 실제 계정 테스트는 아직 수행하지 않았습니다.
+4. `dist/config.js`에 Supabase URL과 공개 키를 입력합니다. 현재 배포본에는 공개 설정이 적용돼 있습니다. 비밀 키는 서버에만 저장했습니다.
 
 ## 관리자 승인과 회원 권한
 
@@ -29,7 +29,7 @@
 
 말머리는 기존 `public.posts.category`를 사용합니다. 자유게시판 값은 `chat`, `info`, `question`이며 DB에서도 누락된 자유게시판 말머리는 `chat`으로 기본 설정합니다. 026은 기존 자유게시판의 `humor` 말머리를 `chat`으로 옮깁니다. 사진첩 메뉴는 `flash`(벙개 사진), `attendance`(직관 사진), `meetup`(정모 사진) 순서입니다. 기존 `meme` 자료는 DB에서 보존하지만 메뉴와 새 글 선택에서는 제외합니다. 기존 프로젝트는 007을 적용해 직관 사진을 저장할 수 있습니다. 운영진 게시판은 `plot`(작당모의)·`minutes`(회의록)으로 나눕니다. 그 외 게시판에는 말머리를 지정하지 않습니다. 읽기/쓰기는 각 서브메뉴에서 따로 확인합니다.
 
-006은 기존 정보공유·질문 글을 각각 정보·질문 말머리의 자유게시판 글로 옮기고 기존 자유게시판 글에는 잡담을 지정합니다. 글 ID·본문·작성자·사진·댓글·추천·작성/수정 시간을 유지합니다. 공개 업로드 티켓의 게시판도 자유게시판으로 바꾸며 운영진·YB의 별도 권한·사진 보호·회원 승인 조건을 유지합니다. 예전 정보공유·질문 주소는 해당 자유게시판 필터로 이동합니다. 실제 운영 프로젝트 적용은 아직 수행하지 않았습니다.
+006은 기존 정보공유·질문 글을 각각 정보·질문 말머리의 자유게시판 글로 옮기고 기존 자유게시판 글에는 잡담을 지정합니다. 글 ID·본문·작성자·사진·댓글·추천·작성/수정 시간을 유지합니다. 공개 업로드 티켓의 게시판도 자유게시판으로 바꾸며 운영진·YB의 별도 권한·사진 보호·회원 승인 조건을 유지합니다. 예전 정보공유·질문 주소는 해당 자유게시판 필터로 이동합니다. 현재 운영 프로젝트에는 026까지 포함한 새 DB 스키마를 적용했습니다.
 
 ## 매직넘버 계산
 

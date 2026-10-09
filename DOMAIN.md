@@ -1,6 +1,6 @@
 # yabol.co.kr과 GitHub Pages 연결
 
-가비아에서 도메인을 구매하고, 홈페이지 파일은 GitHub Pages에 배포하는 구성을 사용할 수 있습니다. 현재 사이트는 localhost 미리보기이며 GitHub 저장소·공개 배포·도메인 DNS 변경은 아직 수행하지 않았습니다.
+2026-10-10에 가비아 DNS와 GitHub Pages를 연결했습니다. [https://yabol.co.kr/](https://yabol.co.kr/)의 실제 Chrome 접속과 HTTPS를 확인했고 GitHub Pages의 **Enforce HTTPS**를 켰습니다. 아래 레코드는 TTL 600으로 저장돼 있습니다.
 
 도메인은 사이트 주소, GitHub Pages는 화면 파일을 제공하는 호스팅, Supabase는 회원·게시글 저장, Cloudinary는 사진 저장을 담당합니다. 도메인 연결 자체로 회원가입이나 저장 기능이 활성화되지는 않습니다.
 
