@@ -1,0 +1,1417 @@
+{
+  "status": "local-preview-unconnected",
+  "local_url": "http://127.0.0.1:8768/",
+  "verified": [
+    "HTTP 200",
+    "HTML local asset references",
+    "JavaScript syntax",
+    "Edge Function TypeScript syntax",
+    "Desktop and mobile layout",
+    "Board navigation",
+    "Post details",
+    "Search result",
+    "Invalid WebMCP query rejected",
+    "Photo preview loaded and removed",
+    "Unconnected authentication and submission disabled"
+  ],
+  "not_verified": [
+    "Supabase SQL execution and permissions in a real project",
+    "Real account signup and sign-in",
+    "Cross-user durable post/comment storage",
+    "Cloudinary upload and signature verification",
+    "GitHub Pages deployment"
+  ],
+  "public_config_has_credentials": false,
+  "screenshots_requested": false,
+  "menu_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Free board, gallery and tools triggers have no down-arrow",
+      "Free board submenu label is 자유게시판 and opens only free-board posts",
+      "Gallery submenu has no aggregate item and is ordered 웃긴 짤방, 정모 사진, 벙개 사진"
+    ],
+    "screenshot": "../community-site-menu.png",
+    "superseded_parts": "Current navigation, header access and permission details are recorded in submenus_roster_calendar_update; other historical checks retained"
+  },
+  "brand_font_update": {
+    "date": "2026-10-09",
+    "logo_asset": "dist/assets/baseball-logo.png",
+    "verified_in_browser": [
+      "Header logo loads and replaces the old M 모아 text",
+      "White lettering and red stitching below the question mark visually checked",
+      "Body, navigation, heading, button and search input compute NanumSquareRound as the first font family",
+      "Desktop layout has no page-level horizontal overflow"
+    ],
+    "font_stylesheet": "https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css",
+    "screenshot": "../community-site-brand-font.png"
+  },
+  "account_menu_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Main navigation no longer contains the aggregate posts link",
+      "Second row no longer contains home, information and question navigation links",
+      "Guest account strip and search field are visible",
+      "Guest account route shows no member data and opens the login dialog"
+    ],
+    "verified_with_synthetic_data": [
+      "Signed-in account markup escapes nickname text",
+      "Email is confined to the account view instead of the header",
+      "Signed-out markup contains no prior member information",
+      "Malformed nickname metadata falls back without an exception"
+    ],
+    "not_verified": [
+      "Real signup, session restoration and logout against a connected Supabase project"
+    ],
+    "screenshot": "../community-site-account-menu.png",
+    "superseded_by": "membership_magic_update: email is no longer presented in the account view",
+    "superseded_parts": "Current navigation, header access and permission details are recorded in submenus_roster_calendar_update; other historical checks retained"
+  },
+  "membership_magic_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Browser title is exactly 야구보러갈래?",
+      "Main navigation trigger is 게시판; free-board submenu remains independent",
+      "Signup fields are login ID, nickname, region immediately below nickname, password, and 10 text-only team radio options",
+      "Signup form contains no email input and no team logo images",
+      "Selecting a second team unchecks the first team",
+      "Administrator approval notice appears at the top of signup",
+      "Unconnected signup/login submission remains disabled",
+      "Tools menu includes ladder game, settlement calculator and magic-number calculator",
+      "144-game season with 80-40 versus 75-45 calculates magic number 20 and 24 remaining games per team"
+    ],
+    "verified_with_synthetic_data": [
+      "Account header and all 10 team rows show logo nickname · region",
+      "All 10 supplied team images load, including the NC SVG",
+      "Nickname and region are escaped and unknown team IDs cannot introduce arbitrary images",
+      "Account presentation contains no internal authentication email identifier"
+    ],
+    "local_database_tests": {
+      "engine": "PGlite, fresh schema and incremental migrations",
+      "membership": {
+        "status": "passed",
+        "findings": [
+          "fresh: pending default, metadata bypass denial, member approval isolation, restricted boards, write gates, revocation, team/region feeds and server-only rate limit passed",
+          "migration: pending default, metadata bypass denial, member approval isolation, restricted boards, write gates, revocation, team/region feeds and server-only rate limit passed",
+          "Magic number: standard formula, clinched/unreachable cases and 100 draw-aware threshold checks passed",
+          "Identity: 10 text-only radio options, nickname/region escaping, approved-member logo markup and no email presentation passed"
+        ]
+      },
+      "existing_permissions_and_tools": {
+        "status": "passed",
+        "findings": [
+          "fresh: anonymous/nonmember/staff/YB/admin reads, direct post/search/comment/like isolation, membership grant denial, writes, revocation, and private attachment isolation passed",
+          "migration: anonymous/nonmember/staff/YB/admin reads, direct post/search/comment/like isolation, membership grant denial, writes, revocation, and private attachment isolation passed",
+          "380 expense settlements conserve money including remainders; 380 ladder layouts map participants one-to-one"
+        ]
+      }
+    },
+    "syntax_checks": "All 8 frontend modules and membership-auth TypeScript passed Node syntax checking",
+    "not_verified": [
+      "Real registration, administrator approval, sign-in, session restoration and logout in a connected Supabase project",
+      "Supabase Edge Function runtime and external deployment",
+      "Official live standings or ranking tiebreakers: magic number uses manually entered records and documented winning-percentage assumptions"
+    ],
+    "screenshots": [
+      "../community-site-signup.png",
+      "../community-site-member-identity.png",
+      "../community-site-magic-number.png"
+    ],
+    "identity_screenshot_is_synthetic": true,
+    "navigation_superseded_by": "free_topics_update: top menu is 자유게시판 and info/question are free-board topics"
+  },
+  "member_sample_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Board list contains no recommendation SVG icons and preserves recommendation counts 38, 24 and 15",
+      "Signup region input has no placeholder attribute",
+      "Header and first sample post author show NC 다이노스 logo and 이다영 · 관악",
+      "Sample account view shows NC 다이노스, 이다영 · 관악 and region 관악",
+      "Sample remains explicitly labelled and login button still says 로그인",
+      "Restricted staff board remains inaccessible despite the sample identity"
+    ],
+    "sample_scope": "Presentation only while backend configuration is empty; no account or permission created",
+    "screenshots": [
+      "../community-site-nc-sample.png",
+      "../community-site-signup-clean-region.png"
+    ]
+  },
+  "nc_logo_transparency_update": {
+    "date": "2026-10-09",
+    "change": "Removed white CSS backgrounds from member logo image and crop wrapper; existing NC SVG already has a transparent canvas",
+    "verified_in_browser": [
+      "Both header and post author logo image and wrapper compute rgba(0, 0, 0, 0) backgrounds",
+      "NC logo displays without a white box on the navy account strip",
+      "NC logo still displays beside 이다영 · 관악 in the board list"
+    ],
+    "image_file_edited": false,
+    "screenshot": "../community-site-nc-transparent.png"
+  },
+  "all_team_logo_transparency_update": {
+    "date": "2026-10-09",
+    "method": "Built-in image_gen background extraction for 9 raster images; original transparent NC SVG retained",
+    "alpha_validation": [
+      {
+        "name": "doosan-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1254,
+          1254
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          0,
+          116,
+          1219,
+          1134
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "hanwha-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1277,
+          1231
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          33,
+          43,
+          1263,
+          1195
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "kia-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1490,
+          1055
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          234,
+          115,
+          1322,
+          938
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "kiwoom-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1358,
+          1159
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          39,
+          29,
+          1292,
+          1135
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "kt-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1451,
+          1084
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          291,
+          159,
+          1125,
+          999
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "lg-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1261,
+          1247
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          33,
+          72,
+          1184,
+          1188
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "lotte-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1268,
+          1241
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          25,
+          21,
+          1238,
+          1191
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "samsung-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1235,
+          1274
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          79,
+          76,
+          1155,
+          1218
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "ssg-transparent.png",
+        "mode": "RGBA",
+        "size": [
+          1173,
+          1341
+        ],
+        "alpha_range": [
+          0,
+          255
+        ],
+        "alpha_bbox": [
+          12,
+          31,
+          1162,
+          1317
+        ],
+        "corners": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "verified_in_browser": [
+      "All 20 images in the 10-team white/navy comparison load successfully",
+      "All logo image backgrounds compute rgba(0, 0, 0, 0)",
+      "No rectangular white or black background behind any team badge at member display size"
+    ],
+    "original_files_preserved": true,
+    "prompt_record": "team-logo-transparency.md",
+    "screenshot": "../community-site-all-team-transparent.png",
+    "screenshot_is_synthetic": true
+  },
+  "kt_black_and_list_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Second free-board post displays KT logo 김보민 · 관악",
+      "KT logo computes brightness(0) without a bright drop shadow and keeps a transparent background",
+      "Board list contains zero recommendation cells",
+      "Desktop row now has four columns: board, title, author, time; no empty recommendation column remains",
+      "Board page has no horizontal overflow"
+    ],
+    "mobile_source_update": "Removed recommendation column from the mobile two-column board/title grid",
+    "sample_only": true,
+    "screenshot": "../community-site-kt-kim-sample.png"
+  },
+  "ten_member_samples_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Free-board list has 10 sample posts with one member badge per KBO team",
+      "NC 이다영 · 관악 and KT 김보민 · 관악 stay in the first two rows",
+      "All 10 team images load and every requested nickname/region matches"
+    ],
+    "added_members": [
+      {
+        "team": "hanwha",
+        "nickname": "강주연",
+        "region": "금천"
+      },
+      {
+        "team": "kiwoom",
+        "nickname": "송민경",
+        "region": "강서"
+      },
+      {
+        "team": "doosan",
+        "nickname": "김미강",
+        "region": "관악"
+      },
+      {
+        "team": "kia",
+        "nickname": "이길종",
+        "region": "동작"
+      },
+      {
+        "team": "lg",
+        "nickname": "윤건영",
+        "region": "은평"
+      },
+      {
+        "team": "samsung",
+        "nickname": "송규석",
+        "region": "군포"
+      },
+      {
+        "team": "ssg",
+        "nickname": "김태호",
+        "region": "시흥"
+      },
+      {
+        "team": "lotte",
+        "nickname": "김주연",
+        "region": "수원"
+      }
+    ],
+    "sample_only": true,
+    "screenshot": "../community-site-ten-member-samples.png",
+    "superseded_by": "staff_yb_and_right_alignment_update for KIA member name/region and badge roles"
+  },
+  "staff_yb_and_right_alignment_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "All 10 author identities align right; each nickname/region ends at the same column boundary without clipping",
+      "Gold crown precedes Hanwha logo and 강주연 · 금천; supplied gold PNG is unchanged",
+      "Silver crown precedes KIA logo and 김형주 · 영등포; computed grayscale(1) brightness(1.08)",
+      "YB SVG precedes SSG logo and 김태호 · 시흥; both badges load successfully",
+      "All team and role badge images in the list load successfully",
+      "Board recommendation icons and count cells remain absent"
+    ],
+    "yb_vector_export": {
+      "source": "C:\\Users\\이다영\\Desktop\\logos\\모자로고.ai",
+      "output": "C:\\Users\\이다영\\Documents\\Codex\\2026-10-07\\df\\outputs\\community-site\\dist\\assets\\yb-hat.svg",
+      "method": "Original PDF vector paths, no raster trace",
+      "paths": 4,
+      "transparent_canvas": true,
+      "original_white_fill_and_outline_preserved": true,
+      "red": "#e71f1b",
+      "color_reference": "Dominant red in Poppler rendering of the embedded ICC CMYK artwork"
+    },
+    "trusted_badges_local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "fresh: trusted roles, metadata spoof denial, self-assignment denial, role feeds, badge revocation and unchanged board access passed",
+        "fresh: YB badge follows explicit trusted membership; Auth spoof and self-assignment denied; public feeds, account RPC, revocation and approval gates passed",
+        "migration: trusted roles, metadata spoof denial, self-assignment denial, role feeds, badge revocation and unchanged board access passed",
+        "migration: YB badge follows explicit trusted membership; Auth spoof and self-assignment denied; public feeds, account RPC, revocation and approval gates passed",
+        "Presentation: crown precedes team logo and name; gold/silver roles and unknown-role fallback passed",
+        "Presentation: crown stays first when both badges apply, followed by YB, team logo and nickname · region"
+      ]
+    },
+    "syntax_checks": "Changed app, account, teams and sample modules passed Node syntax checking",
+    "sample_only": true,
+    "not_verified": [
+      "Connected Supabase accounts, actual administrator role/affiliation assignment and deployment"
+    ],
+    "screenshot": "../community-site-staff-yb-right.png"
+  },
+  "copyright_footer_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Full-width footer bar uses rgb(37, 61, 91), exactly matching the top navigation background",
+      "Centered light text reads © 2026 야구보러갈래? All rights reserved.",
+      "Footer extends from the left edge to the right edge of the page with no horizontal overflow"
+    ],
+    "year": "Uses the browser current year",
+    "layout": "Page flex layout keeps the footer at the bottom on short pages",
+    "screenshot": "../community-site-staff-yb-right.png"
+  },
+  "free_topics_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Top menu is 자유게시판; its dropdown contains only 자유게시판",
+      "Free-board tabs are 전체, 유머, 정보, 잡담, 질문; each topic filter contains only matching posts",
+      "Write dialog offers exactly four topics with 잡담 selected by default, and no standalone info/question board options",
+      "Switching to gallery hides and disables free-topic selection, keeping existing photo categories",
+      "Post list and article heading show the topic",
+      "Legacy info/question routes redirect to corresponding free-board topic filters",
+      "Home information panel reads free-board information posts",
+      "Write dialog has no horizontal overflow"
+    ],
+    "browser_results": {
+      "filters": [
+        {
+          "labels": [
+            "유머"
+          ],
+          "selected": "유머"
+        },
+        {
+          "labels": [
+            "정보",
+            "정보",
+            "정보",
+            "정보"
+          ],
+          "selected": "정보"
+        },
+        {
+          "labels": [
+            "잡담",
+            "잡담",
+            "잡담",
+            "잡담",
+            "잡담",
+            "잡담"
+          ],
+          "selected": "잡담"
+        },
+        {
+          "labels": [
+            "질문",
+            "질문",
+            "질문",
+            "질문"
+          ],
+          "selected": "질문"
+        }
+      ],
+      "legacyRoutes": [
+        {
+          "url": "http://127.0.0.1:8768/#/board/free?category=info",
+          "labels": [
+            "정보",
+            "정보",
+            "정보",
+            "정보"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8768/#/board/free?category=question",
+          "labels": [
+            "질문",
+            "질문",
+            "질문",
+            "질문"
+          ]
+        }
+      ],
+      "writeDefault": "chat",
+      "writeTopicChoices": [
+        "유머",
+        "정보",
+        "잡담",
+        "질문"
+      ],
+      "writeBoardChoices": [
+        "자유게시판",
+        "사진첩"
+      ],
+      "dropdown": [
+        "자유게시판"
+      ],
+      "detailHeading": "[정보] 직관 준비물 공유합니다",
+      "gallerySwitch": {
+        "freeHidden": true,
+        "freeDisabled": true,
+        "galleryHidden": false
+      },
+      "dialogHorizontalOverflow": false
+    },
+    "local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "fresh: database chat default, topic edits, invalid topic rejection, consolidated board access, unchanged gallery categories, approval and private-board gates passed",
+        "Migration preserves legacy IDs, authors, bodies, images, replies, likes and timestamps; maps info/question to free topics and existing free posts to chat",
+        "migration: database chat default, topic edits, invalid topic rejection, consolidated board access, unchanged gallery categories, approval and private-board gates passed",
+        "Sample data includes all four topics; old info/question entries are consolidated and member badges preserved"
+      ]
+    },
+    "source_migration": "supabase/migrations/006_free_board_topics.sql; included in fresh schema.sql",
+    "syntax_checks": "Changed app, navigation and sample modules passed Node syntax checking",
+    "not_verified": [
+      "Connected Supabase migration and real account post creation/editing"
+    ],
+    "screenshots": [
+      "../community-site-free-topics.png",
+      "../community-site-free-topic-write.png"
+    ],
+    "navigation_and_style_superseded_by": "pastel_gallery_update: free menu opens directly, pastel topic palette and attendance gallery category added",
+    "superseded_parts": "Current navigation, header access and permission details are recorded in submenus_roster_calendar_update; other historical checks retained"
+  },
+  "pastel_gallery_update": {
+    "date": "2026-10-09",
+    "verified_in_browser": [
+      "Clicking 자유게시판 from another board opens free board directly; zero free dropdown triggers remain",
+      "Photo dropdown has 웃긴 짤방, 정모 사진, 벙개 사진, 직관 사진",
+      "Attendance photo link opens only the attendance sample, and write dialog preselects 직관 사진",
+      "Humor pink, information blue, chat mint and question lavender pastel colors match between row tags and filter tabs",
+      "Selected topic keeps its pastel background and gains a dark border",
+      "Text contrast against each pastel background ranges from 5.48 to 6.22"
+    ],
+    "browser_results": {
+      "freeMenu": {
+        "colors": [
+          {
+            "background": "rgb(252, 231, 239)",
+            "color": "rgb(150, 55, 91)",
+            "label": "유머",
+            "topic": "humor"
+          },
+          {
+            "background": "rgb(229, 239, 255)",
+            "color": "rgb(52, 93, 145)",
+            "label": "정보",
+            "topic": "info"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "label": "잡담",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(237, 232, 251)",
+            "color": "rgb(102, 69, 144)",
+            "label": "질문",
+            "topic": "question"
+          }
+        ],
+        "freeDropdownTriggers": 0,
+        "popupHidden": true,
+        "rowColors": [
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(237, 232, 251)",
+            "color": "rgb(102, 69, 144)",
+            "topic": "question"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(237, 232, 251)",
+            "color": "rgb(102, 69, 144)",
+            "topic": "question"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(227, 244, 237)",
+            "color": "rgb(50, 107, 83)",
+            "topic": "chat"
+          },
+          {
+            "background": "rgb(229, 239, 255)",
+            "color": "rgb(52, 93, 145)",
+            "topic": "info"
+          },
+          {
+            "background": "rgb(252, 231, 239)",
+            "color": "rgb(150, 55, 91)",
+            "topic": "humor"
+          },
+          {
+            "background": "rgb(229, 239, 255)",
+            "color": "rgb(52, 93, 145)",
+            "topic": "info"
+          },
+          {
+            "background": "rgb(237, 232, 251)",
+            "color": "rgb(102, 69, 144)",
+            "topic": "question"
+          },
+          {
+            "background": "rgb(229, 239, 255)",
+            "color": "rgb(52, 93, 145)",
+            "topic": "info"
+          },
+          {
+            "background": "rgb(237, 232, 251)",
+            "color": "rgb(102, 69, 144)",
+            "topic": "question"
+          },
+          {
+            "background": "rgb(229, 239, 255)",
+            "color": "rgb(52, 93, 145)",
+            "topic": "info"
+          }
+        ],
+        "url": "http://127.0.0.1:8768/#/board/free"
+      },
+      "galleryDropdown": [
+        "웃긴 짤방",
+        "정모 사진",
+        "벙개 사진",
+        "직관 사진"
+      ],
+      "attendanceView": {
+        "active": "직관 사진",
+        "posts": [
+          "주말 직관의 기록2"
+        ],
+        "title": "직관 사진"
+      },
+      "attendanceWrite": {
+        "choices": [
+          "정모 사진",
+          "벙개 사진",
+          "웃긴 짤방",
+          "직관 사진"
+        ],
+        "selected": "attendance"
+      },
+      "activeTopic": {
+        "background": "rgb(252, 231, 239)",
+        "border": "rgb(150, 55, 91)",
+        "topic": "humor"
+      },
+      "textContrast": {
+        "humor": 5.95,
+        "info": 5.81,
+        "chat": 5.48,
+        "question": 6.22
+      }
+    },
+    "local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "fresh: existing gallery posts preserved; approved member can create/edit attendance photos and read them through public feed; other gallery categories and chat default work; invalid/free-board attendance values rejected",
+        "migration: existing gallery posts preserved; approved member can create/edit attendance photos and read them through public feed; other gallery categories and chat default work; invalid/free-board attendance values rejected"
+      ]
+    },
+    "source_migration": "supabase/migrations/007_gallery_attendance.sql; included in fresh schema.sql",
+    "syntax_checks": "Changed app, navigation and sample modules passed Node syntax checking",
+    "not_verified": [
+      "Connected Supabase migration and live attendance photo storage"
+    ],
+    "screenshot": "../community-site-pastel-gallery.png",
+    "superseded_parts": "Current navigation, header access and permission details are recorded in submenus_roster_calendar_update; other historical checks retained"
+  },
+  "member_admin_update": {
+    "date": "2026-10-09",
+    "mode": "Local sample admin console; no Supabase project connected",
+    "features": [
+      "Pending signup approval/rejection and suspension/reapproval",
+      "Member/staff/vice-staff grades with gold/silver crowns",
+      "Independent YB affiliation and administrator management flag",
+      "Per-member board defaults or deny/read/write overrides with effective permission preview",
+      "Search, status counts/filters, pagination, reset and recent change audit",
+      "Mobile member selection scrolls to the edit form"
+    ],
+    "browser_results": {
+      "status": "passed",
+      "checks": [
+        {
+          "check": "approval",
+          "stats": "가입 대기\n1\n승인\n11\n가입 거절\n0\n이용 정지\n0",
+          "audit": "가입신청 샘플 1\n\n승인 상태: 가입 대기 → 승인\n\n이다영 (샘플)\n2026. 10. 9. 오후 7:36:59"
+        },
+        {
+          "check": "grade_and_permissions",
+          "detail": "김보민 · 관악\n\nsample_kt · 가입 2026. 10. 6.\n\n승인\n가입 상태\n가입 대기\n승인\n가입 거절\n이용 정지\n회원 등급\n일반회원\n운영진\n부운영진\nYB Holics 소속\n회원 관리 권한\n\n운영진·부운영진은 기본적으로 운영진 게시판과 공지사항에 글을 쓸 수 있어요. YB 소속 회원은 YB 게시판을 이용할 수 있습니다. 회원 관리 권한은 모든 게시판의 읽기·쓰기와 이 관리 화면을 허용합니다.\n\n게시판별 권한\n게시판\n설정\n적용 권한\n자유게시판\n등급·소속 기본값\n접근 불가\n읽기만\n읽기·쓰기\n읽기·쓰기\n사진첩\n등급·소속 기본값\n접근 불가\n읽기만\n읽기·쓰기\n읽기·쓰기\n공지사항\n등급·소속 기본값\n접근 불가\n읽기만\n읽기·쓰기\n읽기·쓰기\n운영진 게시판\n등급·소속 기본값\n접근 불가\n읽기만\n읽기·쓰기\n읽기만\nYB Holics\n등급·소속 기본값\n접근 불가\n읽기만\n읽기·쓰기\n접근 불가\n\n읽기만 허용하면 글·댓글 작성과 사진 업로드가 제한됩니다. ‘기본값’을 선택하면 등급과 소속을 따릅니다.\n\n저장 완료\n변경사항 저장",
+          "row": "김보민 · 관악\nsample_kt · 부운영진\n승인"
+        },
+        {
+          "check": "pending_admin_denied",
+          "error": "회원 관리 권한은 승인된 회원에게 부여할 수 있습니다."
+        },
+        {
+          "check": "rejected_filter",
+          "total": "1명",
+          "members": "가입신청 샘플 2 · 마포\nsample_join_2 · 일반회원\n가입 거절"
+        },
+        {
+          "check": "member_search",
+          "total": "1명",
+          "members": "김보민 · 관악\nsample_kt · 부운영진\n승인"
+        },
+        {
+          "check": "suspension",
+          "effective": [
+            "접근 불가",
+            "접근 불가",
+            "접근 불가",
+            "접근 불가",
+            "접근 불가"
+          ],
+          "audit": "김보민\n\n승인 상태: 승인 → 이용 정지\n\n이다영 (샘플)\n2026. 10. 9. 오후 7:37:57\n가입신청 샘플 2\n\n승인 상태: 가입 대기 → 가입 거절\n\n이다영 (샘플)\n2026. 10. 9. 오후 7:37:56\n김보민\n\n등급: 일반회원 → 부운영진 · YB 소속 부여 · 운영진 게시판: 읽기만 · YB Holics: 접근 불가\n\n이다영 (샘플)\n2026. 10. 9. 오후 7:37:35\n가입신청 샘플 1\n\n승인 상태: 가입 대기 → 승인\n\n이다영 (샘플)\n2026. 10. 9. 오후 7:36:59"
+        },
+        {
+          "check": "badges_on_posts",
+          "icons": [
+            {
+              "alt": "부운영진 왕관",
+              "loaded": true
+            },
+            {
+              "alt": "YB Holics 회원",
+              "loaded": true
+            },
+            {
+              "alt": "KT 위즈 로고",
+              "loaded": true
+            }
+          ]
+        },
+        {
+          "check": "self_admin_protected",
+          "adminControlEnabled": false,
+          "statusControlEnabled": false
+        },
+        {
+          "check": "reset",
+          "stats": "가입 대기\n2\n승인\n10\n가입 거절\n0\n이용 정지\n0",
+          "audit": "아직 변경 기록이 없습니다."
+        },
+        {
+          "check": "mobile_layout",
+          "dimensions": {
+            "documentWidth": 360,
+            "overflowing": [],
+            "width": 375
+          }
+        },
+        {
+          "check": "mobile_member_selection",
+          "detailTop": 254.171875,
+          "headerBottom": 237.953125,
+          "dimensions": {
+            "documentWidth": 360,
+            "width": 375
+          }
+        }
+      ]
+    },
+    "local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "fresh: admin-only listing/mutations/audit, pending approval, trusted grades/YB, default and overridden read/write, private reads, read-only post/comment/upload denial, delegated notice writing, atomic revision checks, self-admin protection, suspension/reapproval, metadata spoof denial and rich-body compatibility passed",
+        "migration: admin-only listing/mutations/audit, pending approval, trusted grades/YB, default and overridden read/write, private reads, read-only post/comment/upload denial, delegated notice writing, atomic revision checks, self-admin protection, suspension/reapproval, metadata spoof denial and rich-body compatibility passed"
+      ]
+    },
+    "syntax_checks": "15 frontend/source modules and both Edge Function TypeScript files passed Node syntax checking",
+    "source_migration": "supabase/migrations/009_member_admin_permissions.sql; included in fresh schema.sql",
+    "security": [
+      "Admin RPCs require a current approved administrator; client metadata is not trusted",
+      "Read-only posts/comments/edits/upload signing and verification denied server-side",
+      "Stale revisions cannot overwrite newer changes; self/final administrator protections",
+      "Role/YB changes displayed in post authors; legacy staff access preserved as explicit overrides"
+    ],
+    "limitations": [
+      "Actual registration/login/Edge Function runtime and deployment await a Supabase project",
+      "Public boards remain guest-readable; per-member deny applies to signed-in requests",
+      "Moderator editing/deletion of other authors and password/account recovery are not part of this console"
+    ],
+    "screenshots": [
+      "../community-site-admin.png",
+      "../community-site-admin-mobile.png"
+    ],
+    "documentation": "ADMIN.md",
+    "official_references": [
+      "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "https://supabase.com/docs/guides/database/functions"
+    ],
+    "superseded_parts": "Current navigation, header access and permission details are recorded in submenus_roster_calendar_update; other historical checks retained"
+  },
+  "rich_editor_checkpoint": {
+    "status": "Editor, inline photo/table and original 8-sticker pack saved at prior user pause; full connected storage validation deferred",
+    "admin_compatibility": "008 fresh/migration schema accepted allowed rich document and rejected invalid image document in current local admin tests",
+    "asset": "dist/assets/yabolticons-baseball.png",
+    "prompt": "yabolticon-generation.md"
+  },
+  "submenus_roster_calendar_update": {
+    "date": "2026-10-09",
+    "cache_version": "20261009-roster-editor",
+    "browser": {
+      "status": "passed-local-preview",
+      "date": "2026-10-09",
+      "checks": [
+        "Header swaps signup/login to member-management/logout for approved managers and to logout for ordinary members; duplicate management link and sample badge removed",
+        "Boards dropdown contains free and humor; gallery order is flash, attendance, meetup with meme removed",
+        "Staff dropdown contains plot and minutes named 작당모의 and 회의록; YB dropdown contains roster, calendar, holics",
+        "Page mockup banners and navigation lock squares removed",
+        "Eleven submenu permission selectors saved; independent staff plot read, minutes denied and calendar read settings displayed",
+        "Calendar create, edit, delete, selected dates, next month and today navigation passed in local memory",
+        "Guest holics access-denied page and public guest roster with seven role groups passed",
+        "Roster groups ordered manager, coach, team manager, pitcher, catcher, infielder, outfielder; 200x200 profile cards and No.2 | 백지훈 caption checked",
+        "Roster has no holics board shortcut; register and card edit buttons are shown only to roster writers",
+        "Roster registration with local PNG, number/name/role editing, photo removal, delete cancellation and confirmed deletion passed; disposable player removed after QA",
+        "Roster photo rendered at 200x200 with natural size 200x200; guest roster had seven cards and zero edit/register buttons",
+        "Roster edit dialog checked at observed 434px viewport with no horizontal overflow and normal checkbox sizing",
+        "Earlier submenu admin and calendar responsive checks passed; viewport overrides reset"
+      ],
+      "screenshots": [
+        "../community-site-roster.png",
+        "../community-site-roster-edit.png",
+        "../community-site-access-denied.png",
+        "../community-site-submenu-admin.png"
+      ],
+      "limitations": [
+        "Actual authentication, durable multi-user storage, Cloudinary upload, Supabase Edge runtime and deployment await project configuration",
+        "Local member, roster and calendar edits are tab memory and reset on reload"
+      ]
+    },
+    "local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "Guest, member, staff, vice-staff, administrator and unapproved/suspended header states passed; duplicate second-row management links removed",
+        "fresh: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete and explicit writer access; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; existing rich-body compatibility passed",
+        "migration: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete and explicit writer access; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; existing rich-body compatibility passed",
+        "role-access: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete and explicit writer access; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; existing rich-body compatibility passed",
+        "granular: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete and explicit writer access; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; existing rich-body compatibility passed",
+        "roster-editor: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete and explicit writer access; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; existing rich-body compatibility passed"
+      ]
+    },
+    "migrations": [
+      "010_staff_member_management.sql",
+      "011_staff_subboards_and_roster.sql",
+      "012_humor_board_and_calendar.sql",
+      "013_submenu_permissions.sql",
+      "014_roster_editor.sql"
+    ],
+    "fresh_schema_includes_all_migrations": true,
+    "syntax_checks": "Changed roster.js, app.js and media-upload/index.ts passed Node syntax checks; prior changed frontend modules checked before final cache-string update",
+    "documentation": [
+      "ADMIN.md",
+      "MEMBERSHIP.md",
+      "README.md",
+      "ROSTER-CALENDAR.md"
+    ],
+    "security": [
+      "Approved staff and vice staff can manage members; administrator designation and administrator accounts remain administrator-only",
+      "Post select/insert/update, comment insert, media signing/verification and private reads check the exact submenu",
+      "Roster is public readable by default; legacy private photo URLs and references are withheld without original post access",
+      "Roster writes/deletes and profile upload signing check yb_roster write; new photos require verified public roster tickets owned by the uploader",
+      "Calendar writes/deletes check yb_calendar write; ordinary YB members are read-only by default",
+      "Roster and calendar use revision checks and soft deletion; private table writes are denied to browser roles"
+    ],
+    "superseded_parts": "Roster edit-control visibility, editor roles, restriction login/status handling and staff Holics defaults are superseded by roster_mode_and_restrictions_update; other historical validation retained"
+  },
+  "roster_mode_and_restrictions_update": {
+    "date": "2026-10-09",
+    "cache_version": "20261009-holics-access",
+    "browser": {
+      "status": "passed-local-preview",
+      "date": "2026-10-09",
+      "checks": [
+        "Header measured at 1280px on free/humor/notice/roster/calendar/minutes routes; brand x=72.5 and navigation x=338.5 on every route despite differing page heights and scrollbar presence",
+        "Normal roster hides registration and all seven card-edit controls; editing enables registration and seven controls; saved card refresh retains editing; exit and route re-entry restore normal mode",
+        "Guest roster has seven profiles and no editing controls; eligible director and manager settings enable editing and ordinary YB settings cannot select roster-write",
+        "Pending member rejection set rejected and increments rejection count; sample restored to pending after QA",
+        "Restriction date dialog at 434px native viewport showed start/end/reason; reversed date range rejected without losing input",
+        "Active period marked member restricted with all eleven effective submenu badges denied; notice preview showed start/end/reason and automatic release text",
+        "Future restriction marked scheduled while current access remained read/write; explicit early release cleared dates and restored approved/read-write immediately",
+        "Non-YB Hanwha staff and KIA vice-staff profiles both displayed Holics read/write by default",
+        "Disposable demo restriction cleared, YB role changes restored, viewport override reset and temporary desktop QA tab closed"
+      ],
+      "header_measurements": [
+        {
+          "clientWidth": 1265,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 1295,
+          "route": "#/board/free",
+          "viewportHeight": 720,
+          "width": 1280
+        },
+        {
+          "clientWidth": 1280,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 720,
+          "route": "#/board/humor",
+          "viewportHeight": 720,
+          "width": 1280
+        },
+        {
+          "clientWidth": 1280,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 720,
+          "route": "#/board/notice",
+          "viewportHeight": 720,
+          "width": 1280
+        },
+        {
+          "clientWidth": 1265,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 2722,
+          "route": "#/yb/roster",
+          "viewportHeight": 720,
+          "width": 1280
+        },
+        {
+          "clientWidth": 1265,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 1260,
+          "route": "#/yb/calendar",
+          "viewportHeight": 720,
+          "width": 1280
+        },
+        {
+          "clientWidth": 1280,
+          "gutter": "stable",
+          "items": [
+            {
+              "text": "",
+              "width": 244,
+              "x": 72.5
+            },
+            {
+              "text": "공지사항\n        인기글\n        게시판\n        사진첩\n        도구\n        운영진 게시판\n        YB Holics",
+              "width": 440.6875,
+              "x": 338.5
+            },
+            {
+              "text": "공지사항",
+              "width": 50.96875,
+              "x": 338.5
+            },
+            {
+              "text": "인기글",
+              "width": 38.234375,
+              "x": 407.46875
+            }
+          ],
+          "pageHeight": 720,
+          "route": "#/board/staff?category=minutes",
+          "viewportHeight": 720,
+          "width": 1280
+        }
+      ],
+      "screenshots": [
+        "../community-site-roster.png",
+        "../community-site-roster-mode.png",
+        "../community-site-restriction-period.png",
+        "../community-site-restriction-guide.png",
+        "../community-site-restriction-release.png"
+      ],
+      "limitations": [
+        "Actual account sessions, durable multi-user storage, Cloudinary uploads, Supabase Edge runtime and deployment await project configuration",
+        "Restriction guide screenshot is the administrator preview using demo member data; actual authenticated restriction routing is implemented and database denial tested, not connected to live Supabase",
+        "Local member, roster and calendar edits reset on reload"
+      ]
+    },
+    "local_database_tests": {
+      "status": "passed",
+      "findings": [
+        "Guest, member, staff, vice-staff, administrator and unapproved/suspended header states passed; duplicate second-row management links removed",
+        "Client role matrix: approved admin/staff/vice/YB director/YB manager only; ordinary YB and other roles cannot gain roster editing from an override",
+        "fresh: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "migration: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "role-access: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "granular: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "roster-editor: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "roster-roles: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "restrictions: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed",
+        "staff-holics: eleven independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; existing rich-body compatibility passed"
+      ]
+    },
+    "migrations": [
+      "015_roster_edit_roles.sql",
+      "016_timed_member_restrictions.sql",
+      "017_staff_holics_access.sql"
+    ],
+    "fresh_schema_includes_all_migrations": true,
+    "syntax_checks": "All 18 dist JavaScript files and membership-auth/index.ts passed Node --check after final cache update",
+    "documentation": [
+      "ADMIN.md",
+      "MEMBERSHIP.md",
+      "README.md",
+      "ROSTER-CALENDAR.md"
+    ],
+    "security": [
+      "Roster writes and photo tickets require eligible admin/staff/vice/YB-director/YB-manager role in addition to yb_roster write permission; arbitrary overrides cannot bypass eligibility",
+      "YB role is trusted DB data and cannot be assigned through editable user metadata or ordinary profile updates",
+      "Timed restrictions keep approved login status for self-service release guidance while all menu, post, comment, media, roster, calendar and manager checks deny access during [start,end)",
+      "Restriction mutation requires current approved manager, latest revision, non-self target, appropriate administrator privilege and valid finite date range; audit records setting and clearing",
+      "Expiration is evaluated using server time without a scheduler; frontend refreshes identity at date boundaries and checks membership periodically",
+      "Non-YB staff/vice can read/write/comment/upload on Holics by default; explicit read/deny overrides and active restrictions remain enforced"
+    ],
+    "deployment_requirements": "Apply migrations through 017 and deploy updated membership-auth plus media-upload before configuring real accounts"
+  },
+  "board_description_removal": {
+    "date": "2026-10-10",
+    "cache_version": "20261010-board-descriptions",
+    "browser": [
+      {
+        "descriptionCount": 0,
+        "route": "#/board/yb",
+        "title": "홀릭스 게시판"
+      },
+      {
+        "descriptionCount": 0,
+        "route": "#/board/staff?category=plot",
+        "title": "작당모의"
+      },
+      {
+        "descriptionCount": 0,
+        "route": "#/board/staff?category=minutes",
+        "title": "회의록"
+      },
+      {
+        "descriptionCount": 0,
+        "route": "#/board/gallery?category=flash",
+        "title": "벙개 사진"
+      },
+      {
+        "descriptionCount": 0,
+        "route": "#/board/gallery?category=attendance",
+        "title": "직관 사진"
+      },
+      {
+        "descriptionCount": 0,
+        "route": "#/board/gallery?category=meetup",
+        "title": "정모 사진"
+      }
+    ],
+    "screenshots": [
+      "../community-site-descriptions-removed.png"
+    ],
+    "syntax_checks": "app.js and sample.js passed Node --check",
+    "change": "Removed subtitle descriptions on Holics, both staff subboards and all three gallery subboards; empty descriptions omit the paragraph and do not fall back to all-board text"
+  },
+  "community_upgrade_20261010": {
+    "status": "passed-local-unconnected",
+    "cache_version": "20261010-community-final",
+    "runtime_syntax_checks": 25,
+    "html_and_module_references": "passed",
+    "sample_content": "posts, members, pending members, roster removed; guest default",
+    "latest_free_topics": [
+      "chat",
+      "info",
+      "question"
+    ],
+    "database": {
+      "status": "passed",
+      "findings": [
+        "Guest, member, staff, vice-staff, administrator and unapproved/suspended header states passed; duplicate second-row management links removed",
+        "Client role matrix: approved admin/staff/vice/YB director/YB manager only; ordinary YB and other roles cannot gain roster editing from an override",
+        "fresh: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "migration: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "role-access: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "granular: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "roster-editor: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "roster-roles: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "restrictions: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "staff-holics: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "public-calendar: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "member-team: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "recruitment: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "roster-order: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "online-ladder: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed",
+        "main-notice: twelve independent submenu permissions, asymmetric staff/gallery read/write and upload reservation, public ordered roster with private photo references withheld from guests, roster CRUD/verified photos/read-only denial/revision/soft-delete; roster writing limited to admins, staff, vice-staff and YB directors/managers, with ordinary explicit-write and metadata-spoof bypasses blocked; admin/staff management and admin-account protection; calendar revision/soft-delete and suspension/spoof protections; timed restriction schedule/start/end/clear, all-board/media denial, safe self/admin guards and rejection; non-YB staff/vice Holics read/write/comment/media and override enforcement; public calendar guest/non-YB reads with mutation denial and member restriction/override enforcement; team change validation, manager authorization, revision, audit and feed refresh; recruitment staff-only posting, authenticated reader RSVP, idempotent same-comment updates and denial safeguards; number-ascending roster with 0/2/10/null passed; online room authentication/full-capacity/all-ready/countdown-cancel/shared-round/clock/read-only/timeout/restriction checks, atomic main-notice selection and author guards passed; existing rich-body compatibility passed"
+      ]
+    },
+    "tools": {
+      "status": "passed",
+      "ladderRounds": 440,
+      "settlementCases": 201,
+      "checks": [
+        "unique paths and fair permutations",
+        "no ambiguous adjacent rungs",
+        "escaped player labels",
+        "integer-won conservation",
+        "expense-specific participants and excluded payer"
+      ]
+    },
+    "signup_host_settings": {
+      "status": "passed",
+      "drawCases": 110,
+      "checks": [
+        "legacy humor tag changed to chat without losing post IDs/body/timestamps",
+        "new humor tag denied, chat default retained",
+        "signup affiliation request captured privately without membership self-grant",
+        "metadata updates cannot alter original request",
+        "password confirmation blocks request",
+        "host-only settings",
+        "fixed losing/passing outcomes",
+        "ready reset on settings change",
+        "changes denied after countdown",
+        "unapproved actor prune",
+        "SQL-generated 2–12 person rounds trace through vendor engine"
+      ]
+    },
+    "browser": {
+      "status": "passed",
+      "home": {
+        "bannerHidden": true,
+        "headings": [
+          "전체 인기글"
+        ],
+        "notice": "공지등록된 공지사항이 없습니다.",
+        "postRows": 0,
+        "signupVisible": true
+      },
+      "freeTopics": "전체\n잡담\n정보\n질문",
+      "signup": {
+        "approvalNotice": "가입 신청 후 관리자 승인이 완료되면 이용할 수 있습니다.",
+        "removedServiceNote": true,
+        "teams": 10,
+        "visibleFieldOrder": [
+          "username",
+          "password",
+          "password_confirmation",
+          "nickname",
+          "region",
+          "yb_requested"
+        ],
+        "mismatchBlocked": true,
+        "matchAllowed": true,
+        "confirmationHiddenOnLogin": true,
+        "ybHiddenOnLogin": true
+      },
+      "settlement": {
+        "copy": "[야볼 정산 결과]\n\n참여자: 검증가, 검증나, 검증다 (3명)\n총 지출: ₩1,001\n\n── 지출 내역 ──\n\n1차 · 검증 식사\n결제자: 검증가 / 총 ₩1,001\n부담액: 검증가 ₩334, 검증나 ₩334, 검증다 ₩333\n\n── 최종 정산 ──\n\n검증가님이 받을 금액: ₩667\n  검증나 → ₩334\n  검증다 → ₩333",
+        "divider": {
+          "hasDivider": false,
+          "previousId": "settleSection"
+        },
+        "noticeCount": 0,
+        "gap": "20px"
+      },
+      "ladder": {
+        "codeInputs": 0,
+        "history": [
+          "모두 준비되면 5초 후 시작합니다. · 공개 0개",
+          "5 게임 시작까지 · 공개 0개",
+          "4 게임 시작까지 · 공개 0개",
+          "3 게임 시작까지 · 공개 0개",
+          "2 게임 시작까지 · 공개 0개",
+          "1 게임 시작까지 · 공개 0개",
+          "게임을 불러오고 있어요. · 공개 0개",
+          "1번 테스트1 · 진행 중 · 공개 0개",
+          "1번 테스트1 · 결과 공개 · 공개 1개",
+          "2번 테스트2 · 진행 중 · 공개 1개",
+          "2번 테스트2 · 결과 공개 · 공개 2개",
+          "모든 결과가 공개되었습니다. · 공개 2개"
+        ],
+        "inviteButtons": 0,
+        "results": [
+          "1. 테스트1통과",
+          "2. 테스트2꽝"
+        ]
+      },
+      "ladderMobile": {
+        "boardWidth": 360,
+        "pageWidth": 375,
+        "results": [
+          "1. 테스트1통과",
+          "2. 테스트2꽝"
+        ],
+        "viewport": 390
+      },
+      "animation": {
+        "movingBaseballPositionsObserved": 8,
+        "resultStyles": [
+          "lose",
+          "pass"
+        ],
+        "errors": 0
+      },
+      "screenshots": [
+        "../community-site-ladder-test.png",
+        "../community-site-settlement.png",
+        "../community-site-signup.png"
+      ],
+      "limits": "Loopback-only test database with two synthetic accounts; real Supabase authentication and external devices not connected"
+    },
+    "limitations": [
+      "Production Supabase authentication, Cloudinary upload and internet multi-device latency are unverified until service connection",
+      "No GitHub Pages deployment or live domain DNS change performed"
+    ]
+  }
+}

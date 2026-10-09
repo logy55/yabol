@@ -1,0 +1,19 @@
+{
+  "name": "moa-community",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check dist/access.js && node --check dist/account.js && node --check dist/admin-model.js && node --check dist/admin.js && node --check dist/anime.js && node --check dist/app.js && node --check dist/calendar.js && node --check dist/config.js && node --check dist/ladder-effects.js && node --check dist/ladder-room.js && node --check dist/membership.js && node --check dist/navigation.js && node --check dist/post-editor.js && node --check dist/recruitment.js && node --check dist/restrictions.js && node --check dist/rich-body.js && node --check dist/roster.js && node --check dist/sample.js && node --check dist/settlement-logic.js && node --check dist/settlement.js && node --check dist/teams.js && node --check dist/tool-logic.js && node --check dist/tools.js && node --check dist/whozzie.js && node --check dist/yabolticons.js",
+    "build": "node build-editor.mjs"
+  },
+  "dependencies": {
+    "@tiptap/core": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
+    "@tiptap/extension-table": "3.31.4",
+    "@tiptap/extension-image": "3.31.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
