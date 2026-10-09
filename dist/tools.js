@@ -1,5 +1,5 @@
 import {renderOnlineLadder} from './ladder-room.js?v=20261010-member-fixes';
-import {renderSettlement} from './settlement.js?v=20261010-member-fixes';
+import {renderSettlement} from './settlement.js?v=20261010-layout-access';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261010-member-fixes';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
