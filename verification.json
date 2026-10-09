@@ -1828,5 +1828,64 @@
     "limitations": [
       "Responsive iframe previews tested in Chrome; actual phone was not directly operated"
     ]
+  },
+  "popular_navigation_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "f419a98d3ca3ff2b40a6c6efae0124f099b3310c",
+    "workflow_run": 38005873810,
+    "cache_version": "20261010-popular-navigation",
+    "change": "Removed write buttons from popular page and home popular section; actual board write buttons retained",
+    "chrome": {
+      "popularWriteButtons": 0,
+      "homeWriteButtons": 0,
+      "freeBoardWriteButtons": 1
+    },
+    "database_changes": false,
+    "screenshot": "outputs/repair-proof/popular-write-removed.png"
+  },
+  "youtube_embed_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "122821e785a0276e35123b38c4427b7f972b3247",
+    "editor_source_commit": "cc30a0148c7d3f48747cc6206746ade208023091",
+    "fresh_schema_commit": "fc0349ae9de6f480ef7957791605a334be1c9039",
+    "workflow_run": 38006401639,
+    "cache_version": "20261010-youtube",
+    "migration": "029_youtube_post_embeds.sql",
+    "production_database": "Incremental migration applied successfully; no full schema replay",
+    "automated_checks": {
+      "clientValidation": "passed",
+      "database": [
+        {
+          "mode": "fresh",
+          "existingContentPreserved": true,
+          "videoSavedAndReloaded": true,
+          "unsafeEmbedsRejected": true,
+          "permissionsPreserved": true,
+          "tableVideoAccepted": true
+        },
+        {
+          "mode": "upgrade",
+          "existingContentPreserved": true,
+          "videoSavedAndReloaded": true,
+          "unsafeEmbedsRejected": true,
+          "permissionsPreserved": true,
+          "tableVideoAccepted": true
+        }
+      ]
+    },
+    "chrome": {
+      "url_input_and_cursor_insertion": true,
+      "invalid_url_rejected": true,
+      "undo_redo": true,
+      "preview_player_loaded": true,
+      "production_video_only_post_saved": true,
+      "reload_retained_video": true,
+      "edit_and_resave_retained_video": true,
+      "test_post": "c8e5a9d1-cfad-4c64-9273-904e4dd04cdc",
+      "test_post_cleanup": "Soft deleted after verification; no active test post remains"
+    },
+    "rendering": "Fixed youtube-nocookie iframe from validated 11-character video ID; no raw iframe HTML stored",
+    "screenshot": "outputs/repair-proof/youtube-production-post.png",
+    "mobile_limitation": "Responsive CSS implemented; actual phone interaction not verified"
   }
 }
