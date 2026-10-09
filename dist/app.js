@@ -13,8 +13,8 @@ import {canManageMembers,effectivePermission,boardMenus,postMenu} from './admin-
 import {teamChoices, memberName} from './teams.js?v=20261010-member-fixes';
 import {requestMembership} from './membership.js?v=20261010-member-fixes';
 import {renderAdmin} from './admin.js?v=20261010-member-fixes';
-import {createPostEditor} from './post-editor.js?v=20261010-member-fixes';
-import {normalizeDocument,imageIndexes,documentText,remapDocumentPhotos,renderDocument} from './rich-body.js?v=20261010-member-fixes';
+import {createPostEditor} from './post-editor.js?v=20261010-youtube';
+import {normalizeDocument,imageIndexes,documentText,remapDocumentPhotos,renderDocument} from './rich-body.js?v=20261010-youtube';
 import {yabolticons,yabolticonHTML,renderYabolText} from './yabolticons.js?v=20261010-member-fixes';
 
 const config=window.COMMUNITY_CONFIG;

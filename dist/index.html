@@ -8,14 +8,14 @@
   <title>야구보러갈래?</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23253d5b'/%3E%3Cpath d='M8 9h16v11H15l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
   <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261010-gallery-calendar">
+  <link rel="stylesheet" href="./styles.css?v=20261010-youtube">
   <link rel="stylesheet" href="./admin.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./roster.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./ladder-room.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./settlement.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./calendar.css?v=20261010-gallery-calendar">
   <script src="./config.js?v=20261010-production-connected"></script>
-  <script type="module" src="./app.js?v=20261010-popular-navigation"></script>
+  <script type="module" src="./app.js?v=20261010-youtube"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
@@ -60,9 +60,10 @@
     <div class="toolbar-group"><button type="button" data-editor="bold" aria-label="굵게" aria-pressed="false"><b>B</b></button><button type="button" data-editor="italic" aria-label="기울임" aria-pressed="false"><i>I</i></button><button type="button" data-editor="underline" aria-label="밑줄" aria-pressed="false"><u>U</u></button><button type="button" data-editor="strike" aria-label="취소선" aria-pressed="false"><s>S</s></button></div>
     <div class="toolbar-group"><button type="button" data-editor="bullet" aria-label="글머리 목록">• 목록</button><button type="button" data-editor="number" aria-label="번호 목록">1. 목록</button><button type="button" data-editor="quote" aria-label="인용문">❞</button><button type="button" data-editor="rule" aria-label="구분선">―</button></div>
     <div class="toolbar-group"><button type="button" data-editor="undo" aria-label="실행 취소">↶</button><button type="button" data-editor="redo" aria-label="다시 실행">↷</button></div>
-    <div class="toolbar-group media-tools"><button type="button" data-editor="photo">사진</button><button type="button" data-editor="table" aria-expanded="false" aria-controls="table-picker">표</button><button type="button" data-editor="stickers" aria-expanded="false" aria-controls="yabol-picker">야볼티콘</button></div>
+    <div class="toolbar-group media-tools"><button type="button" data-editor="photo">사진</button><button type="button" data-editor="youtube" aria-expanded="false" aria-controls="youtube-picker">유튜브</button><button type="button" data-editor="table" aria-expanded="false" aria-controls="table-picker">표</button><button type="button" data-editor="stickers" aria-expanded="false" aria-controls="yabol-picker">야볼티콘</button></div>
     <button type="button" data-editor="preview" class="editor-preview-button">미리보기</button>
   </div>
+  <div class="youtube-picker editor-panel" id="youtube-picker" hidden><div class="youtube-controls"><label for="youtube-url">유튜브 URL<input id="youtube-url" type="text" inputmode="url" autocomplete="off" maxlength="2048" placeholder="유튜브 영상 주소를 붙여 넣어 주세요" aria-describedby="youtube-error"></label><button type="button" class="primary" data-insert-youtube>영상 넣기</button><button type="button" class="secondary" data-cancel-youtube>취소</button></div><p class="form-error" id="youtube-error" role="alert"></p></div>
   <div class="table-picker editor-panel" id="table-picker" hidden><label>행<input id="table-rows" type="number" min="1" max="20" value="3"></label><label>열<input id="table-columns" type="number" min="1" max="10" value="3"></label><button type="button" data-insert-table class="primary">표 넣기</button></div>
   <div class="yabol-panel editor-panel"><div class="yabol-picker" id="yabol-picker" aria-label="기본 야볼티콘 8종" hidden></div></div>
   <div class="table-edit-actions" aria-label="표 편집" hidden><span>표 편집</span><button type="button" data-table-command="addRowAfter">행 추가</button><button type="button" data-table-command="deleteRow">행 삭제</button><button type="button" data-table-command="addColumnAfter">열 추가</button><button type="button" data-table-command="deleteColumn">열 삭제</button><button type="button" data-table-command="deleteTable">표 삭제</button></div>

@@ -1,6 +1,7 @@
 import {getYabolticon,yabolticonHTML} from './yabolticons.js';
+import {validYoutubeId,youtubeHTML,youtubeWatchUrl} from './youtube.js?v=20261010-youtube';
 
-const blockTypes=['paragraph','heading','blockquote','bulletList','orderedList','codeBlock','horizontalRule','table','image'];
+const blockTypes=['paragraph','heading','blockquote','bulletList','orderedList','codeBlock','horizontalRule','table','image','youtube'];
 const children={doc:blockTypes,paragraph:['text','hardBreak','yabolticon'],heading:['text','hardBreak','yabolticon'],codeBlock:['text'],blockquote:blockTypes,bulletList:['listItem'],orderedList:['listItem'],listItem:blockTypes,table:['tableRow'],tableRow:['tableCell','tableHeader'],tableCell:blockTypes.filter(type=>type!=='table'),tableHeader:blockTypes.filter(type=>type!=='table')};
 const marks=new Set(['bold','italic','underline','strike','code']);
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -30,6 +31,10 @@ export function normalizeDocument(input,imageCount=5){
       if(!getYabolticon(node.attrs?.id))throw new Error('지원하지 않는 야볼티콘입니다.');
       return {type,attrs:{id:node.attrs.id}};
     }
+    if(type==='youtube'){
+      if(!validYoutubeId(node.attrs?.videoId))throw new Error('올바른 유튜브 영상 주소를 입력해 주세요.');
+      return {type,attrs:{videoId:node.attrs.videoId}};
+    }
     if(type==='hardBreak'||type==='horizontalRule')return result;
     if(!Object.hasOwn(children,type))throw new Error('지원하지 않는 본문 형식입니다.');
     if(type==='heading')result.attrs={level:[2,3].includes(node.attrs?.level)?node.attrs.level:2};
@@ -56,7 +61,7 @@ export function imageIndexes(doc){
   walk(doc);return [...found];
 }
 export function documentText(doc){
-  const visit=node=>node.type==='text'?node.text:node.type==='yabolticon'?`[${getYabolticon(node.attrs.id)?.label||'야볼티콘'}]`:node.type==='image'?'[사진]':node.type==='hardBreak'?'\n':(node.content||[]).map(visit).join(['doc','table','tableRow','bulletList','orderedList'].includes(node.type)?'\n':'');
+  const visit=node=>node.type==='text'?node.text:node.type==='yabolticon'?`[${getYabolticon(node.attrs.id)?.label||'야볼티콘'}]`:node.type==='image'?'[사진]':node.type==='youtube'?`[유튜브] ${youtubeWatchUrl(node.attrs.videoId)}`:node.type==='hardBreak'?'\n':(node.content||[]).map(visit).join(['doc','table','tableRow','bulletList','orderedList'].includes(node.type)?'\n':'');
   const text=visit(doc).trim();return text||(doc.content?.some(node=>node.type==='table')?'[표]':'');
 }
 export function plainDocument(text='',images=[]){
@@ -79,6 +84,7 @@ export function renderDocument(input,images=[],options={}){
       return text;
     }
     if(node.type==='yabolticon')return yabolticonHTML(node.attrs.id);
+    if(node.type==='youtube')return youtubeHTML(node.attrs.videoId);
     if(node.type==='image'){
       if(options.restricted)return `<div class="inline-photo-placeholder" data-private-photo="${node.attrs.index}">사진을 불러오는 중입니다.</div>`;
       const src=resolve(images[node.attrs.index]);
