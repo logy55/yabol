@@ -64,7 +64,7 @@ Deno.serve(async(request:Request)=>{
     }
     if(input.action==='read'){
       if(typeof input.post_id!=='string'||typeof input.image!=='string')return json({error:'Invalid image request'},400);
-      const {data:post,error:postError}=await admin.from('posts').select('board,category,images').eq('id',input.post_id).maybeSingle();
+      const {data:post,error:postError}=await admin.from('posts').select('board,category,images').eq('id',input.post_id).is('deleted_at',null).maybeSingle();
       if(postError||!post||!restricted(post.board)||!await canAccess(post.board,false,post.category)||!post.images.includes(input.image))return json({error:'Image access denied'},403);
       const {data:ticket,error:ticketError}=await admin.from('upload_tickets').select('public_id,format,board,delivery_type,verified_at').eq('secure_url',input.image).maybeSingle();
       if(ticketError||!ticket?.verified_at||ticket.board!==post.board||ticket.delivery_type!=='authenticated'||!['jpg','png','webp'].includes(ticket.format))return json({error:'Image access denied'},403);
