@@ -22,9 +22,8 @@ export function effectivePermission(member,board,permissions=member?.permissions
   if(member.is_admin===true)return 'write';
   const override=permissions[board];
   if(board==='yb_roster'||board==='yb_calendar')return override==='deny'?'deny':override==='read'?'read':canManageRoster(member)?'write':'read';
-  if(board==='recruit')return override==='deny'?'deny':override==='read'?'read':canManageMembers(member)?'write':'read';
   if(Object.hasOwn(accessLabels,override))return override;
-  if(board==='free'||board==='humor'||board.startsWith('gallery_'))return 'write';
+  if(board==='free'||board==='humor'||board==='recruit'||board.startsWith('gallery_'))return 'write';
   const staff=['staff','vice_staff'].includes(member.staff_role);
   if(board==='notice')return staff?'write':'read';
   if(board.startsWith('staff_'))return staff?'write':'deny';

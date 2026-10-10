@@ -1,7 +1,7 @@
 export const boards = {
   humor:{name:'유머게시판',description:'함께 웃고 싶은 이야기'},
   free:{name:'자유게시판',description:'일상과 취미, 편하게 나누는 이야기'},
-  recruit:{name:'모집게시판',description:''},
+  recruit:{name:'모집게시판',description:'직관 · 여행 · 벙 인원 모집 하는 공간'},
   gallery:{name:'사진첩',description:''},
   notice:{name:'공지사항',description:'커뮤니티 소식과 이용 안내'},
   staff:{name:'운영진 게시판',description:'',restricted:true},

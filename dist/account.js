@@ -1,5 +1,5 @@
 import {memberName, getTeam} from './teams.js?v=20261010-member-fixes';
-import {canManageMembers} from './admin-model.js?v=20261010-member-name';
+import {canManageMembers} from './admin-model.js?v=20261010-recruit-rights';
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const nickname = user => typeof user?.user_metadata?.nickname === 'string' ? user.user_metadata.nickname.trim() || '회원' : '회원';
 
