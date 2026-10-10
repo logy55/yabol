@@ -2041,5 +2041,138 @@
       "Responsive previews used; no physical phone operated.",
       "Live saves preserved existing identity; changed names and regions tested in local DB."
     ]
+  },
+  "admin_fields_design_20261010": {
+    "runtime_commit": "ce49f09f71a86d0cd584c883a87ac33230d3689f",
+    "workflow_id": 38009558724,
+    "workflow_conclusion": "success",
+    "responsive": [
+      {
+        "frame": "mobile",
+        "fields": [
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "16px",
+            "height": 40,
+            "name": "status",
+            "width": 150.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "16px",
+            "height": 40,
+            "name": "staff_role",
+            "width": 150.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "16px",
+            "height": 40,
+            "name": "nickname",
+            "width": 150.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "16px",
+            "height": 40,
+            "name": "region",
+            "width": 150.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "16px",
+            "height": 40,
+            "name": "team",
+            "width": 313
+          }
+        ],
+        "size": {
+          "scrollWidth": 375,
+          "width": 390
+        }
+      },
+      {
+        "frame": "desktop",
+        "fields": [
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "13px",
+            "height": 34,
+            "name": "status",
+            "width": 323.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "13px",
+            "height": 34,
+            "name": "staff_role",
+            "width": 323.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "13px",
+            "height": 34,
+            "name": "nickname",
+            "width": 323.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "13px",
+            "height": 34,
+            "name": "region",
+            "width": 323.5
+          },
+          {
+            "border": "rgb(203, 214, 229)",
+            "font": "13px",
+            "height": 34,
+            "name": "team",
+            "width": 663
+          }
+        ],
+        "size": {
+          "scrollWidth": 745,
+          "width": 760
+        }
+      }
+    ],
+    "chrome_production": [
+      {
+        "border": "rgb(203, 214, 229)",
+        "font": "13px",
+        "height": 34,
+        "name": "status",
+        "width": 300.40625
+      },
+      {
+        "border": "rgb(203, 214, 229)",
+        "font": "13px",
+        "height": 34,
+        "name": "staff_role",
+        "width": 300.40625
+      },
+      {
+        "border": "rgb(203, 214, 229)",
+        "font": "13px",
+        "height": 34,
+        "name": "nickname",
+        "width": 300.40625
+      },
+      {
+        "border": "rgb(203, 214, 229)",
+        "font": "13px",
+        "height": 34,
+        "name": "region",
+        "width": 300.40625
+      },
+      {
+        "border": "rgb(203, 214, 229)",
+        "font": "13px",
+        "height": 34,
+        "name": "team",
+        "width": 616.8125
+      }
+    ],
+    "screenshot": "outputs/repair-proof/admin-fields-production.png"
   }
 }
