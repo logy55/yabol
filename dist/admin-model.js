@@ -21,19 +21,19 @@ export function effectivePermission(member,board,permissions=member?.permissions
   if(member.status!=='approved'||restrictionActive(member))return 'deny';
   if(member.is_admin===true)return 'write';
   const override=permissions[board];
-  if(board==='yb_roster')return override==='deny'?'deny':override==='read'?'read':canManageRoster(member)?'write':'read';
+  if(board==='yb_roster'||board==='yb_calendar')return override==='deny'?'deny':override==='read'?'read':canManageRoster(member)?'write':'read';
   if(board==='recruit')return override==='deny'?'deny':override==='read'?'read':canManageMembers(member)?'write':'read';
   if(Object.hasOwn(accessLabels,override))return override;
   if(board==='free'||board==='humor'||board.startsWith('gallery_'))return 'write';
   const staff=['staff','vice_staff'].includes(member.staff_role);
   if(board==='notice')return staff?'write':'read';
   if(board.startsWith('staff_'))return staff?'write':'deny';
-  if(board==='yb_calendar')return member.is_yb_member===true&&staff?'write':'read';
   return staff||member.is_yb_member===true?'write':'deny';
 }
 export function fullPermissions(member){return Object.fromEntries(Object.keys(adminBoards).map(board=>[board,member.permissions?.[board]||'default']));}
 export function summarizeMemberChanges(before,after){
   const changes=[];
+  for(const [key,label] of [['nickname','닉네임'],['region','지역']])if(before[key]!==after[key])changes.push(`${label}: ${before[key]||'—'} → ${after[key]||'—'}`);
   if(before.team!==after.team)changes.push(`응원 구단: ${getTeam(before.team)?.name||'미선택'} → ${getTeam(after.team)?.name||'미선택'}`);
   for(const [key,label,values] of [['status','승인 상태',statusLabels],['staff_role','등급',roleLabels]])if(before[key]!==after[key])changes.push(`${label}: ${values[before[key]]} → ${values[after[key]]}`);
   for(const [key,label] of [['is_yb_member','YB 소속'],['is_admin','어드민 권한']])if(before[key]!==after[key])changes.push(`${label} ${after[key]?'부여':'해제'}`);

@@ -9,3 +9,5 @@
 .admin-member-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.admin-member-actions:empty{display:none}.admin-member-actions .danger{color:#a13345;border-color:#d7a8b1}
 
 .admin-team{display:grid;gap:7px;font-size:13px;font-weight:700;margin:16px 0}
+
+.admin-profile-fields input{min-width:0;font-size:16px;padding:10px 12px;border:1px solid #cad8d8;border-radius:5px;width:100%;background:#fff;color:var(--ink)}
