@@ -26,15 +26,4 @@
 .calendar-extra-status{display:flex;justify-content:flex-end;margin-bottom:8px}
 .calendar-game.additional-game{border-top:1px solid var(--line);padding-top:10px}
 .calendar-more{display:block;width:100%;text-align:center}
-.calendar-event{display:block}
-.calendar-event-content{min-width:0;width:100%}
-.calendar-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.calendar-detail-heading h3{margin:0;flex:1}
-.calendar-detail-heading .game-result-badge{flex-shrink:0}
-.calendar-event .calendar-opponent{font-size:16px}
-.calendar-event .calendar-score{font-size:26px}
-.calendar-event .calendar-location{font-size:14px}
-.calendar-event p.calendar-time{text-align:center;margin-top:8px;font-size:13px}
-.calendar-event p.calendar-memo{text-align:center}
-.calendar-event-actions{justify-content:flex-end;margin-top:14px}
-@media(max-width:640px){.calendar-cell{min-height:132px;padding:9px;gap:10px}.calendar-cell-heading{gap:4px}.calendar-more{display:block}.calendar-event .calendar-opponent{font-size:15px}}
+@media(max-width:640px){.calendar-cell{min-height:132px;padding:9px;gap:10px}.calendar-cell-heading{gap:4px}.calendar-more{display:block}}
