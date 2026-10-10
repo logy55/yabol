@@ -2174,5 +2174,67 @@
       }
     ],
     "screenshot": "outputs/repair-proof/admin-fields-production.png"
+  },
+  "member_name_labels_20261010": {
+    "runtime_commit": "2ba8e470173bccc117a0bec56ccfcaecbf098cd2",
+    "workflow_id": 38010181712,
+    "workflow_conclusion": "success",
+    "javascript_syntax": "passed",
+    "responsive": [
+      {
+        "frame": "mobile",
+        "heading": {
+          "children": [
+            {
+              "text": "지역",
+              "width": 25.484375,
+              "x": 41,
+              "y": 574.21875
+            },
+            {
+              "text": "(구 제외하고 입력. 예: 금천구 > 금천)",
+              "width": 181.375,
+              "x": 41,
+              "y": 603.90625
+            }
+          ],
+          "scrollWidth": 208,
+          "text": "지역(구 제외하고 입력. 예: 금천구 > 금천)",
+          "width": 208
+        },
+        "region": "signup-region-hint"
+      },
+      {
+        "frame": "desktop",
+        "heading": {
+          "children": [
+            {
+              "text": "지역",
+              "width": 25.484375,
+              "x": 41,
+              "y": 554.078125
+            },
+            {
+              "text": "(구 제외하고 입력. 예: 금천구 > 금천)",
+              "width": 181.375,
+              "x": 74.484375,
+              "y": 556.078125
+            }
+          ],
+          "scrollWidth": 408,
+          "text": "지역(구 제외하고 입력. 예: 금천구 > 금천)",
+          "width": 408
+        },
+        "region": "signup-region-hint"
+      }
+    ],
+    "chrome_production": {
+      "adminNameLabel": "이름",
+      "regionDescribedBy": "signup-region-hint",
+      "regionLabelledBy": "signup-region-name",
+      "signupName": "이름",
+      "signupRegionHint": "(구 제외하고 입력. 예: 금천구 > 금천)"
+    },
+    "screenshot": "outputs/repair-proof/member-name-production.png"
   }
 }
