@@ -1980,5 +1980,66 @@
     "limitations": [
       "320/390/760px iframe previews checked; actual phone interaction not operated"
     ]
+  },
+  "member_profile_20261010": {
+    "migration": "031_member_profile_and_calendar_roles.sql",
+    "production_migration_applied": true,
+    "runtime_commit": "ca535d1a34c33cc7bb6ef46d7a1235419d4623b5",
+    "workflow_id": 38009108588,
+    "workflow_conclusion": "success",
+    "database": {
+      "database": [
+        {
+          "mode": "fresh",
+          "upgradePreservedProfiles": true,
+          "selfIdentityOnly": true,
+          "managerRolesVerified": true,
+          "invalidAndStaleChangesRejected": true,
+          "existingAuthorsUseUpdatedIdentity": true,
+          "calendarFiveRolesAndReadOnlyMembers": true,
+          "legacyRpcCompatible": true,
+          "auditRecorded": true
+        },
+        {
+          "mode": "upgrade",
+          "upgradePreservedProfiles": true,
+          "selfIdentityOnly": true,
+          "managerRolesVerified": true,
+          "invalidAndStaleChangesRejected": true,
+          "existingAuthorsUseUpdatedIdentity": true,
+          "calendarFiveRolesAndReadOnlyMembers": true,
+          "legacyRpcCompatible": true,
+          "auditRecorded": true
+        }
+      ]
+    },
+    "responsive": [
+      {
+        "frame": "mobile",
+        "scrollWidth": 305,
+        "width": 320
+      },
+      {
+        "frame": "desktop",
+        "scrollWidth": 745,
+        "width": 760
+      }
+    ],
+    "chrome_production": {
+      "site": "https://yabol.co.kr",
+      "selfSaveAndReload": true,
+      "adminSave": true,
+      "originalNicknameAndRegionPreserved": true,
+      "calendarOverrides": 0,
+      "calendarUsesGradeAffiliationDefault": true,
+      "runtimeCommit": "ca535d1a34c33cc7bb6ef46d7a1235419d4623b5",
+      "workflow": "38009108588",
+      "workflowConclusion": "success"
+    },
+    "screenshot": "outputs/repair-proof/member-profile-production.png",
+    "limits": [
+      "Responsive previews used; no physical phone operated.",
+      "Live saves preserved existing identity; changed names and regions tested in local DB."
+    ]
   }
 }
