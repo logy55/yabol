@@ -33,7 +33,7 @@ export function effectivePermission(member,board,permissions=member?.permissions
 export function fullPermissions(member){return Object.fromEntries(Object.keys(adminBoards).map(board=>[board,member.permissions?.[board]||'default']));}
 export function summarizeMemberChanges(before,after){
   const changes=[];
-  for(const [key,label] of [['nickname','닉네임'],['region','지역']])if(before[key]!==after[key])changes.push(`${label}: ${before[key]||'—'} → ${after[key]||'—'}`);
+  for(const [key,label] of [['nickname','이름'],['region','지역']])if(before[key]!==after[key])changes.push(`${label}: ${before[key]||'—'} → ${after[key]||'—'}`);
   if(before.team!==after.team)changes.push(`응원 구단: ${getTeam(before.team)?.name||'미선택'} → ${getTeam(after.team)?.name||'미선택'}`);
   for(const [key,label,values] of [['status','승인 상태',statusLabels],['staff_role','등급',roleLabels]])if(before[key]!==after[key])changes.push(`${label}: ${values[before[key]]} → ${values[after[key]]}`);
   for(const [key,label] of [['is_yb_member','YB 소속'],['is_admin','어드민 권한']])if(before[key]!==after[key])changes.push(`${label} ${after[key]?'부여':'해제'}`);

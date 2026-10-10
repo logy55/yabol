@@ -8,14 +8,14 @@
   <title>야구보러갈래?</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23253d5b'/%3E%3Cpath d='M8 9h16v11H15l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
   <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261010-admin-fields">
+  <link rel="stylesheet" href="./styles.css?v=20261010-member-name">
   <link rel="stylesheet" href="./admin.css?v=20261010-admin-fields">
   <link rel="stylesheet" href="./roster.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./ladder-room.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./settlement.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./calendar.css?v=20261010-calendar-cells">
   <script src="./config.js?v=20261010-production-connected"></script>
-  <script type="module" src="./app.js?v=20261010-profile"></script>
+  <script type="module" src="./app.js?v=20261010-member-name"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
@@ -45,8 +45,8 @@
       <label>아이디<input name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" placeholder="영문·숫자·밑줄, 3~24자" required></label>
       <label>비밀번호<input name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required></label>
       <label id="password-confirm-label" hidden>비밀번호 확인<input name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="72" disabled></label>
-      <label id="nickname-label" hidden>닉네임<input name="nickname" autocomplete="nickname" minlength="2" maxlength="20"></label>
-      <label id="region-label" hidden>지역<input name="region" maxlength="20"></label>
+      <label id="nickname-label" hidden>이름<input name="nickname" autocomplete="name" minlength="2" maxlength="20"></label>
+      <label id="region-label" hidden><span class="signup-region-heading"><span id="signup-region-name">지역</span><small id="signup-region-hint">(구 제외하고 입력. 예: 금천구 &gt; 금천)</small></span><input name="region" maxlength="20" aria-labelledby="signup-region-name" aria-describedby="signup-region-hint"></label>
       <fieldset id="team-fieldset" class="team-fieldset" hidden disabled><legend>응원 구단</legend><div class="team-options" id="team-options"></div></fieldset>
       <label id="yb-request-label" class="signup-yb-choice" hidden><input type="checkbox" name="yb_requested" disabled> YB Holics 소속입니다</label>
       <p class="form-error" id="auth-error" role="alert"></p>

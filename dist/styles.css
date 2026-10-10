@@ -124,3 +124,5 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(max-width:640px){.youtube-picker{padding:10px}.youtube-controls{flex-wrap:wrap;gap:8px}.youtube-controls label{flex-basis:100%}.youtube-controls button{padding:7px 13px}}
 
 .account-profile-form{border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin-top:16px;background:var(--pale)}.account-profile-form h2{font-size:18px;margin:0 0 18px}.account-profile-form fieldset{border:0;padding:0;margin:0;min-width:0}.account-profile-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}.account-profile-fields label{display:grid;gap:7px;font-size:14px;font-weight:700}.account-profile-fields input{min-width:0;width:100%;font-size:16px;padding:10px 12px;border:1px solid #cad8d8;border-radius:5px;background:#fff;color:var(--ink)}@media(max-width:640px){.account-profile-form{padding:20px 18px}.account-profile-fields{grid-template-columns:1fr}}
+
+.signup-region-heading{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.signup-region-heading small{font-size:12px;font-weight:400;line-height:1.5;color:var(--muted)}
