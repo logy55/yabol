@@ -9,3 +9,32 @@
 .game-score strong{font-size:18px;color:var(--ink)}
 .calendar-event-label[data-result=win]{background:#3f7e62}.calendar-event-label[data-result=loss]{background:#a95d69}.calendar-event-label[data-result=draw]{background:#917844}
 .calendar-score-fields input:disabled{background:#f2f4f7;color:#8a96a8}
+
+.calendar-month-view{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding-bottom:6px}
+.calendar-month-view:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.calendar-month-content{min-width:840px}
+.calendar-grid{position:relative}
+.calendar-cell{min-height:132px;padding:10px;gap:10px}
+.calendar-cell-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.calendar-cell-heading .game-result-badge,.calendar-extra-status .game-result-badge{padding:3px 6px;font-size:11px;line-height:1.4;white-space:nowrap;flex-shrink:0}
+.game-result-badge[data-result=cancelled]{background:#eceef2;color:#687386}
+.calendar-game{display:block;width:100%;min-width:0}
+.calendar-game-lines{display:grid;gap:6px;text-align:center;width:100%;line-height:1.4}
+.calendar-opponent{font-size:13px;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.calendar-score{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.calendar-location{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.calendar-extra-status{display:flex;justify-content:flex-end;margin-bottom:8px}
+.calendar-game.additional-game{border-top:1px solid var(--line);padding-top:10px}
+.calendar-more{display:block;width:100%;text-align:center}
+.calendar-event{display:block}
+.calendar-event-content{min-width:0;width:100%}
+.calendar-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.calendar-detail-heading h3{margin:0;flex:1}
+.calendar-detail-heading .game-result-badge{flex-shrink:0}
+.calendar-event .calendar-opponent{font-size:16px}
+.calendar-event .calendar-score{font-size:26px}
+.calendar-event .calendar-location{font-size:14px}
+.calendar-event p.calendar-time{text-align:center;margin-top:8px;font-size:13px}
+.calendar-event p.calendar-memo{text-align:center}
+.calendar-event-actions{justify-content:flex-end;margin-top:14px}
+@media(max-width:640px){.calendar-cell{min-height:132px;padding:9px;gap:10px}.calendar-cell-heading{gap:4px}.calendar-more{display:block}.calendar-event .calendar-opponent{font-size:15px}}
