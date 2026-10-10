@@ -2236,5 +2236,135 @@
       "signupRegionHint": "(구 제외하고 입력. 예: 금천구 > 금천)"
     },
     "screenshot": "outputs/repair-proof/member-name-production.png"
+  },
+  "recruitment_approval_20261010": {
+    "runtime_commit": "f976422c7d8a1569f524ba2b46de3cadc74cf5cd",
+    "workflow_id": 38013113929,
+    "workflow_conclusion": "success",
+    "migration": "032_recruitment_member_write.sql",
+    "migration_applied_to_production": true,
+    "javascript_syntax": "passed",
+    "database_and_handler_tests": {
+      "passed": true,
+      "database": [
+        {
+          "mode": "fresh",
+          "ordinaryDefaultWrite": true,
+          "explicitReadAndDenyPreserved": true,
+          "rsvpSingleComment": true,
+          "ownersOnlyAndModerators": true,
+          "adminAndLegacyOverridesSaved": true,
+          "pendingAndRestrictedDeniedAllMenus": true,
+          "authenticatedPendingBypassDenied": true,
+          "metadataCannotGrantApproval": true,
+          "existingDataPreserved": true
+        },
+        {
+          "mode": "upgrade",
+          "ordinaryDefaultWrite": true,
+          "explicitReadAndDenyPreserved": true,
+          "rsvpSingleComment": true,
+          "ownersOnlyAndModerators": true,
+          "adminAndLegacyOverridesSaved": true,
+          "pendingAndRestrictedDeniedAllMenus": true,
+          "authenticatedPendingBypassDenied": true,
+          "metadataCannotGrantApproval": true,
+          "existingDataPreserved": true
+        }
+      ],
+      "loginHandler": [
+        {
+          "action": "register",
+          "status": "pending",
+          "httpStatus": 201,
+          "code": "pending",
+          "sessionReturned": false,
+          "internalSessionCleared": false
+        },
+        {
+          "action": "login",
+          "status": "pending",
+          "httpStatus": 403,
+          "code": "approval_pending",
+          "sessionReturned": false,
+          "internalSessionCleared": true
+        },
+        {
+          "action": "login",
+          "status": "rejected",
+          "httpStatus": 403,
+          "code": "membership_rejected",
+          "sessionReturned": false,
+          "internalSessionCleared": true
+        },
+        {
+          "action": "login",
+          "status": "approved",
+          "httpStatus": 200,
+          "code": "session",
+          "sessionReturned": true,
+          "internalSessionCleared": false
+        },
+        {
+          "action": "login",
+          "status": "suspended",
+          "httpStatus": 200,
+          "code": "session",
+          "sessionReturned": true,
+          "internalSessionCleared": false
+        },
+        {
+          "action": "login",
+          "status": "error",
+          "httpStatus": 503,
+          "code": "unavailable",
+          "sessionReturned": false,
+          "internalSessionCleared": true
+        },
+        {
+          "action": "login",
+          "status": "invalid",
+          "httpStatus": 401,
+          "code": "invalid_credentials",
+          "sessionReturned": false,
+          "internalSessionCleared": false
+        }
+      ]
+    },
+    "deployed_auth_source": {
+      "deployment": 5,
+      "registerPendingNoSession": true,
+      "loginRejectsPending": true,
+      "clearsInternalSession": true,
+      "pendingCode": true,
+      "deniedHttp403": true
+    },
+    "live_db_rollback_tests": {
+      "result": "passed",
+      "source": "Chrome Supabase SQL Editor; real auth trigger and authenticated RLS in rollback-only transaction",
+      "signupDefaultsPending": true,
+      "metadataCannotGrantApproval": true,
+      "pendingAllMenusDenied": true,
+      "pendingPostsCommentsRosterCalendarAndAdminDenied": true,
+      "recruitmentApprovedMemberReadWrite": true,
+      "explicitReadAndDenyHonored": true,
+      "temporaryUsersRemoved": true,
+      "temporaryPostsRemoved": true
+    },
+    "chrome_production": {
+      "recruitApplied": "읽기·쓰기",
+      "recruitSetting": "default",
+      "recruitWriteSelectable": true,
+      "runtimeVersion": "./app.js?v=20261010-recruit-rights",
+      "selectedAdmin": false,
+      "selectedRole": "member",
+      "selectedStatus": "approved",
+      "selectedYb": false,
+      "boardDescription": "직관 · 여행 · 벙 인원 모집 하는 공간",
+      "descriptionVisible": true,
+      "boardWriteButtonEnabled": true
+    },
+    "real_pending_password_login_tested": false,
+    "screenshot": "outputs/repair-proof/recruitment-production.png"
   }
 }
