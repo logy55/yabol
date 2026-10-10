@@ -1887,5 +1887,98 @@
     "rendering": "Fixed youtube-nocookie iframe from validated 11-character video ID; no raw iframe HTML stored",
     "screenshot": "outputs/repair-proof/youtube-production-post.png",
     "mobile_limitation": "Responsive CSS implemented; actual phone interaction not verified"
+  },
+  "calendar_cards_20261010": {
+    "status": "deployed-and-verified",
+    "runtime_commit": "47ef5ad83a61f5fee3e6116c7652b16e8be0bf10",
+    "workflow_run": 38008374539,
+    "cache_version": "20261010-calendar-cells",
+    "migration": "030_cancelled_team_games.sql",
+    "production_migration": "Success. No rows returned",
+    "layout": "Month cells: date left/status right on the first row; centered opponent, score, venue on separate lines. Below-calendar daily details retain their original layout.",
+    "cancellation": "cancelled has no score; disabled score fields, validated RPC and table constraint",
+    "database_tests": {
+      "clientValidation": "passed",
+      "database": [
+        {
+          "mode": "fresh",
+          "existingGamePreserved": true,
+          "cancelledSavedAndRead": true,
+          "scoreCleared": true,
+          "invalidScoresRejected": true,
+          "permissionsPreserved": true,
+          "revisionConflictRejected": true,
+          "allExistingStatusesSupported": true,
+          "legacyRpcPreservesResult": true
+        },
+        {
+          "mode": "upgrade",
+          "existingGamePreserved": true,
+          "cancelledSavedAndRead": true,
+          "scoreCleared": true,
+          "invalidScoresRejected": true,
+          "permissionsPreserved": true,
+          "revisionConflictRejected": true,
+          "allExistingStatusesSupported": true,
+          "legacyRpcPreservesResult": true
+        }
+      ]
+    },
+    "responsive_iframe_checks": [
+      {
+        "alignment": "center",
+        "cellWidth": 118.84375,
+        "headingDisplay": "flex",
+        "lines": "vs BlueGene Foxes\n13 : 0\n안산 한양대구장",
+        "pageOverflow": false,
+        "selectedVisible": true,
+        "width": 303
+      },
+      {
+        "alignment": "center",
+        "cellWidth": 118.84375,
+        "headingDisplay": "flex",
+        "lines": "vs BlueGene Foxes\n13 : 0\n안산 한양대구장",
+        "pageOverflow": false,
+        "selectedVisible": true,
+        "width": 373
+      },
+      {
+        "alignment": "center",
+        "cellWidth": 118.84375,
+        "headingDisplay": "flex",
+        "lines": "vs BlueGene Foxes\n13 : 0\n안산 한양대구장",
+        "pageOverflow": false,
+        "selectedVisible": true,
+        "width": 743
+      }
+    ],
+    "chrome_production": {
+      "existingGame": {
+        "alignment": "center",
+        "heading": "10\n승",
+        "text": "10\n승\nvs BlueGene Foxes\n13 : 0\n안산 한양대구장",
+        "title": "2026 안산 한양대리그 - 토요루키"
+      },
+      "cancelledTestId": "4ac7fd15-6983-421a-b67a-20fb08851c33",
+      "cancelledSavedAndReloaded": true,
+      "cancelledScoresDisabled": true,
+      "testEventRemoved": true,
+      "originalDailyDetailsRestored": {
+        "hasChangedDetailWrapper": false,
+        "hasOriginalCombinedLine": true,
+        "layout": "flex",
+        "text": "2026 안산 한양대리그 - 토요루키\n\n13:00 · vs BlueGene Foxes · 안산 한양대구장\n\n승\nYB Holics\n13 : 0\nBlueGene Foxes\n\n수정\n삭제"
+      },
+      "monthCellAfterRestoration": "10\n승\nvs BlueGene Foxes\n13 : 0\n안산 한양대구장"
+    },
+    "screenshots": [
+      "outputs/repair-proof/calendar-cards-production.png",
+      "outputs/repair-proof/calendar-cells-original-details.png",
+      "outputs/repair-proof/calendar-cancelled-production.png"
+    ],
+    "limitations": [
+      "320/390/760px iframe previews checked; actual phone interaction not operated"
+    ]
   }
 }
