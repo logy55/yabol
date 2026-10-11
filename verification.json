@@ -2366,5 +2366,62 @@
     },
     "real_pending_password_login_tested": false,
     "screenshot": "outputs/repair-proof/recruitment-production.png"
+  },
+  "post_list_markers_20261011": {
+    "runtime_commit": "98d20be1b84caba07155b11362ea31db41a12d24",
+    "workflow_id": 38107728986,
+    "workflow_conclusion": "success",
+    "javascript_syntax": "passed",
+    "preview_chrome": [
+      {
+        "commentBadge": null,
+        "id": "#/post/preview-zero-photo",
+        "photoBadge": false,
+        "title": "사진이 있고 댓글이 없는 글"
+      },
+      {
+        "commentBadge": "[2]",
+        "id": "#/post/preview-comments-photo",
+        "photoBadge": false,
+        "title": "사진이 있고 댓글이 2개인 글[2]"
+      },
+      {
+        "commentBadge": null,
+        "id": "#/post/preview-zero-text",
+        "photoBadge": false,
+        "title": "댓글이 없는 일반 글"
+      },
+      {
+        "commentBadge": null,
+        "id": "#/post/preview-zero-photo",
+        "photoBadge": false,
+        "title": "[잡담]사진이 있고 댓글이 없는 글"
+      },
+      {
+        "commentBadge": "[2]",
+        "id": "#/post/preview-comments-photo",
+        "photoBadge": false,
+        "title": "[잡담]사진이 있고 댓글이 2개인 글[2]"
+      },
+      {
+        "commentBadge": null,
+        "id": "#/post/preview-zero-text",
+        "photoBadge": false,
+        "title": "[잡담]댓글이 없는 일반 글"
+      }
+    ],
+    "production_chrome": {
+      "commentBadges": [
+        "[2]",
+        "[1]"
+      ],
+      "emptyCommentBadges": 0,
+      "photoMarkers": 0,
+      "rows": 2,
+      "runtimeVersion": "./app.js?v=20261011-list-markers",
+      "squareGlyphPresent": false
+    },
+    "database_changes": false,
+    "screenshot": "outputs/repair-proof/list-markers-production.png"
   }
 }
