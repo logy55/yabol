@@ -12,3 +12,5 @@
 .ladder-gift-links a:hover img{transform:translateY(-3px)}
 @media(max-width:480px){.ladder-gift-links{gap:10px;padding:20px 2px 2px}.ladder-gift-links img{width:56px;height:56px}.ladder-gift-links>a{font-size:12px;gap:9px}}
 @media(prefers-reduced-motion:reduce){.ladder-gift-links img{transition:none}}
+
+.marble-canvas{display:block;width:100%;height:600px;border-radius:9px;background:#172a43}.marble-attribution{margin:18px 0 0;text-align:center;font-size:11px;color:#748397}.marble-attribution a{text-decoration:underline;text-underline-offset:2px}@media(max-width:640px){.marble-canvas{height:500px}}

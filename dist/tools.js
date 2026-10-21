@@ -1,3 +1,4 @@
+import {renderOnlineMarble} from './marble-room.js?v=20261021-marble-rooms';
 import {renderOnlineLadder} from './ladder-room.js?v=20261021-gift-links';
 import {renderSettlement} from './settlement.js?v=20261010-layout-access';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
@@ -7,6 +8,7 @@ const money = value => `${value.toLocaleString('ko-KR')}원`;
 
 export async function renderTool(main, key, context={}) {
   if (key === 'ladder') await renderOnlineLadder(main,context);
+  else if (key === 'marble') await renderOnlineMarble(main,context);
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
   else main.innerHTML = '<div class="empty"><strong>도구를 찾을 수 없어요.</strong><a href="#/">홈으로</a></div>';

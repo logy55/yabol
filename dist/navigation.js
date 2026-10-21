@@ -1,7 +1,7 @@
 const menus = {
   boards: [['자유게시판', '#/board/free'], ['유머게시판', '#/board/humor'], ['모집게시판', '#/board/recruit']],
   gallery: [['벙개 사진', '#/board/gallery?category=flash'], ['직관 사진', '#/board/gallery?category=attendance'], ['정모 사진', '#/board/gallery?category=meetup']],
-  tools: [['사다리 게임', '#/tools/ladder'], ['정산 계산기', '#/tools/settlement'], ['매직넘버 계산기', '#/tools/magic-number']],
+  tools: [['사다리 게임', '#/tools/ladder'], ['마블룰렛', '#/tools/marble'], ['정산 계산기', '#/tools/settlement'], ['매직넘버 계산기', '#/tools/magic-number']],
   staff: [['작당모의', '#/board/staff?category=plot'], ['회의록', '#/board/staff?category=minutes']],
   yb: [['선수단', '#/yb/roster'], ['경기 일정', '#/yb/calendar'], ['홀릭스 게시판', '#/board/yb']]
 };
