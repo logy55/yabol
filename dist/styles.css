@@ -143,3 +143,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 #auth-form>.remember-username-choice{display:flex;align-items:center;gap:8px;font-weight:500;margin-top:3px;margin-bottom:16px}
 #auth-dialog .remember-username-choice input{width:17px;height:17px;padding:0;margin:0;flex:none;accent-color:var(--primary)}
 @media(max-width:640px){.membership-alert-toggle{width:28px;height:28px;padding:3px}.membership-alert-toggle svg{width:19px;height:19px}.header-inner:has(.membership-notification:not([hidden]))>.brand{width:min(220px,calc(100vw - 212px))}}
+
+/* A persisted recommendation is visible by both fill and toggle state. */
+.like-button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.like-button.active svg{fill:currentColor;stroke:currentColor}
