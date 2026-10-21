@@ -142,10 +142,15 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .membership-alert-popover a>span:last-child{margin-left:auto}
 #auth-form>.remember-username-choice{display:flex;align-items:center;gap:8px;font-weight:500;margin-top:3px;margin-bottom:16px}
 #auth-dialog .remember-username-choice input{width:17px;height:17px;padding:0;margin:0;flex:none;accent-color:var(--primary)}
-@media(max-width:640px){.membership-alert-toggle{width:28px;height:28px;padding:3px}.membership-alert-toggle svg{width:19px;height:19px}.header-inner:has(.membership-notification:not([hidden]))>.brand{width:min(220px,calc(100vw - 212px))}}
+@media(max-width:640px){.membership-alert-toggle{width:28px;height:28px;padding:3px}.membership-alert-toggle svg{width:19px;height:19px}}
 
 /* A persisted recommendation is visible by both fill and toggle state. */
 .like-button.active{background:var(--primary);border-color:var(--primary);color:#fff}
 .like-button.active svg{fill:currentColor;stroke:currentColor}
 
 .recruitment-late-form{width:100%;padding-top:16px;border-top:1px solid #dce4ef}.recruitment-late-form h3{font-size:16px;margin:0 0 13px}.recruitment-late-form fieldset{border:0;padding:0;margin:0;min-width:0;display:flex;align-items:flex-end;gap:18px;justify-content:space-between}.late-time-fields{display:flex;gap:12px;flex:1;max-width:400px}.late-time-fields label{display:grid;gap:5px;flex:1;font-size:13px;font-weight:700}.late-time-fields select{width:100%;min-width:0;font-size:16px;padding:9px 12px;border:1px solid #c8d4e4;border-radius:5px;color:var(--ink);background:#fff}.late-time-actions{display:flex;gap:8px}.recruitment-buttons{flex-wrap:wrap}.recruitment-buttons [data-response=late][aria-pressed=true]{background:#8b671a;border-color:#8b671a}@media(max-width:640px){.recruitment-panel{padding:18px}.recruitment-buttons{width:100%}.recruitment-buttons button{flex:1;min-width:0;padding-inline:12px}.recruitment-late-form fieldset{flex-wrap:wrap}.late-time-fields{max-width:none;flex-basis:100%}.late-time-actions{margin-left:auto}}
+
+/* Keep membership notifications beside My Account, independent of the primary menu row. */
+.sub-member-group{display:flex;align-items:center;gap:10px;min-width:0}.sub-member-group .member-strip{flex:0 1 auto;min-width:0}.sub-member-group .membership-notification{flex:none}@media(max-width:640px){.sub-member-group{gap:8px;width:100%}.sub-member-group .member-strip{gap:10px}.sub-member-group .member-greeting{min-width:0}}
+
+@media(max-width:640px){.header-inner>.brand{flex:1 1 0;min-width:0;width:auto;max-width:220px;height:64px;display:flex;align-items:center}.header-inner>.brand .brand-logo{max-height:64px;object-fit:contain;object-position:left center}.header-inner>.account-actions{flex:0 0 auto}}
