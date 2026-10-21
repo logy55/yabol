@@ -8,14 +8,14 @@
   <title>야구보러갈래?</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23253d5b'/%3E%3Cpath d='M8 9h16v11H15l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
   <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261010-member-name">
+  <link rel="stylesheet" href="./styles.css?v=20261021-member-alerts">
   <link rel="stylesheet" href="./admin.css?v=20261010-admin-fields">
   <link rel="stylesheet" href="./roster.css?v=20261010-member-fixes">
-  <link rel="stylesheet" href="./ladder-room.css?v=20261010-member-fixes">
+  <link rel="stylesheet" href="./ladder-room.css?v=20261021-gift-links">
   <link rel="stylesheet" href="./settlement.css?v=20261010-member-fixes">
   <link rel="stylesheet" href="./calendar.css?v=20261010-calendar-cells">
   <script src="./config.js?v=20261010-production-connected"></script>
-  <script type="module" src="./app.js?v=20261011-list-markers"></script>
+  <script type="module" src="./app.js?v=20261021-member-alerts"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
@@ -31,7 +31,7 @@
         <button class="nav-trigger" data-dropdown="staff" aria-expanded="false" aria-controls="nav-dropdown">운영진 게시판</button>
         <button class="nav-trigger" data-dropdown="yb" aria-expanded="false" aria-controls="nav-dropdown">YB Holics</button>
       </nav>
-      <div class="account-actions"><button type="button" class="header-button" id="signup-button">회원가입</button><a class="header-button" id="member-manage-button" href="#/admin" hidden>회원관리</a><button type="button" class="header-button light" id="login-button">로그인</button></div>
+      <div class="account-actions"><button type="button" class="header-button" id="signup-button">회원가입</button><div class="membership-notification" id="pending-member-alert" hidden><button class="membership-alert-toggle" type="button" data-pending-toggle aria-label="가입 대기 알림" aria-expanded="false" aria-controls="pending-member-popover"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span class="membership-alert-count" data-pending-count data-pending-badge aria-hidden="true"></span></button><section class="membership-alert-popover" id="pending-member-popover" data-pending-popover aria-label="가입 대기 알림" hidden><p data-pending-message>가입 대기 중인 회원이 있습니다.</p><a href="#/admin?status=pending">가입 대기 확인 <strong><span data-pending-count></span>명</strong><span aria-hidden="true">→</span></a></section></div><a class="header-button" id="member-manage-button" href="#/admin" hidden>회원관리</a><button type="button" class="header-button light" id="login-button">로그인</button></div>
     </div>
     <div class="sub-header"><div class="wrap sub-inner"><div class="member-strip" id="member-strip" role="group" aria-label="회원 정보"><span class="member-guest">로그인 후 내 정보를 확인할 수 있어요.</span></div><form class="search-form" id="search-form" role="search"><label class="sr-only" for="search">글 검색</label><input id="search" name="search" type="search" placeholder="글 제목·내용 검색" maxlength="100"><button aria-label="검색" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"></circle><path d="m15 15 5 5"></path></svg></button></form></div></div>
     <nav id="nav-dropdown" class="nav-dropdown" aria-label="하위 메뉴" hidden></nav>
@@ -49,6 +49,7 @@
       <label id="region-label" hidden><span class="signup-region-heading"><span id="signup-region-name">지역</span><small id="signup-region-hint">(구 제외하고 입력. 예: 금천구 &gt; 금천)</small></span><input name="region" maxlength="20" aria-labelledby="signup-region-name" aria-describedby="signup-region-hint"></label>
       <fieldset id="team-fieldset" class="team-fieldset" hidden disabled><legend>응원 구단</legend><div class="team-options" id="team-options"></div></fieldset>
       <label id="yb-request-label" class="signup-yb-choice" hidden><input type="checkbox" name="yb_requested" disabled> YB Holics 소속입니다</label>
+      <label id="remember-username-label" class="remember-username-choice"><input type="checkbox" name="remember_username"> 아이디 저장</label>
       <p class="form-error" id="auth-error" role="alert"></p>
       <button class="primary full" id="auth-submit" type="submit">로그인</button><button class="text-button full" type="button" id="switch-auth">회원가입으로 전환</button>
     </form>
