@@ -2,8 +2,8 @@ import {deleteContent,bindCommentActions,renderTrash} from './content-management
 import {uploadCommunityPhoto} from './media.js?v=20261010-member-fixes';
 import {recruitmentPanel,bindRecruitment,previewRecruitmentComments,updateRecruitmentMember} from './recruitment.js?v=20261010-member-fixes';
 import { boards, galleryCategories, freeCategories, staffCategories } from './sample.js?v=20261010-recruit-rights';
-import './navigation.js?v=20261022-marble-motion-v2';
-import {renderTool} from './tools.js?v=20261022-marble-motion-v2';
+import './navigation.js?v=20261022-marble-motion-v3';
+import {renderTool} from './tools.js?v=20261022-marble-motion-v3';
 import {accountBar, renderAccount, accountActions} from './account.js?v=20261010-member-name';
 import {restrictionActive,restrictionView} from './restrictions.js?v=20261010-member-fixes';
 import {accessDenied} from './access.js?v=20261010-member-fixes';

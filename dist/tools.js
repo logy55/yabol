@@ -1,4 +1,4 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261022-marble-motion-v2';
+import {renderOnlineMarble} from './marble-room.js?v=20261022-marble-motion-v3';
 import {renderOnlineLadder} from './ladder-room.js?v=20261021-gift-links';
 import {renderSettlement} from './settlement.js?v=20261010-layout-access';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
