@@ -40,3 +40,9 @@ SOFTWARE.
 공식 출처: https://github.com/juliangarnier/anime/tree/v3.2.2
 
 고정 버전 3.2.2의 ESM 소스를 `dist/anime.js`에 포함했습니다. 사다리의 야구공 이동·경로 표시·결과 카드 연출에 사용합니다. MIT 라이선스 전문은 `dist/anime-LICENSE.txt`에 포함합니다.
+
+# Marble physics and maps
+
+Source: https://github.com/lazygyu/roulette/tree/bd237348858035c48336c3f2a0d5276008d86fb6
+
+MIT licensed physics adapter and map definitions only. The site supplies its own interface, room server and renderer. The adapter uses an instance-local seeded random generator and a fixed non-SIMD Box2D WASM build for replay. Original branding, advertisements, analytics and community services are excluded. MIT text: `dist/marble-LICENSE.txt`. Box2D WASM 7.0.0 uses the zlib license, retained at `dist/marble-box2d-LICENSE.txt`. Original sources and local modifications are in `marble-source.zip` and the local `src/` tree. Unzip at the project root, run `pnpm install`, then `pnpm build:marble` to rebuild.

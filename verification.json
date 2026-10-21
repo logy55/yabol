@@ -2423,5 +2423,53 @@
     },
     "database_changes": false,
     "screenshot": "outputs/repair-proof/list-markers-production.png"
+  },
+  "2026-10-21_member_alerts_and_marble": {
+    "state": "deployed-verified",
+    "notifications": {
+      "roles": [
+        "admin",
+        "staff",
+        "vice_staff"
+      ],
+      "database_and_ui_roles_verified": true,
+      "quiet_zero_and_count_dropdown": true
+    },
+    "remember_id": {
+      "username_only": true,
+      "restore_and_uncheck_verified": true
+    },
+    "gifts": {
+      "order": [
+        "kakao",
+        "starbucks",
+        "mgc",
+        "compose"
+      ],
+      "same_size_mobile_verified": true
+    },
+    "marble": {
+      "source": "lazygyu/roulette@bd237348858035c48336c3f2a0d5276008d86fb6",
+      "room_capacity": "2-12",
+      "countdown_seconds": 5,
+      "race_seconds": 30,
+      "fresh_and_upgrade_sql_tests": true,
+      "two_chrome_clients_with_isolated_real_sql_rpc": true,
+      "same_result_verified": true,
+      "physics_counts_tested": [
+        2,
+        4,
+        8,
+        12
+      ]
+    },
+    "runtime_commit": "18498ef6944d2eb61e16caa2f59bfa14aed125bc",
+    "workflow_id": 39618270683,
+    "workflow_result": "success",
+    "production_lobby_chrome": true,
+    "production_wasm_http": 200,
+    "production_wasm_matches_local": true,
+    "production_rollback_sql": "passed",
+    "temporary_accounts_and_rooms_rolled_back": true
   }
 }
