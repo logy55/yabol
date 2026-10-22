@@ -161,3 +161,5 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .sub-member-group{display:flex;align-items:center;gap:10px;min-width:0}.sub-member-group .member-strip{flex:0 1 auto;min-width:0}.sub-member-group .membership-notification{flex:none}@media(max-width:640px){.sub-member-group{gap:8px;width:100%}.sub-member-group .member-strip{gap:10px}.sub-member-group .member-greeting{min-width:0}}
 
 @media(max-width:640px){.header-inner>.brand{flex:1 1 0;min-width:0;width:auto;max-width:220px;height:64px;display:flex;align-items:center}.header-inner>.brand .brand-logo{max-height:64px;object-fit:contain;object-position:left center}.header-inner>.account-actions{flex:0 0 auto}}
+
+.toast{white-space:pre-line}

@@ -1,4 +1,4 @@
-import {roomMaps,betField,betBadge,betNotice,roomControls} from './room-options.js?v=20261022-room-controls-v2';
+import {roomMaps,betField,betBadge,betNotice,roomControls,explainRoomLeave} from './room-options.js?v=20261022-room-exit-hint';
 import {memberName} from './teams.js?v=20261010-member-fixes';
 import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 import {ladderGiftLinks} from './ladder-gifts.js?v=20261021-gift-links';
@@ -26,7 +26,7 @@ export async function renderOnlineMarble(main,{db,actor,isCurrent=()=>true,onAut
     const settingsForm=find('#room-settings-form');if(settingsForm){bindCapacity(settingsForm);settingsForm.onsubmit=event=>{event.preventDefault();void change(()=>api.settings(current.id,Number(settingsForm.elements.capacity.value),Number(settingsForm.elements.losers.value),Number(settingsForm.elements.map.value),settingsForm.elements.bet.value));};}
     find('#room-ready').onclick=()=>void change(()=>api.ready(current.id,!me.ready));
     for(const button of root.querySelectorAll('[data-kick]'))button.onclick=()=>void change(()=>api.kick(current.id,button.dataset.kick));
-    find('#room-leave').onclick=async()=>{if(busy||find('#room-leave').disabled)return;busy=true;generation++;try{await api.leave(current.id);await returnToLobby();}catch(failure){if(alive())error(friendly(failure));}finally{busy=false;}};boardKey='';tick();}
+    find('#room-leave').onclick=async()=>{if(explainRoomLeave(root,notify)||busy)return;busy=true;generation++;try{await api.leave(current.id);await returnToLobby();}catch(failure){if(alive())error(friendly(failure));}finally{busy=false;}};boardKey='';tick();}
   async function returnToLobby(message=''){current=null;generation++;boardKey='';stopEffects();preparedKey='';preparedMovie=null;clockRound=null;find('#marble-room').hidden=true;find('#marble-lobby').hidden=false;lobby();error(message);await refreshList();}
 
   function prepare(){
@@ -56,7 +56,7 @@ export async function renderOnlineMarble(main,{db,actor,isCurrent=()=>true,onAut
     if(!current.start_at){stage.textContent='모두 준비되면 5초 후 시작합니다.';return;}
     const now=Date.now()+clockOffset,remaining=Math.ceil((Date.parse(current.start_at)-now)/1000);
     if(remaining>0){stage.innerHTML=`<span class="room-countdown">${remaining}</span> 게임 시작까지`;return;}
-    find('#room-ready').disabled=true;find('#room-leave').disabled=current.phase!=='finished';for(const button of root.querySelectorAll('[data-kick]'))button.disabled=true;
+    find('#room-ready').disabled=true;find('#room-leave').dataset.exitState=current.phase==='finished'?'':'running';for(const button of root.querySelectorAll('[data-kick]'))button.disabled=true;
     if(!current.round||!preparedMovie){stage.textContent='구슬 경기를 준비하고 있어요.';return;}
     mountBoard();const duration=current.playback_version===2?(current.playback_duration_ms||preparedMovie.duration*1000):Date.parse(current.finish_at)-Date.parse(current.start_at),seconds=Math.max(0,Math.ceil((Date.parse(current.start_at)+duration-now)/1000));stage.textContent=seconds?`구슬 경기 진행 중 · ${seconds}초`:'모든 결과가 공개되었습니다.';
   }

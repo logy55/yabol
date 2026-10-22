@@ -1,5 +1,5 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261022-room-controls-v2';
-import {renderOnlineLadder} from './ladder-room.js?v=20261022-room-controls-v2';
+import {renderOnlineMarble} from './marble-room.js?v=20261022-room-exit-hint';
+import {renderOnlineLadder} from './ladder-room.js?v=20261022-room-exit-hint';
 import {renderSettlement} from './settlement.js?v=20261010-layout-access';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261010-member-fixes';
