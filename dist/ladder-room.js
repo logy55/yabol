@@ -1,4 +1,4 @@
-import {roomMaps,betField,betBadge,betNotice,roomControls,explainRoomLeave} from './room-options.js?v=20261022-room-exit-hint';
+import {roomMaps,betField,betBadge,betNotice,roomControls,explainRoomLeave} from './room-options.js?v=20261022-room-exit-inline';
 import {ladderGiftLinks} from './ladder-gifts.js?v=20261021-gift-links';
 import {animateLadderBoard,revealLadderResult} from './ladder-effects.js?v=20261010-member-fixes';
 import {trace,layout,lanePath,minBoardWidth} from './whozzie.js?v=20261010-member-fixes';
@@ -37,7 +37,7 @@ export async function renderOnlineLadder(main,{db,actor,isCurrent=()=>true,onAut
     const settingsForm=find('#room-settings-form');if(settingsForm){bindCapacity(settingsForm);settingsForm.onsubmit=event=>{event.preventDefault();void change(()=>api.settings(current.id,Number(settingsForm.elements.capacity.value),Number(settingsForm.elements.losers.value),settingsForm.elements.bet.value));};}
     find('#room-ready').onclick=()=>void change(()=>api.ready(current.id,!me.ready));
     for(const button of root.querySelectorAll('[data-kick]'))button.onclick=()=>void change(()=>api.kick(current.id,button.dataset.kick));
-    find('#room-leave').onclick=async()=>{if(explainRoomLeave(root,notify)||busy)return;busy=true;generation++;try{await api.leave(current.id);await returnToLobby();}catch(failure){if(alive())error(friendly(failure));}finally{busy=false;}};boardKey='';tick();}
+    find('#room-leave').onclick=async()=>{if(explainRoomLeave(root)||busy)return;busy=true;generation++;try{await api.leave(current.id);await returnToLobby();}catch(failure){if(alive())error(friendly(failure));}finally{busy=false;}};boardKey='';tick();}
   async function returnToLobby(message=''){current=null;generation++;boardKey='';stopEffects();find('#ladder-room').hidden=true;find('#ladder-lobby').hidden=false;lobby();error(message);await refreshList();}
 
   function mountBoard(holder,round,key,elapsed){key+=`:${root.clientWidth}`;if(boardKey===key&&holder.querySelector('.ladder-paper'))return;stopEffects();boardKey=key;boardData=ladderRoundView(round,Math.max(360,root.clientWidth-40));holder.innerHTML=`<div class="room-game-card">${boardData.html}<div class="room-results" aria-live="polite">${boardData.lanes.map((lane,column)=>`<div data-result="${column}" hidden><span>${column+1}. ${esc(round.players[lane.player].name)}</span><strong>${esc(round.outcomes[round.slots[lane.end]])}</strong></div>`).join('')}</div>${ladderGiftLinks()}</div>`;stopEffects=animateLadderBoard(holder,elapsed,SLOT_MS,TRACE_MS);}
