@@ -2620,5 +2620,17 @@
     "inline_and_toast_preserve_line_break": true,
     "server_readiness_guard_unchanged": true,
     "production_asset_hashes_match": true
+  },
+  "2026-10-22_room_exit_inline_only": {
+    "state": "deployed-verified",
+    "runtime_commit": "b711250c75b40d91d28fb7ebd56c0e45f95534b1",
+    "workflow": 39790284924,
+    "workflow_result": "success",
+    "ladder_and_marble_verified": true,
+    "inline_hint_only": true,
+    "no_toast_emitted": true,
+    "two_line_instruction_preserved": true,
+    "server_exit_guard_unchanged": true,
+    "production_six_asset_hashes_match": true
   }
 }
