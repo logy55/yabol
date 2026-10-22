@@ -84,3 +84,20 @@ Chrome에서 기존 10/10 BlueGene Foxes전의 승, 13 : 0, 안산 한양대구�
 ## 2026-10-21 알림과 마블룰렛
 
 운영 DB에는 순서대로 `033_pending_member_notifications.sql`, `034_online_marble_rooms.sql`을 적용합니다. 기존 설치에 전체 schema.sql을 재실행하지 않습니다. Pages에는 `dist/` 변경 파일과 네 개 gift 아이콘 및 marble WASM/라이선스를 포함합니다. 마블 소스 재빌드는 THIRD-PARTY-NOTICES.md를 참고하세요. 검증용 qa 파일과 테스트 회원은 배포하지 않습니다.
+
+## 2026-10-22 원본 움직임
+
+034 다음 `035_marble_original_motion.sql`을 적용합니다. 승인된 방장에게만 맵 변경과 이번 시드의 재생 시간 보고를 허용하며, 서버 결과를 변경하는 입력은 받지 않습니다. 기존 2인자 방 생성/3인자 설정 함수는 하위 호환으로 유지합니다. Pages의 marble-engine.js, marble-room.js, tools.js, app.js, index.html 및 styles.css를 함께 갱신합니다. 이때의 캐시 버전은 20261022-marble-motion-v3입니다. 검증용 qa 파일은 배포하지 않습니다.
+
+## 2026-10-22 모집 늦참과 모바일 종 위치
+
+035 다음 `036_recruitment_late_responses.sql`을 적용합니다. 응답 유형 late와 delay_minutes를 추가하며 10분 단위를 서버에서도 검사합니다. 기존 데이터와 2인자 RPC는 호환됩니다. 모집 글의 직접 댓글 쓰기/수정은 차단하므로 프런트엔드 app.js·recruitment.js·styles.css·index.html도 갱신합니다. 댓글 삭제·복구와 일반 게시판은 기존 권한을 유지합니다. 알림 위치 변경은 index.html과 styles.css에 포함되어 있습니다. 현재 앱 캐시 버전은 20261022-late-response, 스타일은 20261022-member-bell-position입니다.
+
+
+## 2026-10-22 게임방·대전 사진첩 업데이트
+
+036까지 적용한 프로젝트는 037_game_room_host_controls.sql, 038_daejeon_photo_albums.sql 순서로 적용합니다. 운영 서버에는 두 변경을 한 트랜잭션으로 적용해 검증했습니다. 기존 계정·게시글은 변경하지 않습니다.
+
+런타임 모듈은 20261022-room-controls-v2, 사다리/마블 CSS는 20261022-room-controls-v3입니다. 새 room-options.js와 변경한 모듈의 import를 함께 배포해야 합니다. GitHub Pages 배포 성공 후 기존 열린 탭을 새로고침합니다.
+
+fresh/036 업그레이드 SQL 검증, 두 Chrome 참가자 추방·재입장·준비 나가기·1초 갱신 검증을 수행했습니다. 운영 DB의 임시 계정·방·사진첩 게시물 검증은 ROLLBACK했으며 기존 회원 데이터는 건드리지 않았습니다.
