@@ -3335,3 +3335,349 @@ create policy recruitment_comments_automatic_update on public.comments as restri
  using(not exists(select 1 from public.posts p where p.id=post_id and p.board='recruit'))
  with check(not exists(select 1 from public.posts p where p.id=post_id and p.board='recruit'));
 commit;
+
+-- Apply after 036. Host removal, coffee stakes and ready-state exit protection.
+
+begin;
+
+alter table private.ladder_rooms add column bet_type text not null default 'none' check(bet_type in ('none','starbucks','mgc','compose'));
+
+create or replace function private.ladder_snapshot(p_room uuid) returns jsonb
+language sql stable security definer set search_path='' as $$
+  select jsonb_build_object('bet_type',r.bet_type,'id',r.id,'code',r.code,'title',r.title,'capacity',r.capacity,'losers',(select count(*) from jsonb_array_elements_text(r.outcomes) e where e='꽝'),'host_id',r.host_id,'revision',r.revision,'server_time',now(),
+    'phase',case when r.phase='closed' then 'closed' when r.finish_at<=now() then 'finished' when r.start_at<=now() then 'running' else r.phase end,
+    'start_at',r.start_at,'finish_at',r.finish_at,'round',case when r.phase<>'closed' and r.start_at<=now() then r.round end,
+    'players',coalesce((select jsonb_agg(jsonb_build_object('id',p.user_id,'ready',p.ready,'nickname',u.nickname,'team',u.team,'region',u.region,'staff_role',u.staff_role) order by p.joined_at,p.user_id)
+      from private.ladder_players p join public.profiles u on u.id=p.user_id where p.room_id=r.id),'[]'::jsonb))
+  from private.ladder_rooms r where r.id=p_room;
+$$;
+
+create or replace function public.list_ladder_rooms() returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare result jsonb;
+begin
+  if not private.member_approved((select auth.uid())) then raise exception 'Approved member required';end if;
+  select coalesce(jsonb_agg(jsonb_build_object('bet_type',r.bet_type,'code',r.code,'title',r.title,'capacity',r.capacity,'host',u.nickname,'count',(select count(*) from private.ladder_players where room_id=r.id)) order by r.created_at desc),'[]'::jsonb)
+    into result from (select * from private.ladder_rooms where phase='waiting' and created_at>now()-interval '24 hours' and exists(select 1 from private.ladder_players where room_id=id and user_id=host_id and last_seen>now()-interval '45 seconds') order by created_at desc limit 30) r
+    join public.profiles u on u.id=r.host_id;
+  return result;
+end; $$;
+
+create function public.create_ladder_room(p_capacity integer,p_losers integer,p_bet text) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare room jsonb;begin
+ if p_bet is null or p_bet not in ('none','starbucks','mgc','compose') then raise exception 'Invalid bet';end if;
+ room:=public.create_ladder_room(p_capacity,p_losers);
+ update private.ladder_rooms set bet_type=p_bet where id=(room->>'id')::uuid;
+ return private.ladder_snapshot((room->>'id')::uuid);
+end;$$;
+
+create function public.update_ladder_settings(p_room uuid,p_capacity integer,p_losers integer,p_bet text) returns jsonb
+language plpgsql security definer set search_path='' as $$
+begin
+ if p_bet is null or p_bet not in ('none','starbucks','mgc','compose') then raise exception 'Invalid bet';end if;
+ perform public.update_ladder_settings(p_room,p_capacity,p_losers);
+ update private.ladder_rooms set bet_type=p_bet where id=p_room;
+ return private.ladder_snapshot(p_room);
+end;$$;
+
+create function public.kick_ladder_player(p_room uuid,p_user uuid) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare actor uuid:=(select auth.uid()); room private.ladder_rooms;begin
+ if not private.member_approved(actor) then raise exception 'Approved member required';end if;
+ select * into room from private.ladder_rooms where id=p_room for update;
+ if not found then raise exception 'Room not found';end if;
+ if room.host_id<>actor or not exists(select 1 from private.ladder_players where room_id=p_room and user_id=actor) then raise exception 'Host required';end if;
+ if p_user is null or p_user=actor then raise exception 'Invalid kick target';end if;
+ if room.phase='closed' or (room.start_at is not null and room.start_at<=now()) then raise exception 'Game already starting';end if;
+ delete from private.ladder_players where room_id=p_room and user_id=p_user;
+ if not found then raise exception 'Player not found';end if;
+ -- This removes one seat only. No blacklist or membership restriction is created.
+ update private.ladder_players set ready=false where room_id=p_room;
+ update private.ladder_rooms set phase='waiting',round=null,start_at=null,finish_at=null,revision=revision+1 where id=p_room;
+ return private.ladder_snapshot(p_room);
+end;$$;
+
+create or replace function public.leave_ladder_room(p_room uuid) returns void
+language plpgsql security definer set search_path='' as $$
+declare actor uuid:=(select auth.uid()); room private.ladder_rooms;
+begin
+  if actor is null then raise exception 'Login required';end if;
+  select * into room from private.ladder_rooms where id=p_room for update;
+  if not found then return;end if;
+  if not exists(select 1 from private.ladder_players where room_id=p_room and user_id=actor) then return;end if;
+  if room.phase<>'closed' and (room.finish_at is null or room.finish_at>now()) then
+    if room.start_at is not null and room.start_at<=now() then raise exception 'Game already starting';end if;
+    if exists(select 1 from private.ladder_players where room_id=p_room and user_id=actor and ready) then raise exception 'Cancel readiness before leaving';end if;
+  end if;
+  delete from private.ladder_players where room_id=p_room and user_id=actor;
+  if actor=room.host_id then update private.ladder_rooms set phase='closed',revision=revision+1 where id=p_room;
+  elsif room.start_at is null or room.start_at>now() then
+    update private.ladder_players set ready=false where room_id=p_room;
+    update private.ladder_rooms set phase='waiting',round=null,start_at=null,finish_at=null,revision=revision+1 where id=p_room;
+  end if;
+end; $$;
+
+alter table private.marble_rooms add column bet_type text not null default 'none' check(bet_type in ('none','starbucks','mgc','compose'));
+
+create or replace function private.marble_snapshot(p_room uuid) returns jsonb
+language sql stable security definer set search_path='' as $$
+  select jsonb_build_object('bet_type',r.bet_type,'map_index',r.map_index,'map_name',(array['운명의 수레바퀴','버블 팝','욕망의 항아리','밤을 달리다'])[r.map_index+1],'playback_version',coalesce((r.round->>'playback_version')::integer,1),'playback_duration_ms',(r.round->>'duration_ms')::integer,'id',r.id,'code',r.code,'title',r.title,'capacity',r.capacity,'losers',(select count(*) from jsonb_array_elements_text(r.outcomes) e where e='꽝'),'host_id',r.host_id,'revision',r.revision,'server_time',now(),
+    'phase',case when r.phase='closed' then 'closed' when r.finish_at<=now() then 'finished' when r.start_at<=now() then 'running' else r.phase end,
+    'start_at',r.start_at,'finish_at',r.finish_at,'simulation_seed',case when r.phase<>'closed' then r.round->'seed' end,'round',case when r.phase<>'closed' and r.start_at<=now() then r.round end,
+    'players',coalesce((select jsonb_agg(jsonb_build_object('id',p.user_id,'ready',p.ready,'nickname',u.nickname,'team',u.team,'region',u.region,'staff_role',u.staff_role) order by p.joined_at,p.user_id)
+      from private.marble_players p join public.profiles u on u.id=p.user_id where p.room_id=r.id),'[]'::jsonb))
+  from private.marble_rooms r where r.id=p_room;
+$$;
+
+create or replace function public.list_marble_rooms() returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare result jsonb;
+begin
+  if not private.member_approved((select auth.uid())) then raise exception 'Approved member required';end if;
+  select coalesce(jsonb_agg(jsonb_build_object('map_index',r.map_index,'map_name',(array['운명의 수레바퀴','버블 팝','욕망의 항아리','밤을 달리다'])[r.map_index+1],'bet_type',r.bet_type,'code',r.code,'title',r.title,'capacity',r.capacity,'host',u.nickname,'count',(select count(*) from private.marble_players where room_id=r.id)) order by r.created_at desc),'[]'::jsonb)
+    into result from (select * from private.marble_rooms where phase='waiting' and created_at>now()-interval '24 hours' and exists(select 1 from private.marble_players where room_id=id and user_id=host_id and last_seen>now()-interval '45 seconds') order by created_at desc limit 30) r
+    join public.profiles u on u.id=r.host_id;
+  return result;
+end; $$;
+
+create function public.create_marble_room(p_capacity integer,p_losers integer,p_map integer,p_bet text) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare room jsonb;begin
+ if p_bet is null or p_bet not in ('none','starbucks','mgc','compose') then raise exception 'Invalid bet';end if;
+ room:=public.create_marble_room(p_capacity,p_losers,p_map);
+ update private.marble_rooms set bet_type=p_bet where id=(room->>'id')::uuid;
+ return private.marble_snapshot((room->>'id')::uuid);
+end;$$;
+
+create function public.update_marble_settings(p_room uuid,p_capacity integer,p_losers integer,p_map integer,p_bet text) returns jsonb
+language plpgsql security definer set search_path='' as $$
+begin
+ if p_bet is null or p_bet not in ('none','starbucks','mgc','compose') then raise exception 'Invalid bet';end if;
+ perform public.update_marble_settings(p_room,p_capacity,p_losers,p_map);
+ update private.marble_rooms set bet_type=p_bet where id=p_room;
+ return private.marble_snapshot(p_room);
+end;$$;
+
+create function public.kick_marble_player(p_room uuid,p_user uuid) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare actor uuid:=(select auth.uid()); room private.marble_rooms;begin
+ if not private.member_approved(actor) then raise exception 'Approved member required';end if;
+ select * into room from private.marble_rooms where id=p_room for update;
+ if not found then raise exception 'Room not found';end if;
+ if room.host_id<>actor or not exists(select 1 from private.marble_players where room_id=p_room and user_id=actor) then raise exception 'Host required';end if;
+ if p_user is null or p_user=actor then raise exception 'Invalid kick target';end if;
+ if room.phase='closed' or (room.start_at is not null and room.start_at<=now()) then raise exception 'Game already starting';end if;
+ delete from private.marble_players where room_id=p_room and user_id=p_user;
+ if not found then raise exception 'Player not found';end if;
+ -- This removes one seat only. No blacklist or membership restriction is created.
+ update private.marble_players set ready=false where room_id=p_room;
+ update private.marble_rooms set phase='waiting',round=null,start_at=null,finish_at=null,revision=revision+1 where id=p_room;
+ return private.marble_snapshot(p_room);
+end;$$;
+
+create or replace function public.leave_marble_room(p_room uuid) returns void
+language plpgsql security definer set search_path='' as $$
+declare actor uuid:=(select auth.uid()); room private.marble_rooms;
+begin
+  if actor is null then raise exception 'Login required';end if;
+  select * into room from private.marble_rooms where id=p_room for update;
+  if not found then return;end if;
+  if not exists(select 1 from private.marble_players where room_id=p_room and user_id=actor) then return;end if;
+  if room.phase<>'closed' and (room.finish_at is null or room.finish_at>now()) then
+    if room.start_at is not null and room.start_at<=now() then raise exception 'Game already starting';end if;
+    if exists(select 1 from private.marble_players where room_id=p_room and user_id=actor and ready) then raise exception 'Cancel readiness before leaving';end if;
+  end if;
+  delete from private.marble_players where room_id=p_room and user_id=actor;
+  if actor=room.host_id then update private.marble_rooms set phase='closed',revision=revision+1 where id=p_room;
+  elsif room.start_at is null or room.start_at>now() then
+    update private.marble_players set ready=false where room_id=p_room;
+    update private.marble_rooms set phase='waiting',round=null,start_at=null,finish_at=null,revision=revision+1 where id=p_room;
+  end if;
+end; $$;
+
+revoke all on function public.create_ladder_room(integer,integer,text),public.update_ladder_settings(uuid,integer,integer,text),public.kick_ladder_player(uuid,uuid),public.create_marble_room(integer,integer,integer,text),public.update_marble_settings(uuid,integer,integer,integer,text),public.kick_marble_player(uuid,uuid) from public,anon,authenticated;
+
+grant execute on function public.create_ladder_room(integer,integer,text),public.update_ladder_settings(uuid,integer,integer,text),public.kick_ladder_player(uuid,uuid),public.create_marble_room(integer,integer,integer,text),public.update_marble_settings(uuid,integer,integer,integer,text),public.kick_marble_player(uuid,uuid) to authenticated;
+
+commit;
+
+-- Apply after 037. Three separately permissioned Daejeon photo albums.
+
+begin;
+
+alter table private.member_permissions drop constraint member_permissions_board_check;
+alter table private.member_permissions add constraint member_permissions_board_check check(board in ('free','humor','gallery','notice','staff','yb','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit'));
+alter table public.posts drop constraint posts_category_check;
+alter table public.posts add constraint posts_category_check check (
+ (board='free' and category is not null and category in ('info','chat','question'))
+ or (board='gallery' and (category is null or category in ('meetup','flash','meme','attendance','daejeon_flash','daejeon_attendance','daejeon_meetup')))
+ or (board='staff' and category is not null and category in ('plot','minutes'))
+ or (board not in ('free','gallery','staff') and category is null));
+
+create or replace function private.post_menu(p_board text,p_category text) returns text
+language sql immutable set search_path='' as $$
+  select case when p_board='gallery' then case p_category when 'daejeon_flash' then 'gallery_daejeon_flash' when 'daejeon_attendance' then 'gallery_daejeon_attendance' when 'daejeon_meetup' then 'gallery_daejeon_meetup' when 'flash' then 'gallery_flash' when 'attendance' then 'gallery_attendance' when 'meme' then 'gallery_flash' when 'meetup' then 'gallery_meetup' else case when p_category is null then 'gallery_meetup' end end
+    when p_board='staff' then case when p_category='minutes' then 'staff_minutes' when p_category='plot' or p_category is null then 'staff_plot' end
+    when p_board='yb' then 'yb_holics' when p_board in ('free','humor','notice','recruit') then p_board end;
+$$;
+
+create or replace function private.menu_permission(p_user uuid,p_menu text) returns text
+language plpgsql stable security definer set search_path='' as $$
+declare override_access text; member_role text;
+begin
+  if p_menu is null or p_menu not in ('free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit') then return 'deny'; end if;
+  if p_user is null then return 'deny'; end if;
+  if not private.member_approved(p_user) then return 'deny'; end if;
+  if exists(select 1 from private.admins where user_id=p_user) then return 'write'; end if;
+  select staff_role into member_role from public.profiles where id=p_user;
+  select access into override_access from private.member_permissions where user_id=p_user and board=p_menu;
+  if found then return case when p_menu in ('yb_roster','yb_calendar') and override_access='write' and not private.roster_editor_role(p_user) then 'read' else override_access end; end if;
+  select staff_role into member_role from public.profiles where id=p_user;
+  if p_menu in ('free','humor','recruit','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup') then return 'write'; end if;
+  if p_menu='notice' then return case when member_role in ('staff','vice_staff') then 'write' else 'read' end; end if;
+  if p_menu in ('staff_plot','staff_minutes') then return case when member_role in ('staff','vice_staff') then 'write' else 'deny' end; end if;
+  if p_menu='yb_roster' then return case when private.roster_editor_role(p_user) then 'write' else 'read' end; end if;
+  if p_menu='yb_calendar' then return case when private.roster_editor_role(p_user) then 'write' else 'read' end; end if;
+  if member_role in ('staff','vice_staff') or private.is_yb_member(p_user) then return 'write'; end if;
+  return 'deny';
+end; $$;
+
+create or replace function private.board_permission(p_user uuid,p_board text) returns text
+language plpgsql stable security definer set search_path='' as $$
+declare modes text[];
+begin
+  if p_board='gallery' then select array_agg(private.menu_permission(p_user,menu)) into modes from unnest(array['gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup']) menu;
+  elsif p_board='staff' then select array_agg(private.menu_permission(p_user,menu)) into modes from unnest(array['staff_plot','staff_minutes']) menu;
+  else return private.menu_permission(p_user,case when p_board='yb' then 'yb_holics' else p_board end); end if;
+  return case when 'write'=any(modes) then 'write' when 'read'=any(modes) then 'read' else 'deny' end;
+end; $$;
+
+create or replace function public.get_menu_permissions() returns jsonb
+language sql stable security definer set search_path='' as $$
+  select jsonb_object_agg(menu,jsonb_build_object('read',mode in ('read','write'),'write',mode='write')) from
+    (select menu,private.menu_permission((select auth.uid()),menu) mode from unnest(array['free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit']) menu) permissions;
+$$;
+
+create or replace function private.admin_member_snapshot(p_user uuid) returns jsonb
+language sql stable set search_path='' as $$
+  select jsonb_build_object('id',p.id,'username',a.username,'nickname',p.nickname,'region',p.region,'team',p.team,
+    'staff_role',p.staff_role,'yb_role',case when private.is_yb_member(p.id) then p.yb_role else 'member' end,'status',a.status,'yb_requested',a.yb_requested,'revision',a.revision,'created_at',p.created_at,'restriction_start',a.restriction_start,'restriction_end',a.restriction_end,'restriction_reason',a.restriction_reason,'is_restricted',private.restriction_active(p.id),
+    'is_admin',exists(select 1 from private.admins where user_id=p.id),'is_yb_member',private.is_yb_member(p.id),
+    'permissions',coalesce((select jsonb_object_agg(board,access) from private.member_permissions where user_id=p.id),'{}'::jsonb),
+    'effective', (select jsonb_object_agg(board,private.menu_permission(p.id,board)) from unnest(array['free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit']) board))
+  from public.profiles p join private.member_accounts a on a.user_id=p.id where p.id=p_user;
+$$;
+
+create or replace function public.approve_member(p_user uuid) returns void
+language plpgsql security definer set search_path='' as $$
+declare member_settings jsonb; full_permissions jsonb;
+begin
+  if not private.can_manage_members() then raise exception 'Administrator required'; end if;
+  member_settings:=private.admin_member_snapshot(p_user);
+  if member_settings is null then raise exception 'Member not found'; end if;
+  select jsonb_object_agg(board,coalesce(member_settings->'permissions'->>board,'default')) into full_permissions
+  from unnest(array['free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit']) board;
+  perform public.admin_update_member(p_user,'approved',member_settings->>'staff_role',(member_settings->>'is_yb_member')::boolean,
+    coalesce(member_settings->>'yb_role','member'),(member_settings->>'is_admin')::boolean,member_settings->>'team',full_permissions,(member_settings->>'revision')::bigint);
+end; $$;
+
+create or replace function public.admin_update_member(p_user uuid,p_status text,p_staff_role text,p_is_yb boolean,p_yb_role text,p_is_admin boolean,p_team text,p_permissions jsonb,p_revision bigint) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare actor_admin boolean; current_revision bigint; previous jsonb; updated jsonb; board_key text; mode text; actor uuid:=(select auth.uid());
+begin
+  -- Serialize administrator membership mutations and protect the final administrator.
+  perform pg_advisory_xact_lock(hashtextextended('community-member-administration',0));
+  if not private.can_manage_members() then raise exception 'Administrator required'; end if;
+  actor_admin:=private.is_admin();
+  if p_user is null or p_status is null or p_status not in ('pending','approved','rejected','suspended')
+    or p_staff_role is null or p_staff_role not in ('member','staff','vice_staff') or p_is_yb is null or p_is_admin is null
+    or p_yb_role is null or p_yb_role not in ('member','director','manager')
+    or (p_team is not null and p_team not in ('kia','samsung','lg','doosan','kt','ssg','lotte','hanwha','nc','kiwoom'))
+    or p_revision is null or jsonb_typeof(p_permissions) is distinct from 'object' then raise exception 'Invalid member settings'; end if;
+  if (select count(*) from jsonb_object_keys(p_permissions))<>15
+    or exists(select 1 from jsonb_each_text(p_permissions) entry where entry.key not in ('free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit') or entry.value not in ('default','deny','read','write') or entry.value is null)
+    then raise exception 'Invalid board permissions'; end if;
+  if not p_is_yb and p_yb_role<>'member' then raise exception 'YB role requires membership'; end if;
+  if p_permissions->>'yb_roster'='write' and not (p_is_admin or p_staff_role in ('staff','vice_staff') or (p_is_yb and p_yb_role in ('director','manager'))) then raise exception 'Roster role required'; end if;
+  select revision into current_revision from private.member_accounts where user_id=p_user for update;
+  if not found then raise exception 'Member not found'; end if;
+  if current_revision<>p_revision then raise exception 'Member settings changed; reload required'; end if;
+  if not actor_admin and (p_is_admin or exists(select 1 from private.admins where user_id=p_user)) then
+    raise exception 'Only administrators may manage administrator accounts';
+  end if;
+  if p_is_admin and p_status<>'approved' then raise exception 'Administrator must remain approved'; end if;
+  if p_user=actor and (p_status<>'approved' or (actor_admin and not p_is_admin) or (not actor_admin and p_staff_role not in ('staff','vice_staff'))) then raise exception 'Cannot remove your own administrator access'; end if;
+  if exists(select 1 from private.admins where user_id=p_user) and not p_is_admin
+    and (select count(*) from private.admins d join private.member_accounts a on a.user_id=d.user_id where a.status='approved')<=1
+    then raise exception 'Cannot remove final administrator'; end if;
+  previous:=private.admin_member_snapshot(p_user);
+  update private.member_accounts set status=p_status,revision=revision+1,
+    approved_at=case when p_status='approved' and status<>'approved' then now() else approved_at end,
+    approved_by=case when p_status='approved' and status<>'approved' then actor else approved_by end where user_id=p_user;
+  update public.profiles set staff_role=p_staff_role,yb_role=p_yb_role,team=p_team where id=p_user;
+  if p_is_admin then insert into private.admins(user_id) values(p_user) on conflict do nothing;
+  else delete from private.admins where user_id=p_user; end if;
+  if p_is_yb then insert into private.board_memberships(user_id,board) values(p_user,'yb') on conflict do nothing;
+  else delete from private.board_memberships where user_id=p_user and board='yb'; end if;
+  delete from private.member_permissions where user_id=p_user;
+  for board_key,mode in select key,value from jsonb_each_text(p_permissions) loop
+    if mode<>'default' then insert into private.member_permissions(user_id,board,access) values(p_user,board_key,mode); end if;
+  end loop;
+  updated:=private.admin_member_snapshot(p_user);
+  insert into private.admin_audit(actor_id,target_id,detail) values(actor,p_user,jsonb_build_object('before',previous,'after',updated));
+  return updated;
+end; $$;
+
+create or replace function public.admin_update_member_with_profile(p_user uuid,p_status text,p_staff_role text,p_is_yb boolean,p_yb_role text,p_is_admin boolean,p_team text,p_nickname text,p_region text,p_permissions jsonb,p_revision bigint) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare actor_admin boolean; current_revision bigint; previous jsonb; updated jsonb; board_key text; mode text; actor uuid:=(select auth.uid());
+begin
+  -- Serialize administrator membership mutations and protect the final administrator.
+  perform pg_advisory_xact_lock(hashtextextended('community-member-administration',0));
+  if not private.can_manage_members() then raise exception 'Administrator required'; end if;
+  actor_admin:=private.is_admin();
+  p_nickname:=trim(p_nickname);p_region:=trim(p_region);
+  if p_nickname is null or char_length(p_nickname) not between 2 and 20 or p_nickname ~ '[[:cntrl:]]' then raise exception 'Invalid profile nickname';end if;
+  if p_region is null or char_length(p_region) not between 1 and 20 or p_region ~ '[[:cntrl:]]' then raise exception 'Invalid profile region';end if;
+  if p_user is null or p_status is null or p_status not in ('pending','approved','rejected','suspended')
+    or p_staff_role is null or p_staff_role not in ('member','staff','vice_staff') or p_is_yb is null or p_is_admin is null
+    or p_yb_role is null or p_yb_role not in ('member','director','manager')
+    or (p_team is not null and p_team not in ('kia','samsung','lg','doosan','kt','ssg','lotte','hanwha','nc','kiwoom'))
+    or p_revision is null or jsonb_typeof(p_permissions) is distinct from 'object' then raise exception 'Invalid member settings'; end if;
+  if (select count(*) from jsonb_object_keys(p_permissions))<>15
+    or exists(select 1 from jsonb_each_text(p_permissions) entry where entry.key not in ('free','humor','gallery_flash','gallery_attendance','gallery_meetup','gallery_daejeon_flash','gallery_daejeon_attendance','gallery_daejeon_meetup','notice','staff_plot','staff_minutes','yb_roster','yb_calendar','yb_holics','recruit') or entry.value not in ('default','deny','read','write') or entry.value is null)
+    then raise exception 'Invalid board permissions'; end if;
+  if not p_is_yb and p_yb_role<>'member' then raise exception 'YB role requires membership'; end if;
+  if p_permissions->>'yb_roster'='write' and not (p_is_admin or p_staff_role in ('staff','vice_staff') or (p_is_yb and p_yb_role in ('director','manager'))) then raise exception 'Roster role required'; end if;
+  if p_permissions->>'yb_calendar'='write' and not (p_is_admin or p_staff_role in ('staff','vice_staff') or (p_is_yb and p_yb_role in ('director','manager'))) then raise exception 'Calendar role required'; end if;
+  select revision into current_revision from private.member_accounts where user_id=p_user for update;
+  if not found then raise exception 'Member not found'; end if;
+  if current_revision<>p_revision then raise exception 'Member settings changed; reload required'; end if;
+  if not actor_admin and (p_is_admin or exists(select 1 from private.admins where user_id=p_user)) then
+    raise exception 'Only administrators may manage administrator accounts';
+  end if;
+  if p_is_admin and p_status<>'approved' then raise exception 'Administrator must remain approved'; end if;
+  if p_user=actor and (p_status<>'approved' or (actor_admin and not p_is_admin) or (not actor_admin and p_staff_role not in ('staff','vice_staff'))) then raise exception 'Cannot remove your own administrator access'; end if;
+  if exists(select 1 from private.admins where user_id=p_user) and not p_is_admin
+    and (select count(*) from private.admins d join private.member_accounts a on a.user_id=d.user_id where a.status='approved')<=1
+    then raise exception 'Cannot remove final administrator'; end if;
+  previous:=private.admin_member_snapshot(p_user);
+  update private.member_accounts set status=p_status,revision=revision+1,
+    approved_at=case when p_status='approved' and status<>'approved' then now() else approved_at end,
+    approved_by=case when p_status='approved' and status<>'approved' then actor else approved_by end where user_id=p_user;
+  update public.profiles set staff_role=p_staff_role,yb_role=p_yb_role,team=p_team,nickname=p_nickname,region=p_region where id=p_user;
+  if p_is_admin then insert into private.admins(user_id) values(p_user) on conflict do nothing;
+  else delete from private.admins where user_id=p_user; end if;
+  if p_is_yb then insert into private.board_memberships(user_id,board) values(p_user,'yb') on conflict do nothing;
+  else delete from private.board_memberships where user_id=p_user and board='yb'; end if;
+  delete from private.member_permissions where user_id=p_user;
+  for board_key,mode in select key,value from jsonb_each_text(p_permissions) loop
+    if mode<>'default' then insert into private.member_permissions(user_id,board,access) values(p_user,board_key,mode); end if;
+  end loop;
+  updated:=private.admin_member_snapshot(p_user);
+  insert into private.admin_audit(actor_id,target_id,detail) values(actor,p_user,jsonb_build_object('before',previous,'after',updated));
+  return updated;
+end; $$;
+
+commit;
