@@ -1,7 +1,7 @@
 import {memberName,teams} from './teams.js?v=20261010-member-fixes';
-import {adminBoards,statusLabels,roleLabels,accessLabels,effectivePermission,fullPermissions,summarizeMemberChanges,canManageMembers,canManageRoster,ybRoleLabels} from './admin-model.js?v=20261022-room-controls';
+import {adminBoards,statusLabels,roleLabels,accessLabels,effectivePermission,fullPermissions,summarizeMemberChanges,canManageMembers,canManageRoster,ybRoleLabels} from './admin-model.js?v=20261022-room-controls-v2';
 import {restrictionActive,restrictionLabel,hasRestriction,formatRestrictionDate,toSeoulInput,seoulInputToIso} from './restrictions.js?v=20261010-member-fixes';
-import {validateProfileInfo,profileErrorText} from './account.js?v=20261022-room-controls';
+import {validateProfileInfo,profileErrorText} from './account.js?v=20261022-room-controls-v2';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let previewState;
 function previewData(){

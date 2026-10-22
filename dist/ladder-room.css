@@ -29,3 +29,5 @@
 .room-list-item>button{flex:none}
 .room-lobby-grid .tool-fields,.room-settings .tool-fields{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 @media(max-width:480px){.room-control-buttons>button{min-width:110px}.room-bet-notice{padding:14px 12px;font-size:13px}.room-list-item .room-bet-badge{font-size:12px}.room-lobby-grid .tool-fields,.room-settings .tool-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.room-bet-field{grid-column:1/-1}}
+
+.room-heading .room-owner-title{font-size:18px;margin:0;color:#365277}.room-map-name>span{font-weight:800;color:#50647e;margin-right:4px}

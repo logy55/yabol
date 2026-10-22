@@ -1,23 +1,23 @@
 import {deleteContent,bindCommentActions,renderTrash} from './content-management.js?v=20261010-member-fixes2';
 import {uploadCommunityPhoto} from './media.js?v=20261010-member-fixes';
 import {recruitmentPanel,bindRecruitment,previewRecruitmentComments,updateRecruitmentMember} from './recruitment.js?v=20261022-late-response';
-import { boards, galleryCategories, freeCategories, staffCategories } from './sample.js?v=20261022-room-controls';
-import './navigation.js?v=20261022-room-controls';
-import {renderTool} from './tools.js?v=20261022-room-controls';
-import {accountBar, renderAccount, accountActions} from './account.js?v=20261022-room-controls';
+import { boards, galleryCategories, freeCategories, staffCategories } from './sample.js?v=20261022-room-controls-v2';
+import './navigation.js?v=20261022-room-controls-v2';
+import {renderTool} from './tools.js?v=20261022-room-controls-v2';
+import {accountBar, renderAccount, accountActions} from './account.js?v=20261022-room-controls-v2';
 import {restrictionActive,restrictionView} from './restrictions.js?v=20261010-member-fixes';
 import {accessDenied} from './access.js?v=20261010-member-fixes';
 import {renderCalendar} from './calendar.js?v=20261010-calendar-cells';
 import {renderRoster} from './roster.js?v=20261010-member-fixes';
-import {canManageMembers,effectivePermission,boardMenus,postMenu} from './admin-model.js?v=20261022-room-controls';
+import {canManageMembers,effectivePermission,boardMenus,postMenu} from './admin-model.js?v=20261022-room-controls-v2';
 import {teamChoices, memberName} from './teams.js?v=20261010-member-fixes';
 import {requestMembership} from './membership.js?v=20261010-member-fixes';
-import {renderAdmin} from './admin.js?v=20261022-room-controls';
+import {renderAdmin} from './admin.js?v=20261022-room-controls-v2';
 import {createPostEditor} from './post-editor.js?v=20261010-youtube';
 import {normalizeDocument,imageIndexes,documentText,remapDocumentPhotos,renderDocument} from './rich-body.js?v=20261010-youtube';
 import {yabolticons,yabolticonHTML,renderYabolText} from './yabolticons.js?v=20261010-member-fixes';
 
-import {createPendingMemberAlert} from './member-notifications.js?v=20261022-room-controls';
+import {createPendingMemberAlert} from './member-notifications.js?v=20261022-room-controls-v2';
 import {bindRememberedLogin} from './remembered-login.js?v=20261021-member-alerts';
 
 const config=window.COMMUNITY_CONFIG;
