@@ -2587,5 +2587,23 @@
     "final_layout_workflow": 39781000311,
     "final_layout_workflow_result": "success",
     "production_admin_three_album_permissions_visible": true
+  },
+  "2026-10-22_marble_mobile_fields": {
+    "state": "deployed-verified",
+    "runtime_commit": "8785f19038891466e980eabb08d6af981235e40a",
+    "workflow": 39786853772,
+    "workflow_result": "success",
+    "mobile_widths": [
+      320,
+      360,
+      390,
+      402,
+      640
+    ],
+    "map_and_bet_same_row_and_width": true,
+    "lobby_and_room_settings_checked": true,
+    "longest_option_does_not_overflow": true,
+    "production_402px_verified": true,
+    "ladder_style_unchanged": true
   }
 }

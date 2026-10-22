@@ -98,6 +98,6 @@ Chrome에서 기존 10/10 BlueGene Foxes전의 승, 13 : 0, 안산 한양대구�
 
 036까지 적용한 프로젝트는 037_game_room_host_controls.sql, 038_daejeon_photo_albums.sql 순서로 적용합니다. 운영 서버에는 두 변경을 한 트랜잭션으로 적용해 검증했습니다. 기존 계정·게시글은 변경하지 않습니다.
 
-런타임 모듈은 20261022-room-controls-v2, 사다리/마블 CSS는 20261022-room-controls-v3입니다. 새 room-options.js와 변경한 모듈의 import를 함께 배포해야 합니다. GitHub Pages 배포 성공 후 기존 열린 탭을 새로고침합니다.
+런타임 모듈은 20261022-room-controls-v2, 사다리/마블 CSS는 20261022-marble-fields입니다. 새 room-options.js와 변경한 모듈의 import를 함께 배포해야 합니다. GitHub Pages 배포 성공 후 기존 열린 탭을 새로고침합니다.
 
 fresh/036 업그레이드 SQL 검증, 두 Chrome 참가자 추방·재입장·준비 나가기·1초 갱신 검증을 수행했습니다. 운영 DB의 임시 계정·방·사진첩 게시물 검증은 ROLLBACK했으며 기존 회원 데이터는 건드리지 않았습니다.
