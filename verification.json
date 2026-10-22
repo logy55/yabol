@@ -2605,5 +2605,20 @@
     "longest_option_does_not_overflow": true,
     "production_402px_verified": true,
     "ladder_style_unchanged": true
+  },
+  "2026-10-22_room_exit_hint": {
+    "state": "deployed-verified",
+    "runtime_commit": "e7cd67483f50770ef475c89fc76ab43334bd2c62",
+    "workflow": 39789518349,
+    "workflow_result": "success",
+    "ladder_and_marble_click_instruction_verified": true,
+    "ready_click_does_not_exit": true,
+    "cancel_then_exit_verified": true,
+    "mobile_width": 402,
+    "instruction": "준비를 해제한 뒤 나갈 수 있습니다.\n'준비 취소'를 먼저 눌러주세요.",
+    "two_lines_verified": true,
+    "inline_and_toast_preserve_line_break": true,
+    "server_readiness_guard_unchanged": true,
+    "production_asset_hashes_match": true
   }
 }
