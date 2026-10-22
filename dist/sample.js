@@ -7,6 +7,6 @@ export const boards = {
   staff:{name:'운영진 게시판',description:'',restricted:true},
   yb:{name:'홀릭스 게시판',description:'',restricted:true}
 };
-export const galleryCategories={flash:'벙개 사진',attendance:'직관 사진',meetup:'정모 사진'};
+export const galleryCategories={flash:'벙개 사진',attendance:'직관 사진',meetup:'정모 사진',daejeon_flash:'벙개 사진 (대전 야볼)',daejeon_attendance:'직관 사진 (대전 야볼)',daejeon_meetup:'정모 사진 (대전 야볼)'};
 export const freeCategories=Object.freeze({chat:'잡담',info:'정보',question:'질문'});
 export const staffCategories=Object.freeze({plot:'작당모의',minutes:'회의록'});

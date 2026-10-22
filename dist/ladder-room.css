@@ -14,3 +14,18 @@
 @media(prefers-reduced-motion:reduce){.ladder-gift-links img{transition:none}}
 
 .marble-canvas{display:block;width:100%;height:600px;border-radius:9px;background:#172a43}.marble-attribution{margin:18px 0 0;text-align:center;font-size:11px;color:#748397}.marble-attribution a{text-decoration:underline;text-underline-offset:2px}@media(max-width:640px){.marble-canvas{height:500px}}
+
+.room-ready-bar{flex-direction:column;justify-content:center;gap:14px;text-align:center}
+.room-control-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.room-control-buttons>button{min-width:130px;min-height:42px}
+.room-kick{border:1px solid #e2bdc3;border-radius:5px;background:#fff;color:#a54d5b;padding:4px 12px;font-size:12px}
+.room-kick:hover:not(:disabled){background:#fff0f2}
+.room-bet-notice{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;padding:16px 20px;margin:0 0 20px;background:#f5f8fc;border:1px solid #dce5f0;border-radius:9px;color:#40536e;font-size:14px;line-height:1.6;text-align:center}
+.room-bet-notice img{width:36px;height:36px;object-fit:contain;flex:none}
+.room-bet-badge{display:inline-flex;align-items:center;gap:7px;width:max-content;max-width:100%;line-height:1.5}
+.room-bet-badge img{width:28px;height:28px;object-fit:contain;flex:none}
+.room-list-item .room-bet-badge>span{color:#40536e}
+.room-list-item>div{min-width:0}
+.room-list-item>button{flex:none}
+.room-lobby-grid .tool-fields,.room-settings .tool-fields{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+@media(max-width:480px){.room-control-buttons>button{min-width:110px}.room-bet-notice{padding:14px 12px;font-size:13px}.room-list-item .room-bet-badge{font-size:12px}.room-lobby-grid .tool-fields,.room-settings .tool-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.room-bet-field{grid-column:1/-1}}

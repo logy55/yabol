@@ -105,6 +105,13 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 }
 
 .account-content-actions{display:flex;margin-top:16px}
+.board-tag.free:not([data-topic]){background:#e4f2eb;color:#31674d}
+.board-tag.humor{background:#fff0e3;color:#94551d}
+.board-tag.recruit{background:#eee9fa;color:#644498}
+.board-tag.gallery{background:#fff4d8;color:#866315}
+.board-tag.notice{background:#e4efff;color:#365f97}
+.board-tag.staff{background:#f9e7ed;color:#91475f}
+.board-tag.yb{background:#e0f3f3;color:#296d71}
 .photo-post-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 20px;border-top:2px solid var(--ink);padding-top:22px}
 .photo-post-card{min-width:0;display:block}
 .photo-post-thumbnail{position:relative;aspect-ratio:1;overflow:hidden;border-radius:8px;background:var(--pale);border:1px solid var(--line)}

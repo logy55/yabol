@@ -1,4 +1,4 @@
-import {canManageMembers} from './admin-model.js?v=20261010-recruit-rights';
+import {canManageMembers} from './admin-model.js?v=20261022-room-controls';
 
 export function createPendingMemberAlert(element,getContext){
   let owner='',sequence=0,inFlight=null;
