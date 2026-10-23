@@ -46,3 +46,9 @@ SOFTWARE.
 Source: https://github.com/lazygyu/roulette/tree/bd237348858035c48336c3f2a0d5276008d86fb6
 
 MIT licensed physics adapter, map definitions, original camera, progress ranking, zoom helpers and rendering constants. The site supplies its own interface, room server and renderer. The adapter uses an instance-local seeded random generator and a fixed non-SIMD Box2D WASM build for replay. Original branding, advertisements, analytics and community services are excluded. MIT text: `dist/marble-LICENSE.txt`. Box2D WASM 7.0.0 uses the zlib license, retained at `dist/marble-box2d-LICENSE.txt`. Original sources and local modifications are in `marble-source.zip` and the local `src/` tree. Unzip at the project root, run `pnpm install`, then `pnpm build:marble` to rebuild.
+
+# Mediabunny MP4 encoder
+
+Official source: https://github.com/Vanilagy/mediabunny
+
+Mediabunny 1.62.1 is bundled without library source modifications in `dist/video-encoder.js` under MPL-2.0. The complete license is `dist/mediabunny-LICENSE.txt`. The exact corresponding npm source package is included as `mediabunny-source.tgz` at the project root, also available at https://github.com/logy55/yabol/blob/main/mediabunny-source.tgz . The site-specific import entry is `src/replay-video-encoder.js`; install dependencies and run `build:replay-video` to rebuild. Replay capture uses local browser WebCodecs and does not upload recordings to a server.

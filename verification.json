@@ -2767,5 +2767,85 @@
       "../repair-proof/member-records-mobile-production.png",
       "../repair-proof/member-records-mobile-local.png"
     ]
+  },
+  "finished_game_replay_20261024": {
+    "date": "2026-10-24",
+    "runtime_cache": "20261024-game-replay",
+    "production_commit": "16d720ab4bb334ec651a0dfcd68fe1f427c5356b",
+    "production_workflow_id": 40040214453,
+    "production_workflow_conclusion": "success",
+    "database_migration_required": false,
+    "scope": "Only the last finished round, no replay history in member records",
+    "finished_controls": {
+      "host": [
+        "모든 결과가 공개되었습니다.",
+        [
+          "다시하기",
+          "리플레이",
+          "나가기"
+        ]
+      ],
+      "guest": [
+        "모든 결과가 공개되었습니다.",
+        [
+          "리플레이",
+          "나가기"
+        ],
+        "방장이 다시하기를 결정하고 있습니다."
+      ]
+    },
+    "canonical_movie_reused": true,
+    "save_label": "리플레이 저장",
+    "saved_video": "Game field only; no separate member result list or page chrome; ladder canvas height follows board geometry",
+    "ladder_mp4": {
+      "file": "yabol-ladder-replay-2026-10-23T23-28-34-990Z.mp4",
+      "bytes": 173655,
+      "container": "ftyp",
+      "avc": true,
+      "seconds": 11.0,
+      "width": 960,
+      "height": 446
+    },
+    "ladder_twelve_players_mp4": {
+      "bytes": 1491735,
+      "container": "ftyp",
+      "avc": true,
+      "seconds": 51.0,
+      "width": 960,
+      "height": 542
+    },
+    "marble_mp4": {
+      "file": "yabol-marble-replay-2026-10-23T23-26-19-128Z.mp4",
+      "bytes": 13906068,
+      "type": "ftyp",
+      "seconds": 48.9,
+      "width": 960,
+      "height": 600
+    },
+    "local_chrome": [
+      "Host and guest have one status box above game; notice above buttons",
+      "402px buttons one row and labels unbroken",
+      "Playback pause/restart/seek and original fixed outcomes verified",
+      "Ladder guest replay closed on host rematch, both unready, ready button focused",
+      "Marble guest export closed on host rematch, export canvas removed, both unready",
+      "Cancellation status visible and controls re-enabled",
+      "Synthetic member with one actual marble game still has exactly one record after replay/export/rematch",
+      "Real AVC MP4 generated for two and twelve ladder players and marble",
+      "Saved ladder file decoded and played in Chrome at 960x446 with no empty footer",
+      "Marble duration-report response ending round redraws host controls"
+    ],
+    "production_chrome": [
+      "Authenticated marble lobby loaded without console errors"
+    ],
+    "production_assets": "All 13 changed assets match local files byte for byte",
+    "screenshots": [
+      "../repair-proof/replay-finished-controls-mobile.png",
+      "../repair-proof/replay-game-only-local.png",
+      "../repair-proof/replay-saved-video-tight.png"
+    ],
+    "limitations": [
+      "iPhone/Safari MP4 encoding not device-tested; unsupported encoder gives a visible message",
+      "Finished-game multi-client test used isolated PGlite, production gameplay not created for QA"
+    ]
   }
 }

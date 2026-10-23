@@ -127,3 +127,10 @@ index.html, styles.css, account.js, app.js, admin.js를 함께 배포합니다. 
 040 다음 `041_member_game_record_lookup.sql`을 적용합니다. 기존 본인 전적 RPC를 공통 private 합계 함수로 옮기고 승인 회원 누구나 다른 승인 회원의 게임 합계를 읽는 새 RPC만 authenticated에 허용합니다. private 원장 접근은 유지하지 않으며 기존처럼 차단합니다. 운영 DB에서 일반 회원·게시판 deny 예외·본인/다른 회원 합계 일치·대기/비로그인 차단을 ROLLBACK으로 검증했습니다.
 
 현재 프런트엔드 캐시는 `20261024-member-records`입니다. index.html, styles.css, account.js, app.js, admin.js, teams.js, tools.js, member-game-records.js, ladder-room.js, marble-room.js를 함께 배포했습니다. GitHub Pages 배포 40036573670이 성공했고 실제 회원의 게시글 이름에서 다른 회원 전적을 열어 확인했습니다. 040·041 migration과 전체 schema.sql, 관련 문서도 같은 최종 상태로 보관합니다.
+
+
+## 2026-10-24 경기 리플레이 배포
+
+DB는 041 상태를 유지하며 추가 마이그레이션이 없습니다. 캐시는 `20261024-game-replay`입니다. index.html, app.js, tools.js, room-options.js, ladder-room.js, marble-room.js, ladder-room.css, marble-engine.js와 새 ladder-board.js, game-replay.js, game-replay-export.js, video-encoder.js, mediabunny-LICENSE.txt를 함께 배포합니다. 마블 엔진에는 저장용 수동 프레임 그리기 API만 추가하고 원본 물리·맵은 유지합니다. src/marble/player.ts와 src/replay-video-encoder.js, build-replay-video.mjs, package.json, marble-source.zip, mediabunny-source.tgz 및 라이선스 문서를 함께 보관합니다.
+
+방장이 다시하기를 선택하면 참가자의 재생·영상 생성이 즉시 닫히며 새로운 대기방의 준비는 자동으로 켜지지 않습니다. 실제 회원 데이터 대신 격리된 PGlite 두 회원으로 확인합니다. 로컬 QA HTML과 다운로드 영상은 배포 대상에서 제외합니다.

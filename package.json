@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check dist/access.js && node --check dist/account.js && node --check dist/admin-model.js && node --check dist/admin.js && node --check dist/anime.js && node --check dist/app.js && node --check dist/calendar.js && node --check dist/config.js && node --check dist/content-management.js && node --check dist/ladder-effects.js && node --check dist/ladder-room.js && node --check dist/media.js && node --check dist/membership.js && node --check dist/navigation.js && node --check dist/post-editor.js && node --check dist/recruitment.js && node --check dist/restrictions.js && node --check dist/rich-body.js && node --check dist/roster.js && node --check dist/sample.js && node --check dist/settlement-logic.js && node --check dist/settlement.js && node --check dist/teams.js && node --check dist/tool-logic.js && node --check dist/tools.js && node --check dist/whozzie.js && node --check dist/yabolticons.js && node --check dist/youtube.js && node --check dist/member-notifications.js && node --check dist/remembered-login.js && node --check dist/ladder-gifts.js && node --check dist/marble-room.js && node --check dist/marble-engine.js && node --check dist/room-options.js",
+    "check": "node --check dist/access.js && node --check dist/account.js && node --check dist/admin-model.js && node --check dist/admin.js && node --check dist/anime.js && node --check dist/app.js && node --check dist/calendar.js && node --check dist/config.js && node --check dist/content-management.js && node --check dist/ladder-effects.js && node --check dist/ladder-room.js && node --check dist/media.js && node --check dist/membership.js && node --check dist/navigation.js && node --check dist/post-editor.js && node --check dist/recruitment.js && node --check dist/restrictions.js && node --check dist/rich-body.js && node --check dist/roster.js && node --check dist/sample.js && node --check dist/settlement-logic.js && node --check dist/settlement.js && node --check dist/teams.js && node --check dist/tool-logic.js && node --check dist/tools.js && node --check dist/whozzie.js && node --check dist/yabolticons.js && node --check dist/youtube.js && node --check dist/member-notifications.js && node --check dist/remembered-login.js && node --check dist/ladder-gifts.js && node --check dist/marble-room.js && node --check dist/marble-engine.js && node --check dist/room-options.js && node --check dist/ladder-board.js && node --check dist/game-replay.js && node --check dist/game-replay-export.js && node --check dist/video-encoder.js",
     "build": "node build-editor.mjs",
-    "build:marble": "node build-marble.mjs"
+    "build:marble": "node build-marble.mjs",
+    "build:replay-video": "node build-replay-video.mjs"
   },
   "dependencies": {
     "@tiptap/core": "3.31.4",
@@ -13,7 +14,8 @@
     "@tiptap/starter-kit": "3.31.4",
     "@tiptap/extension-table": "3.31.4",
     "@tiptap/extension-image": "3.31.4",
-    "box2d-wasm": "7.0.0"
+    "box2d-wasm": "7.0.0",
+    "mediabunny": "1.62.1"
   },
   "devDependencies": {
     "esbuild": "0.28.2"
