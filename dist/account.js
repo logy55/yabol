@@ -13,12 +13,13 @@ export function accountBar(user, {preview=false}={}) {
   return `<span class="member-greeting">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member)}</span><a class="member-link" href="#/account">내 정보</a>`;
 }
 
-export function accountView(user, {preview=false}={}) {
+export function accountView(user, {preview=false,gameRecords=null}={}) {
   if (!user) return '<section class="access-panel"><h1>내 정보</h1><p>로그인 후 내 정보를 확인할 수 있어요.</p><div class="access-actions"><button class="primary" data-auth>로그인</button></div></section>';
   const joined = user.created_at ? new Date(user.created_at) : null;
   const joinedText = joined && !Number.isNaN(joined.getTime()) ? joined.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'}) : '—';
   const profile = user.user_metadata || {};
-  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div></dl></div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
+  const recordText=game=>gameRecords?`${gameRecords[game].wins}승 ${gameRecords[game].losses}패`:preview?'0승 0패':'불러오는 중…';
+  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div><div class="game-record-row"><dt>사다리 게임 전적</dt><dd id="account-ladder-record" aria-live="polite">${recordText('ladder')}</dd></div><div class="game-record-row"><dt>마블룰렛 전적</dt><dd id="account-marble-record" aria-live="polite">${recordText('marble')}</dd></div></dl></div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
 }
 
 export function validateProfileInfo(nickname,region){
@@ -36,9 +37,9 @@ export function profileErrorText(error){
   return '';
 }
 export function renderAccount(main,{user,db,preview=false,isCurrent,onSaved,notify}){
-  let current=user,busy=false;
+  let current=user,busy=false,gameRecords=null;
   function draw(){
-    main.innerHTML=accountView(current,{preview});
+    main.innerHTML=accountView(current,{preview,gameRecords});
     const root=main.querySelector('.account-page');
     if(!root||preview)return;
     const alive=()=>isCurrent()&&main.contains(root),button=root.querySelector('#account-edit');
@@ -66,4 +67,15 @@ export function renderAccount(main,{user,db,preview=false,isCurrent,onSaved,noti
     };
   }
   draw();
+  if(db&&!preview&&user)void (async()=>{
+    try{
+      const {data,error}=await db.rpc('get_my_game_records');if(error)throw error;
+      for(const kind of ['ladder','marble'])for(const key of ['wins','losses'])if(!Number.isSafeInteger(data?.[kind]?.[key])||data[kind][key]<0)throw Error('Invalid game records');
+      if(!isCurrent())return;gameRecords=data;
+      for(const kind of ['ladder','marble']){const el=main.querySelector('#account-'+kind+'-record');if(el)el.textContent=`${data[kind].wins}승 ${data[kind].losses}패`;}
+    }catch{
+      if(isCurrent())for(const kind of ['ladder','marble']){const el=main.querySelector('#account-'+kind+'-record');if(el)el.textContent='전적을 불러오지 못했습니다.';}
+    }
+  })();
 }
+

@@ -28,3 +28,6 @@ export function explainRoomLeave(root){
   const hint=root.querySelector('#room-leave-hint');hint.textContent=message;hint.hidden=false;
   return true;
 }
+export function roomReplayControls(isHost){
+  return `<section class="room-replay-actions" data-room-replay-panel hidden>${isHost?'<button class="primary" type="button" data-room-replay>같은 인원으로 다시하기</button><p>남아 있는 참가자 모두 다시 준비하면 시작합니다.</p>':'<p>방장이 다시하기를 누르면 같은 방에서 재경기를 준비할 수 있습니다.</p>'}<p class="form-error" data-room-replay-error role="alert"></p></section>`;
+}

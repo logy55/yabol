@@ -163,3 +163,5 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(max-width:640px){.header-inner>.brand{flex:1 1 0;min-width:0;width:auto;max-width:220px;height:64px;display:flex;align-items:center}.header-inner>.brand .brand-logo{max-height:64px;object-fit:contain;object-position:left center}.header-inner>.account-actions{flex:0 0 auto}}
 
 .toast{white-space:pre-line}
+.account-details>.game-record-row{grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.game-record-row dd{white-space:nowrap;color:var(--primary)}

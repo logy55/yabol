@@ -1,6 +1,6 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261022-room-exit-inline';
-import {renderOnlineLadder} from './ladder-room.js?v=20261022-room-exit-inline';
-import {renderSettlement} from './settlement.js?v=20261010-layout-access';
+import {renderOnlineMarble} from './marble-room.js?v=20261024-game-records';
+import {renderOnlineLadder} from './ladder-room.js?v=20261024-game-records';
+import {renderSettlement} from './settlement.js?v=20261024-game-records';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261010-member-fixes';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
