@@ -2685,5 +2685,87 @@
       "All 12 changed runtime asset bytes match production",
       "Temporary mobile viewport reset"
     ]
+  },
+  "game_bet_records_20261024": {
+    "date": "2026-10-24",
+    "runtime_cache": "20261024-bet-records",
+    "migration": "040_game_bet_records.sql",
+    "production_migration_applied": true,
+    "production_rollback_check": "passed: both games, six players/two losers, five players/one loser, stable per-bet records; temporary_accounts_removed=true",
+    "local_postgres": [
+      "fresh schema and 039 upgrade passed",
+      "both games and all four bet types",
+      "5 players/1 loser: each winner receives 1, loser sends 4",
+      "6 players/2 losers: each winner receives 1, each loser sends 2",
+      "remainders conserve quantities",
+      "one record per member/room/round",
+      "bet and player-count changes do not rewrite prior results",
+      "own approved-account stats only",
+      "unknown old details remain unclassified; totals preserved",
+      "039 replay/privacy/offline regression passed"
+    ],
+    "chrome_local": [
+      "402px and 320px detail tables fit without horizontal overflow",
+      "game sections below joined date",
+      "per-game headings and separators",
+      "all four bet categories and coffee count columns"
+    ],
+    "win_rate": "wins / (wins + losses) * 100, rounded to 1 decimal; zero games = 0%",
+    "gift_policy": "Each passing player receives one; losers split the number of passing players evenly. Stable canonical loser order allocates indivisible remainders.",
+    "gift_count_meaning": "Outcome-based quantities, not confirmed Kakao gifting transactions",
+    "production_browser_verified": true,
+    "production_commit": "ba26a779f2f897fd2afc3d8bcd4458f8b4ee414c",
+    "production_workflow_id": 40035697390,
+    "production_workflow_conclusion": "success",
+    "production_chrome": [
+      "Own account win rates and both bet tables loaded",
+      "Current member lookup reuses the same validated summary renderer",
+      "Real other member totals and bet quantities loaded in production"
+    ],
+    "superseded_runtime_cache": "20261024-member-records"
+  },
+  "member_game_records_20261024": {
+    "date": "2026-10-24",
+    "runtime_cache": "20261024-member-records",
+    "migration": "041_member_game_record_lookup.sql",
+    "production_migration_applied": true,
+    "production_commit": "db0ed25989509d8b0ea64d5f936f6345347e3efe",
+    "production_workflow_id": 40036573670,
+    "production_workflow_conclusion": "success",
+    "production_rollback_check": "passed: ordinary approved member, no board role, game-only summary, pending/anon blocked; temporary_accounts_removed=true",
+    "local_postgres": [
+      "fresh schema and 040 upgrade passed",
+      "ordinary approved viewer can read other member game summaries",
+      "board deny override does not block game summary",
+      "anon/pending/rejected/restricted viewers denied",
+      "pending/rejected/unknown targets denied",
+      "raw ledger and private helper denied",
+      "no private member profile returned",
+      "same totals as own-account RPC",
+      "repeated lookup never duplicates records"
+    ],
+    "chrome_local": [
+      "Regular approved member opens another regular member record menu",
+      "Actual post-list and photo-list renderers tested",
+      "Name click leaves post URL unchanged",
+      "Post link navigates normally",
+      "No member buttons nested in links",
+      "Modal omits joined date/account fields",
+      "No duplicate IDs",
+      "402px popup and dialog stay inside viewport"
+    ],
+    "production_browser_verified": true,
+    "production_chrome": [
+      "Real free-board author menu opens another member game summary",
+      "Real article author and comment authors expose member menus",
+      "402px modal has equal client/scroll width 349px",
+      "Both game totals, win rates and four bet rows visible",
+      "Temporary viewport reset"
+    ],
+    "production_asset_hashes": "All 10 changed runtime assets match local files byte-for-byte",
+    "screenshots": [
+      "../repair-proof/member-records-mobile-production.png",
+      "../repair-proof/member-records-mobile-local.png"
+    ]
   }
 }

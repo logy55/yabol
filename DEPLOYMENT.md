@@ -113,3 +113,17 @@ fresh/036 업그레이드 SQL 검증, 두 Chrome 참가자 추방·재입장·�
 038 다음 `039_game_records_and_replay.sql`을 한 번 적용합니다. 운영 서버에서 적용하고 임시 두 계정·두 게임·각 두 회차를 하나의 ROLLBACK 트랜잭션으로 검증했습니다. 전적 중복 방지·방장 전용 다시하기·설정 유지·준비 초기화·테스트 계정 원상복구를 확인했습니다. 기존 설치에 전체 schema.sql을 재실행하지 않습니다.
 
 런타임 index.html, styles.css, ladder-room.css, account.js, admin.js, app.js, tools.js, room-options.js, ladder-room.js, marble-room.js, settlement.js, settlement.html을 함께 배포합니다. 캐시 버전은 `20261024-game-records`입니다. 정산 모바일 입력 폰트·행 너비 보정과 내 정보의 서버 전적 및 결과 하단 재경기 버튼을 포함합니다. 원본 마블 물리 엔진과 맵은 변경하지 않았습니다. 로컬 QA 파일·임시 회원·검증 방은 공개 사이트에 올리지 않습니다.
+
+
+## 2026-10-24 내기별 전적 확장
+
+039 다음 `040_game_bet_records.sql`을 적용합니다. get_my_game_records는 기존 ladder/marble의 wins/losses를 유지하면서 bets와 unclassified를 추가하므로 이전 프런트엔드와도 호환됩니다. 상세 내기와 커피 수량은 private 원장에만 기록하고 외부 입력으로 수량을 변경할 수 없습니다. 운영 DB에서 두 게임 각각 6명·2꽝 후 5명·1꽝 재경기, 내기 변경, 수량 보존, 반복 조회를 검증하고 모두 ROLLBACK했습니다.
+
+index.html, styles.css, account.js, app.js, admin.js를 함께 배포합니다. 내 정보 관련 캐시는 `20261024-bet-records`이며 기존 게임·정산 모듈 캐시는 유지합니다. 원본 마블 물리·게임 진행·준비·추방·재경기 규칙은 변경하지 않습니다. 로컬 새 설치/039 업그레이드·복원할 수 없는 이전 상세 이력 보존을 검증했습니다.
+
+
+## 2026-10-24 회원 게임 전적 조회 배포
+
+040 다음 `041_member_game_record_lookup.sql`을 적용합니다. 기존 본인 전적 RPC를 공통 private 합계 함수로 옮기고 승인 회원 누구나 다른 승인 회원의 게임 합계를 읽는 새 RPC만 authenticated에 허용합니다. private 원장 접근은 유지하지 않으며 기존처럼 차단합니다. 운영 DB에서 일반 회원·게시판 deny 예외·본인/다른 회원 합계 일치·대기/비로그인 차단을 ROLLBACK으로 검증했습니다.
+
+현재 프런트엔드 캐시는 `20261024-member-records`입니다. index.html, styles.css, account.js, app.js, admin.js, teams.js, tools.js, member-game-records.js, ladder-room.js, marble-room.js를 함께 배포했습니다. GitHub Pages 배포 40036573670이 성공했고 실제 회원의 게시글 이름에서 다른 회원 전적을 열어 확인했습니다. 040·041 migration과 전체 schema.sql, 관련 문서도 같은 최종 상태로 보관합니다.
