@@ -2632,5 +2632,58 @@
     "two_line_instruction_preserved": true,
     "server_exit_guard_unchanged": true,
     "production_six_asset_hashes_match": true
+  },
+  "game_records_replay_mobile_settlement_20261024": {
+    "date": "2026-10-24",
+    "runtime_cache": "20261024-game-records",
+    "migration": "039_game_records_and_replay.sql",
+    "production_migration_applied": true,
+    "production_rollback_check": "passed: two games, two rounds, no duplicate records, host-only replay; temporary_accounts_removed=true",
+    "local_postgres": [
+      "fresh schema",
+      "038 to 039 upgrade",
+      "private ledger and own stats only",
+      "pending, restricted, anonymous denied",
+      "canonical ladder tracing and last marble losses",
+      "exactly once per game/room/round/member",
+      "offline completion and close preserve results",
+      "cancelled and legacy rounds excluded",
+      "host-only finished replay",
+      "stale replay rejected",
+      "same participants, bets and maps preserved",
+      "all ready flags reset"
+    ],
+    "chrome_local": [
+      "two clients, two completed ladder rounds",
+      "two clients, two completed marble rounds",
+      "host replay control and guest explanation",
+      "no guest replay button",
+      "waiting screen removes old board and marble canvas",
+      "account stats after reload: ladder 1 win 1 loss, marble 2 wins 0 losses",
+      "mobile settlement at 320 and 402 pixels",
+      "plus button visible and participant added",
+      "manual viewport reset after testing"
+    ],
+    "production_commit": "d4d34110459662b40d75dddbc443131d551a8789",
+    "production_workflow_id": 40034636931,
+    "production_browser_verified": true,
+    "historical_records": "Only rounds started after migration 039 are recorded; no retrospective backfill.",
+    "not_verified": [
+      "Physical iPhone Safari focus behavior"
+    ],
+    "screenshots": [
+      "../repair-proof/game-records-account-production.png",
+      "../repair-proof/settlement-mobile-production.png",
+      "../repair-proof/settlement-mobile-fixed-local.png"
+    ],
+    "production_workflow_status": "completed",
+    "production_workflow_conclusion": "success",
+    "production_chrome": [
+      "Real approved account shows ladder 0 wins 0 losses and marble 0 wins 0 losses immediately below joined date",
+      "Mobile settlement 402px plus button fully visible",
+      "Name focus: visualViewport.scale=1, document scrollWidth=387, viewport innerWidth=402",
+      "All 12 changed runtime asset bytes match production",
+      "Temporary mobile viewport reset"
+    ]
   }
 }
