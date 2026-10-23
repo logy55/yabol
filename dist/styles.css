@@ -163,5 +163,11 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(max-width:640px){.header-inner>.brand{flex:1 1 0;min-width:0;width:auto;max-width:220px;height:64px;display:flex;align-items:center}.header-inner>.brand .brand-logo{max-height:64px;object-fit:contain;object-position:left center}.header-inner>.account-actions{flex:0 0 auto}}
 
 .toast{white-space:pre-line}
-.account-details>.game-record-row{grid-template-columns:minmax(0,1fr) auto;align-items:center}
-.game-record-row dd{white-space:nowrap;color:var(--primary)}
+
+/* Per-game totals and itemized coffee bet records. */
+.account-game-records{margin-top:24px;padding-top:24px;border-top:1px solid var(--line);min-width:0}
+.account-game-record+.account-game-record{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+.game-record-heading{display:flex;align-items:center;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin-bottom:14px}
+.game-record-heading h2{font-size:16px;margin:0}.game-record-total{margin:0;color:var(--primary);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}.game-record-total span{white-space:nowrap;font-weight:500}
+.game-bet-records{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.game-bet-records .game-bet-name-col{width:44%}.game-bet-records .game-bet-result-col{width:24%}.game-bet-records th,.game-bet-records td{padding:12px 5px;border-bottom:1px solid #edf0f5;text-align:center;vertical-align:middle;overflow-wrap:anywhere}.game-bet-records thead th{font-size:12px;font-weight:500;color:var(--muted);background:#f5f7fa}.game-bet-records th:first-child{text-align:left;padding-left:10px}.game-bet-records tbody th{font-weight:700;line-height:1.5}.game-bet-records small{display:block;color:var(--muted);font-size:11px;font-weight:400;line-height:1.5}.game-bet-records tbody tr:last-child>*{border-bottom:0}
+@media(max-width:640px){.account-game-records{margin-top:20px;padding-top:20px}.game-record-heading{gap:7px}.game-record-heading h2{font-size:15px}.game-record-total{font-size:13px}.game-bet-records{font-size:12px}.game-bet-records .game-bet-name-col{width:41%}.game-bet-records .game-bet-result-col{width:25%}.game-bet-records th,.game-bet-records td{padding:11px 3px}.game-bet-records th:first-child{padding-left:5px}.game-bet-records thead th{font-size:11px}}

@@ -4,7 +4,7 @@ import {recruitmentPanel,bindRecruitment,previewRecruitmentComments,updateRecrui
 import { boards, galleryCategories, freeCategories, staffCategories } from './sample.js?v=20261022-room-controls-v2';
 import './navigation.js?v=20261022-room-controls-v2';
 import {renderTool} from './tools.js?v=20261024-game-records';
-import {accountBar, renderAccount, accountActions} from './account.js?v=20261024-game-records';
+import {accountBar, renderAccount, accountActions} from './account.js?v=20261024-bet-records';
 import {restrictionActive,restrictionView} from './restrictions.js?v=20261010-member-fixes';
 import {accessDenied} from './access.js?v=20261010-member-fixes';
 import {renderCalendar} from './calendar.js?v=20261010-calendar-cells';
@@ -12,7 +12,7 @@ import {renderRoster} from './roster.js?v=20261010-member-fixes';
 import {canManageMembers,effectivePermission,boardMenus,postMenu} from './admin-model.js?v=20261022-room-controls-v2';
 import {teamChoices, memberName} from './teams.js?v=20261010-member-fixes';
 import {requestMembership} from './membership.js?v=20261010-member-fixes';
-import {renderAdmin} from './admin.js?v=20261024-game-records';
+import {renderAdmin} from './admin.js?v=20261024-bet-records';
 import {createPostEditor} from './post-editor.js?v=20261010-youtube';
 import {normalizeDocument,imageIndexes,documentText,remapDocumentPhotos,renderDocument} from './rich-body.js?v=20261010-youtube';
 import {yabolticons,yabolticonHTML,renderYabolText} from './yabolticons.js?v=20261010-member-fixes';
