@@ -1,8 +1,8 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261024-game-records';
-import {renderOnlineLadder} from './ladder-room.js?v=20261024-game-records';
+import {renderOnlineMarble} from './marble-room.js?v=20261024-member-records';
+import {renderOnlineLadder} from './ladder-room.js?v=20261024-member-records';
 import {renderSettlement} from './settlement.js?v=20261024-game-records';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
-import {teams} from './teams.js?v=20261010-member-fixes';
+import {teams} from './teams.js?v=20261024-member-records';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const money = value => `${value.toLocaleString('ko-KR')}원`;
 

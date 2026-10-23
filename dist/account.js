@@ -1,5 +1,5 @@
 import {roomBets} from './room-options.js?v=20261024-game-records';
-import {memberName, getTeam} from './teams.js?v=20261010-member-fixes';
+import {memberName, getTeam} from './teams.js?v=20261024-member-records';
 import {canManageMembers} from './admin-model.js?v=20261022-room-controls-v2';
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const nickname = user => typeof user?.user_metadata?.nickname === 'string' ? user.user_metadata.nickname.trim() || '회원' : '회원';
@@ -11,7 +11,7 @@ export function accountActions(user) {
 export function accountBar(user, {preview=false}={}) {
   if (!user) return '<span class="member-guest">로그인 후 내 정보를 확인할 수 있어요.</span>';
   const profile = user.user_metadata || {};
-  return `<span class="member-greeting">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member)}</span><a class="member-link" href="#/account">내 정보</a>`;
+  return `<span class="member-greeting">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member, user.id)}</span><a class="member-link" href="#/account">내 정보</a>`;
 }
 
 export function accountView(user, {preview=false,gameRecords=null}={}) {
@@ -20,7 +20,7 @@ export function accountView(user, {preview=false,gameRecords=null}={}) {
   const joinedText = joined && !Number.isNaN(joined.getTime()) ? joined.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'}) : '—';
   const profile = user.user_metadata || {};
   const records=gameRecords||(preview?emptyGameRecords():null);
-  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div></dl>${gameRecordSections(records)}</div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
+  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member, user.id)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div></dl>${gameRecordSections(records)}</div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
 }
 
 export function emptyGameRecords(){
@@ -29,16 +29,16 @@ export function emptyGameRecords(){
 export function gameWinRate(wins,losses){
   return wins+losses?String(Math.round(wins/(wins+losses)*1000)/10):'0';
 }
-function gameRecordSections(records){
-  return `<div class="account-game-records" id="account-game-records" aria-live="polite">${['ladder','marble'].map(game=>{
+export function gameRecordSections(records,{prefix='account'}={}){
+  return `<div class="account-game-records" id="${prefix}-game-records" aria-live="polite">${['ladder','marble'].map(game=>{
     const data=records?.[game],label=game==='ladder'?'사다리 게임 전적':'마블룰렛 전적';
-    return `<section class="account-game-record" aria-labelledby="${game}-record-heading"><div class="game-record-heading"><h2 id="${game}-record-heading">${label}</h2><p class="game-record-total" id="account-${game}-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<table class="game-bet-records"><caption class="sr-only">${label} 내기별 상세 전적</caption><colgroup><col class="game-bet-name-col"><col class="game-bet-result-col"><col><col></colgroup><thead><tr><th scope="col">내기</th><th scope="col">승 / 패</th><th scope="col">받은 수</th><th scope="col">보낸 수</th></tr></thead><tbody>${Object.entries(roomBets).map(([bet,details])=>{
+    return `<section class="account-game-record" aria-labelledby="${prefix}-${game}-record-heading"><div class="game-record-heading"><h2 id="${prefix}-${game}-record-heading">${label}</h2><p class="game-record-total" id="${prefix}-${game}-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<table class="game-bet-records"><caption class="sr-only">${label} 내기별 상세 전적</caption><colgroup><col class="game-bet-name-col"><col class="game-bet-result-col"><col><col></colgroup><thead><tr><th scope="col">내기</th><th scope="col">승 / 패</th><th scope="col">받은 수</th><th scope="col">보낸 수</th></tr></thead><tbody>${Object.entries(roomBets).map(([bet,details])=>{
       const row=data.bets[bet],name=bet==='none'?details.name:details.name.replace(' 아이스 아메리카노','<small>아이스 아메리카노</small>');
       return `<tr><th scope="row">${name}</th><td>${row.wins}승 ${row.losses}패</td><td>${bet==='none'?'—':row.received+'개'}</td><td>${bet==='none'?'—':row.sent+'개'}</td></tr>`;
     }).join('')}${data.unclassified&&(data.unclassified.wins+data.unclassified.losses)>0?`<tr><th scope="row">이전 기록<small>내기 정보 없음</small></th><td>${data.unclassified.wins}승 ${data.unclassified.losses}패</td><td>—</td><td>—</td></tr>`:''}</tbody></table>`:''}</section>`;
   }).join('')}</div>`;
 }
-function validateGameRecords(data){
+export function validateGameRecords(data){
   const valid=value=>Number.isSafeInteger(value)&&value>=0;
   for(const game of ['ladder','marble']){
     const record=data?.[game];

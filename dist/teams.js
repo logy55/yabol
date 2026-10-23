@@ -14,13 +14,14 @@ export const teams = Object.freeze([
 export const getTeam = id => teams.find(team => team.id === id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
-export function memberName(name, teamId, region, staffRole='member', isYbMember=false) {
+export function memberName(name, teamId, region, staffRole='member', isYbMember=false, userId=null) {
   const team = getTeam(teamId);
   const area = typeof region === 'string' ? region.trim() : '';
   const staffTitle = staffRole==='staff'?'운영진':staffRole==='vice_staff'?'부운영진':null;
   const crown = staffTitle ? `<img class="staff-role-icon${staffRole==='vice_staff'?' staff-role-silver':''}" src="./assets/crown.png" alt="${staffTitle} 왕관" title="${staffTitle}" width="22" height="22">` : '';
   const yb = isYbMember===true ? '<img class="yb-member-icon" src="./assets/yb-hat.svg" alt="YB Holics 회원" title="YB Holics" width="22" height="22">' : '';
-  return `${crown}${yb}${team ? `<span class="member-logo-crop" data-team="${team.id}"><img class="member-team-logo" src="${team.logo}" alt="${team.name} 로고" width="22" height="22"></span>` : ''}<span class="member-name-text">${escapeHtml(name || '회원')}${area ? ` <span class="member-region">· ${escapeHtml(area)}</span>` : ''}</span>`;
+  const identity=`${crown}${yb}${team ? `<span class="member-logo-crop" data-team="${team.id}"><img class="member-team-logo" src="${team.logo}" alt="${team.name} 로고" width="22" height="22"></span>` : ''}<span class="member-name-text">${escapeHtml(name || '회원')}${area ? ` <span class="member-region">· ${escapeHtml(area)}</span>` : ''}</span>`;
+  return typeof userId==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)?`<button type="button" class="member-record-trigger" data-game-member-id="${escapeHtml(userId)}" data-member-name="${escapeHtml(name||'회원')}" aria-label="${escapeHtml(name||'회원')} 회원 메뉴" aria-haspopup="menu" aria-expanded="false">${identity}</button>`:identity;
 }
 
 export function teamChoices() {
