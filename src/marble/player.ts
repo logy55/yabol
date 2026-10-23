@@ -1,0 +1,35 @@
+import {simulateMarbles} from './simulation';
+import {Camera} from '../vendor/marble-roulette/camera';
+const colours=['#63b5ff','#ffca6a','#7de1ba','#dda0fb','#ff8eab','#64d7e6','#d9d87c','#a7b6ff','#ffaf76','#79d2b5','#c6a5ed','#e6b8c4'];
+export async function prepareMarbleMovie(count:number,seed:number,signal?:AbortSignal,mapIndex=0){return simulateMarbles(count,seed,{mapIndex,signal,yieldControl:()=>new Promise(resolve=>setTimeout(resolve,0))});}
+export function sampleMovie(movie:any,time:number){const index=Math.min(movie.frames.length-1,Math.max(0,Math.floor(time*100))),a=movie.frames[index],b=movie.frames[Math.min(index+1,movie.frames.length-1)],mix=b.time>a.time?Math.max(0,Math.min(1,(time-a.time)/(b.time-a.time))):0;return{a,b,mix};}
+export function playMarbleMovie(canvas:HTMLCanvasElement,movie:Awaited<ReturnType<typeof simulateMarbles>>,round:any,getProgress:()=>number,onArrivals:(indices:number[])=>void,onFrame?:(metrics:{drawMs:number,time:number})=>void,options:{manual?:boolean}={}){
+ const context=canvas.getContext('2d',{alpha:false})!,camera=new Camera();camera.initializePosition();camera.startFollowingMarbles();
+ const ranks=Array(movie.count);movie.order.forEach((id,rank)=>ranks[id]=rank);
+ const marbles=Array.from({length:movie.count},(_,id)=>({id,x:0,y:0,position:{x:0,y:0},angle:0}));
+ const shapes=movie.entities.map((entity:any,index:number)=>{const shape=entity.shape,path=new Path2D();if(shape.type==='circle')path.arc(0,0,shape.radius,0,Math.PI*2);else if(shape.type==='box')path.rect(-shape.width,-shape.height,shape.width*2,shape.height*2);else shape.points.forEach((p:number[],i:number)=>i?path.lineTo(p[0],p[1]):path.moveTo(p[0],p[1]));return{entity,path,index,dynamic:movie.stage.entities![index].type==='kinematic'||entity.life>0};});
+ let stopped=false,frameId=0,lastArrivals=-1,lastTime=0,cameraTick=0,initial=true,width=0,height=0,ratio=1,baseScale=30,gradient:CanvasGradient,tiles=new Map<number,HTMLCanvasElement>(),resize=true;
+ const observer=new ResizeObserver(()=>resize=true);observer.observe(canvas);
+ function resizeCanvas(){const bounds=canvas.getBoundingClientRect();width=Math.max(280,bounds.width);height=Math.max(360,bounds.height);ratio=Math.min(1.5,devicePixelRatio||1);canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);baseScale=Math.min(30,width/27);gradient=context.createLinearGradient(0,0,0,height);gradient.addColorStop(0,'#172a43');gradient.addColorStop(1,'#0f1d31');tiles.clear();resize=false;}
+ function paint(ctx:CanvasRenderingContext2D,item:typeof shapes[number],angle:number){const {entity,path}=item,shape=entity.shape;ctx.save();ctx.translate(entity.x,entity.y);ctx.rotate(angle+(shape.type==='box'?shape.rotation||0:0));ctx.strokeStyle=shape.color||(shape.type==='circle'?'#ffe28a':'#83c5db');ctx.fillStyle=shape.color||'#70b9d1';ctx.lineWidth=.09;if(shape.type==='box')ctx.fill(path);else ctx.stroke(path);ctx.restore();}
+ function tile(index:number){if(tiles.has(index))return tiles.get(index)!;const image=document.createElement('canvas'),scale=baseScale*ratio;image.width=Math.ceil(34*scale);image.height=Math.ceil(16*scale);const ctx=image.getContext('2d')!;ctx.scale(scale,scale);ctx.translate(4,-index*16);for(const item of shapes)if(!item.dynamic)paint(ctx,item,item.entity.angle);tiles.set(index,image);if(tiles.size>8)tiles.delete(tiles.keys().next().value!);return image;}
+ function draw(now:number){
+  if(stopped)return;const started=performance.now();if(resize)resizeCanvas();
+  const progress=Math.min(1,Math.max(0,getProgress())),time=movie.duration*progress,{a,b,mix}=sampleMovie(movie,time);
+  const arrived=movie.order.filter(id=>movie.arrivals[id]<=time);if(arrived.length!==lastArrivals){lastArrivals=arrived.length;onArrivals(round.ranking.slice(0,arrived.length));}
+  const active=a.ranked.filter((id:number)=>a.positions[id*4+3]);for(const id of active){const m=marbles[id],offset=id*4,blend=b.positions[offset+3]?mix:0;m.x=a.positions[offset]+(b.positions[offset]-a.positions[offset])*blend;m.y=a.positions[offset+1]+(b.positions[offset+1]-a.positions[offset+1])*blend;m.angle=a.positions[offset+2]+(b.positions[offset+2]-a.positions[offset+2])*blend;m.position.x=m.x;m.position.y=m.y;}
+  const list=active.map((id:number)=>marbles[id]),target=arrived.length?Math.max(0,list.length-1):0;
+  if(initial&&list.length){camera.initializePosition(list[target].position,1);camera.startFollowingMarbles();initial=false;}
+  cameraTick+=lastTime?Math.min(100,now-lastTime):1000/60;lastTime=now;
+  while(cameraTick>=1000/60){camera.update({marbles:list as any,stage:movie.stage,intensity:a.intensity,targetIndex:target,focusOnRival:arrived.length>0&&a.focusOnRival,viewSize:{x:width/baseScale,y:height/baseScale}});cameraTick-=1000/60;}
+  context.setTransform(ratio,0,0,ratio,0,0);context.fillStyle=gradient;context.fillRect(0,0,width,height);
+  const zoom=baseScale*camera.zoom,viewHeight=height/zoom;context.save();context.translate(width/2,height/2);context.scale(zoom,zoom);context.translate(-camera.x,-camera.y);
+  for(let i=Math.floor((camera.y-viewHeight/2)/16);i<=Math.floor((camera.y+viewHeight/2)/16);i++)if(i>=-2&&i*16<movie.goalY+16)context.drawImage(tile(i),-4,i*16,34,16);
+  for(const item of shapes)if(item.dynamic){const angle=a.angles[item.index],next=b.angles[item.index];if(Number.isFinite(angle))paint(context,item,Number.isFinite(next)?angle+(next-angle)*mix:angle);}
+  context.strokeStyle='#f6d88a';context.lineWidth=.12;context.setLineDash([.35,.25]);context.beginPath();context.moveTo(0,movie.goalY);context.lineTo(27,movie.goalY);context.stroke();context.setLineDash([]);
+  for(const id of active){const m=marbles[id],member=round.ranking[ranks[id]],colour=colours[member%colours.length],name=String(round.players[member].name).slice(0,12);context.save();context.translate(m.x,m.y);context.fillStyle=colour;context.strokeStyle='#fff';context.lineWidth=.045;context.beginPath();context.arc(0,0,.25,0,Math.PI*2);context.fill();context.stroke();context.rotate(m.angle);context.strokeStyle='#ffffff90';context.beginPath();context.moveTo(-.18,0);context.lineTo(.18,0);context.stroke();context.rotate(-m.angle);context.font='600 .46px NanumSquareRound, sans-serif';context.textAlign='center';context.lineWidth=.10;context.strokeStyle='#12233f';context.fillStyle='#fff';context.strokeText(name,0,-.55);context.fillText(name,0,-.55);context.restore();}
+  context.restore();context.fillStyle='#d5e3f2';context.font='13px NanumSquareRound, sans-serif';context.textAlign='left';context.fillText(`${progress===1&&movie.lastStanding!==null?'결과 확정':'도착'} ${arrived.length} / ${movie.count}`,16,25);context.textAlign='right';context.fillText(movie.stage.title,width-16,25);
+  onFrame?.({drawMs:performance.now()-started,time});if(progress<1){if(!options.manual)frameId=requestAnimationFrame(draw);}else onArrivals(round.ranking);
+ }
+ draw(options.manual?0:performance.now());const stop=()=>{stopped=true;cancelAnimationFrame(frameId);observer.disconnect();tiles.clear();};return Object.assign(stop,{draw:(now:number)=>draw(now)});
+}
