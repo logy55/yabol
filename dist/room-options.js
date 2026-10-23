@@ -17,7 +17,8 @@ export function betNotice(key){
   const bet=getBet(key);
   return `<div class="room-bet-notice" role="note">${bet.image?`이번 경기에는 <img src="./assets/${bet.image}" width="36" height="36" alt=""><strong>${bet.name}</strong> 내기가 걸려 있습니다.`:'이번 경기는 내기 없이 진행합니다.'}</div>`;
 }
-export function roomControls(me,phase){
+export function roomControls(me,phase,{isHost=false}={}){
+  if(phase==='finished')return `<div class="room-ready-bar room-finished-bar" data-room-replay-panel>${roomReplayControls(isHost)}</div>`;
   const terminal=['finished','closed'].includes(phase),exitState=terminal?'':phase==='running'?'running':me?.ready?'ready':'';
   return `<div class="room-ready-bar"><div class="room-control-buttons"><button class="primary" type="button" id="room-ready" aria-pressed="${Boolean(me?.ready)}" ${!me||['running','finished','closed'].includes(phase)?'disabled':''}>${me?.ready?'준비 취소':'준비'}</button><button type="button" class="secondary" id="room-leave" data-exit-state="${exitState}" aria-describedby="room-leave-hint">나가기</button></div><p id="room-leave-hint" class="room-leave-hint" role="status" hidden></p><p id="room-stage" role="status">모두 준비되면 5초 후 시작합니다.</p></div>`;
 }
@@ -29,5 +30,5 @@ export function explainRoomLeave(root){
   return true;
 }
 export function roomReplayControls(isHost){
-  return `<section class="room-replay-actions" data-room-replay-panel hidden>${isHost?'<button class="primary" type="button" data-room-replay>같은 인원으로 다시하기</button><p>남아 있는 참가자 모두 다시 준비하면 시작합니다.</p>':'<p>방장이 다시하기를 누르면 같은 방에서 재경기를 준비할 수 있습니다.</p>'}<p class="form-error" data-room-replay-error role="alert"></p></section>`;
+  return `<p id="room-stage" role="status">모든 결과가 공개되었습니다.</p><div class="room-control-buttons">${isHost?'<button class="primary" type="button" data-room-replay>다시하기</button>':''}<button class="secondary" type="button" data-room-watch-replay>리플레이</button><button class="secondary" type="button" id="room-leave" data-exit-state="">나가기</button></div>${isHost?'':'<p class="room-host-decision">방장이 다시하기를 결정하고 있습니다.</p>'}<p class="form-error" data-room-replay-error role="alert"></p>`;
 }

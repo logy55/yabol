@@ -1,5 +1,5 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261024-member-records';
-import {renderOnlineLadder} from './ladder-room.js?v=20261024-member-records';
+import {renderOnlineMarble} from './marble-room.js?v=20261024-game-replay';
+import {renderOnlineLadder} from './ladder-room.js?v=20261024-game-replay';
 import {renderSettlement} from './settlement.js?v=20261024-game-records';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261024-member-records';

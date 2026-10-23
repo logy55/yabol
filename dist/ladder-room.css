@@ -31,10 +31,6 @@
 @media(max-width:480px){.room-ready-bar .room-control-buttons>button{min-width:110px}.room-bet-notice{padding:14px 12px;font-size:13px}.room-list-item .room-bet-badge{font-size:12px}.room-lobby-grid .tool-fields,.room-settings .tool-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.room-bet-field{grid-column:1/-1}}
 
 .room-heading .room-owner-title{font-size:18px;margin:0;color:#365277}.room-map-name>span{font-weight:800;color:#50647e;margin-right:4px}
-.room-replay-actions{display:grid;justify-items:center;gap:10px;padding:22px 12px 8px;text-align:center}
-.room-replay-actions>p{margin:0;color:var(--muted);font-size:13px}
-.room-replay-actions>.form-error{color:#b23625}
-.room-replay-actions>.form-error:empty{display:none}
 .room-ready-bar .room-leave-hint{padding:9px 13px;border-radius:6px;background:#fff4d9;color:#795316;font-size:14px;font-weight:700;white-space:pre-line}
 
 @media(max-width:640px){
@@ -43,3 +39,13 @@
   .marble-room-page .room-bet-field{grid-column:auto}
   .marble-room-page .tool-fields select{width:100%;min-width:0;max-width:100%;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+
+.game-replay-dialog{width:min(1020px,calc(100% - 24px));max-height:92dvh;padding:22px;overflow:hidden}.game-replay-dialog[open]{display:flex;flex-direction:column}.game-replay-dialog .dialog-top{flex:none;margin-bottom:7px}.game-replay-dialog .dialog-top h2{font-size:21px}.game-replay-info{flex:none;color:var(--muted);font-size:13px;margin:0 0 14px;overflow-wrap:anywhere}.game-replay-board{min-height:0;overflow:auto;flex:1}.game-replay-board .marble-canvas{height:clamp(300px,52dvh,600px)}.game-replay-controls{flex:none;padding-top:14px;border-top:1px solid var(--line);margin-top:12px}.game-replay-control-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.game-replay-control-row label{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}.game-replay-control-row select{width:82px;padding:7px 9px;font-size:16px;border:1px solid #cad8e5;border-radius:5px;background:#fff;color:var(--ink)}.game-replay-progress{display:flex;align-items:center;gap:12px;margin-top:12px}.game-replay-progress input{min-width:0;flex:1;accent-color:var(--primary)}.game-replay-progress output{flex:none;font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted)}
+@media(max-width:640px){.game-replay-dialog{padding:15px;max-height:92dvh}.game-replay-dialog .dialog-top h2{font-size:18px}.game-replay-control-row{gap:7px}.game-replay-control-row button{padding:8px 11px;font-size:13px}.game-replay-control-row select{width:74px}.game-replay-control-row label{gap:5px;font-size:12px}}
+
+.room-finished-bar .room-control-buttons>button{min-width:110px}.room-finished-bar>.room-host-decision{font-size:13px;font-weight:500;color:#64748b}.room-finished-bar>.form-error{color:#b23625;font-weight:500}.room-finished-bar>.form-error:empty{display:none}@media(max-width:640px){.room-finished-bar .room-control-buttons{flex-wrap:nowrap;gap:8px}.room-finished-bar .room-control-buttons>button{min-width:0;flex:1;padding-inline:10px}}
+.game-replay-save-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:12px}.game-replay-save-row>span{font-size:12px;color:var(--muted);flex:1;min-width:120px}.game-replay-save-row>.text-button{padding:6px}.game-replay-save-row>.secondary{font-size:13px;padding:8px 12px}
+
+.room-replay-update{padding:12px 15px;margin:0 0 16px;border:1px solid #d6e2ef;border-radius:7px;background:#eff4fa;color:#365277;font-size:14px}
+
+.room-finished-bar .room-control-buttons{width:100%;max-width:390px}.room-finished-bar .room-control-buttons>button{white-space:nowrap}
