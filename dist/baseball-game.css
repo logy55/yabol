@@ -1,0 +1,140 @@
+.baseball-page{--navy:#253d5b;--ink:#26354a;--muted:#8a95a3;--line:#e6e9ed;--gold:#be9850;--font:NanumSquareRound,system-ui,-apple-system,sans-serif}
+.baseball-page *{box-sizing:border-box}
+.baseball-page button,.baseball-page a,.baseball-page canvas{touch-action:manipulation}
+.baseball-page button{font:inherit;cursor:pointer}
+.baseball-page button:disabled{opacity:.5;cursor:default}
+.baseball-page button:focus-visible,.baseball-page a:focus-visible,.baseball-page canvas:focus-visible{outline:3px solid #90abc9;outline-offset:4px}
+.baseball-page button svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.baseball-page [hidden]{display:none!important}
+.baseball-page .intro{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:32px 0 25px}
+.baseball-page .eyebrow{font-size:10px;letter-spacing:.18em;color:#9a8c73;font-weight:800;margin:0 0 11px}
+.baseball-page h1{font-size:32px;letter-spacing:-.04em;margin:0;font-weight:800;display:flex;gap:10px;align-items:center}
+.baseball-page .title-ball{font-size:27px;display:inline-block;transform:rotate(-17deg)}
+.baseball-page .subtitle{font-size:13px;color:#8b929d;margin:12px 0 0}
+.baseball-page .game-layout{display:grid;gap:18px}
+.baseball-page .play-panel,.baseball-page .ranking-card{background:#fff;border:1px solid #e1e5eb;border-radius:15px;padding:22px 28px 18px;box-shadow:0 12px 38px #253d5b06;min-width:0}
+.baseball-page .scoreboard{display:flex;align-items:center;gap:26px;padding:0 4px 18px}
+.baseball-page .scoreboard>div{min-width:0}
+.baseball-page .score-main>span,.baseball-page .next>span{font-size:9px;font-weight:800;letter-spacing:.2em;display:block;color:#9aa6b3}
+.baseball-page .score-main>strong{font-size:40px;line-height:1.25;letter-spacing:-.04em;display:block;color:var(--navy);font-variant-numeric:tabular-nums}
+.baseball-page .score-best{margin-left:auto;text-align:right}
+.baseball-page .score-best>span{font-size:11px;color:#9e9b91;display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.baseball-page .score-best svg{height:14px;width:14px;stroke:#bba165;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.baseball-page .score-best>strong{display:block;color:#b79b60;font-size:24px;margin-top:4px;font-variant-numeric:tabular-nums}
+.baseball-page .next{border-left:1px solid #e9e9e5;padding-left:22px;text-align:center;width:64px;flex:none}
+.baseball-page .next canvas{height:38px;width:38px;margin-top:3px;display:block}
+.baseball-page .field-wrap{position:relative;isolation:isolate;overflow:hidden;border-radius:11px;border:1px solid #e0ddd4;background:#fbf8f0}
+.baseball-page .field-wrap::after{content:'';position:absolute;pointer-events:none;inset:0;border-radius:10px;box-shadow:inset 0 0 15px #766b4808}
+.baseball-page #field{display:block;width:100%;height:auto;aspect-ratio:440/610;outline-offset:2px;touch-action:none;user-select:none;-webkit-user-select:none}
+.baseball-page .first-tip{position:absolute;top:42%;left:12px;right:12px;pointer-events:none;display:grid;justify-items:center;gap:10px;text-align:center}
+.baseball-page .first-tip .tip-cross{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:#fff9;color:#a0acaf;font-size:30px;border:1px solid #e6e2d8}
+.baseball-page .first-tip strong{font-size:16px;color:#828c87}
+.baseball-page .first-tip>span:last-child{font-size:12px;color:#a3aaa0}
+.baseball-page .round-summary{border-bottom:1px solid var(--line);padding:12px 0 15px;margin-bottom:16px}
+
+.baseball-page .round-summary dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0}
+.baseball-page .round-summary dl>div{text-align:center;min-width:0;padding:0 8px}
+.baseball-page .round-summary dl>div+div{border-left:1px solid var(--line)}
+.baseball-page .round-summary dt{font-size:10px;color:#98a1ac;margin-bottom:7px}
+.baseball-page .round-summary dd{margin:0;font-size:16px;font-weight:800;color:#4b6078;font-variant-numeric:tabular-nums;line-height:1.4;white-space:nowrap}
+.baseball-page .round-summary dd small{font-size:11px;font-weight:500;margin-left:4px}
+.baseball-page .round-summary #largest{font-size:13px;padding-top:2px}
+.baseball-page .game-actions{display:flex;gap:9px}
+.baseball-page .button-secondary,.baseball-page .button-primary{border-radius:7px;min-height:44px;padding:10px 19px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:13px;font-weight:700;white-space:nowrap}
+.baseball-page .button-secondary{color:#627084;border:1px solid #dce2e9;background:#fff}
+.baseball-page .button-secondary:hover{background:#f3f6fa}
+.baseball-page .button-primary{border:1px solid var(--navy);background:var(--navy);color:#fff}
+.baseball-page .button-primary:hover{background:#1c3049}
+.baseball-page .game-actions button{flex:1;min-width:0}
+.baseball-page .input-hint{display:flex;justify-content:space-between;gap:8px;margin:13px 0 0;color:#a8b0b9;font-size:10px}
+.baseball-page .touch-hint{display:none}
+.baseball-page .key-hint{color:#a4acb7;white-space:nowrap}
+.baseball-page .ranking-card{padding:23px 28px 20px}
+.baseball-page .ranking-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.baseball-page .ranking-heading .eyebrow{font-size:9px;margin-bottom:7px}
+.baseball-page .ranking-heading h2{font-size:20px;margin:0;display:flex;align-items:center;gap:9px}
+.baseball-page .ranking-heading h2>span{font-size:9px;font-weight:700;color:#a88c52;background:#faf6ec;border-radius:4px;padding:4px 6px;letter-spacing:.05em}
+.baseball-page .ranking-table{border-collapse:collapse;width:100%;table-layout:fixed;margin-top:17px;font-size:11px;text-align:center}
+.baseball-page .ranking-table th{font-size:10px;color:#9ba5b0;font-weight:500;border-bottom:1px solid var(--line);padding:10px 3px}
+.baseball-page .ranking-table th:nth-child(1){width:24%}
+.baseball-page .ranking-table th:nth-child(2){width:24%}
+.baseball-page .ranking-table th:nth-child(3){width:28%}
+.baseball-page .ranking-table th:nth-child(4){width:24%}
+.baseball-page .ranking-table td{border-bottom:1px solid #eef0f3;padding:13px 3px;color:#7b899b;vertical-align:middle;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.baseball-page .ranking-table td:nth-child(1){font-size:15px;font-weight:800;color:#3f5570}
+.baseball-page .ranking-table tr:last-child td{border-bottom:0}
+.baseball-page .ranking-table .rank-number{font-size:13px;font-weight:800;color:#aab3bf}
+.baseball-page .ranking-table .rank-number.podium{color:#b29459}
+.baseball-page .ranking-table .this-round{background:#f7f9fc}
+.baseball-page .current-badge{display:block;font-size:8px;font-weight:500;color:#8c9cb0;margin:4px 0 -3px}
+.baseball-page .ranking-empty{text-align:center;color:#9ba5af;font-size:12px;padding:22px 0 16px}
+.baseball-page .field-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:#faf8f1b8;backdrop-filter:blur(5px);z-index:4}
+.baseball-page .overlay-card{width:100%;max-width:280px;background:#fff;border:1px solid #e6e3d9;border-radius:13px;text-align:center;padding:30px 20px;box-shadow:0 15px 50px #243d5b15}
+.baseball-page .overlay-card h2{font-size:25px;margin:13px 0 10px;letter-spacing:-.04em}
+.baseball-page .overlay-card p{font-size:13px;color:#8b95a2;line-height:1.8;white-space:pre-line}
+.baseball-page .overlay-card button{width:100%;margin-top:10px}
+.baseball-page dialog{border:1px solid #e2e7ed;border-radius:14px;background:#fff;color:var(--ink);padding:27px;max-width:440px;width:calc(100% - 32px);font-family:var(--font);box-shadow:0 20px 80px #13263f30}
+.baseball-page dialog::backdrop{background:#172b4666;backdrop-filter:blur(3px)}
+.baseball-page dialog h2{font-size:21px;margin:0}
+.baseball-page dialog>p{font-size:13px;color:#8d98a8;line-height:1.8}
+.baseball-page .dialog-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.baseball-page .close{background:transparent;color:#7e8b9d;border:0;font-size:26px;line-height:1}
+.baseball-page .rules{padding-left:22px;margin:25px 0;font-size:13px;color:#69798d}
+.baseball-page .rules li{padding-left:6px;margin:19px 0}
+.baseball-page .rules strong{color:#394d67;font-size:14px}
+.baseball-page .rules p{font-size:12px;line-height:1.8;margin:7px 0;color:#8a96a5}
+.baseball-page .help-note{padding:13px 17px;background:#f4f6f9;border-radius:7px;font-size:12px;line-height:1.8;color:#7a8b9f;margin-bottom:20px}
+.baseball-page #help-done{width:100%}
+.baseball-page .dialog-actions{display:flex;gap:9px;margin-top:22px}
+.baseball-page .dialog-actions>button{flex:1}
+.baseball-page .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.baseball-page .field-wrap,.baseball-page .scoreboard,.baseball-page .round-summary,.baseball-page .game-actions,.baseball-page .input-hint{max-width:440px;margin-left:auto;margin-right:auto}
+@media(hover:none),(pointer:coarse){.baseball-page .touch-hint{display:inline}
+.baseball-page .desktop-hint,.baseball-page .key-hint{display:none}
+.baseball-page .input-hint{justify-content:center}
+}
+@media(max-width:760px){.baseball-page .intro{padding:23px 3px 20px;gap:10px}
+.baseball-page .eyebrow{font-size:9px;margin-bottom:9px}
+.baseball-page h1{font-size:28px}
+.baseball-page .title-ball{font-size:24px}
+.baseball-page .subtitle{font-size:12px;margin-top:10px}
+.baseball-page .game-layout{gap:15px}
+.baseball-page .play-panel{padding:16px 15px 14px;border-radius:12px}
+.baseball-page .scoreboard{padding:0 2px 13px;gap:16px}
+.baseball-page .score-main>strong{font-size:34px}
+.baseball-page .score-best>strong{font-size:23px}
+.baseball-page .score-best>span{font-size:10px}
+.baseball-page .next{width:54px;padding-left:15px}
+.baseball-page .next canvas{height:34px;width:34px}
+.baseball-page .round-summary{padding:10px 0 12px;margin-bottom:13px}
+
+.baseball-page .round-summary dt{font-size:9px}
+.baseball-page .round-summary dd{font-size:15px}
+.baseball-page .round-summary #largest{font-size:12px}
+.baseball-page .game-actions .button-secondary{font-size:12px}
+.baseball-page .input-hint{font-size:9px}
+.baseball-page .input-hint .key-hint{display:none}
+.baseball-page .ranking-card{padding:20px 17px 16px;border-radius:12px}
+.baseball-page .ranking-heading h2{font-size:19px}
+.baseball-page .ranking-table{font-size:10px}
+.baseball-page .ranking-table td:nth-child(1){font-size:14px}
+}
+@media(max-width:359px){.baseball-page .scoreboard{gap:10px}
+.baseball-page .score-main>strong{font-size:30px}
+.baseball-page .score-best>strong{font-size:21px}
+.baseball-page .round-summary dl>div{padding:0 3px}
+}
+@media(prefers-reduced-motion:reduce){.baseball-page *{scroll-behavior:auto!important}
+}
+@media(max-width:760px){.baseball-page .touch-hint{display:inline}
+.baseball-page .desktop-hint{display:none}
+.baseball-page .input-hint{justify-content:center}
+}
+
+.baseball-page{width:100%;max-width:572px;margin:0 auto;color:#26354a;font-family:var(--font);padding-bottom:24px}
+.baseball-page .intro{padding-top:0}.baseball-page .play-panel{box-shadow:none}
+.baseball-page .baseball-help{font-size:11px;padding:8px 10px;min-height:36px}
+.baseball-page .score-status{margin:10px auto 0;max-width:440px;font-size:12px;color:#7b8798;line-height:1.6;text-align:center}
+.baseball-page .score-status button{border:0;background:transparent;color:#253d5b;text-decoration:underline;padding:5px 8px}
+.baseball-page .ranking-error{color:#8e6b54}.baseball-page .game-loading{min-height:360px;display:grid;place-items:center;text-align:center;font-size:14px;color:#8190a4}
+@media(max-width:760px){.baseball-page .intro{padding:0 2px 16px}.baseball-page h1{font-size:26px}.baseball-page .subtitle{font-size:11px}.baseball-page .play-panel{padding:13px 11px 11px}.baseball-page .scoreboard{padding-bottom:11px}}
