@@ -150,7 +150,7 @@
   .baseball-page .score-main>strong{font-size:28px}
   .baseball-page .score-best>strong{font-size:20px}
   .baseball-page .next canvas{width:30px;height:30px}
-  .baseball-page .field-wrap{max-width:calc(100% - 36px)}
+  .baseball-page .field-wrap{width:calc(100% - 20px);max-width:320px}
   .baseball-page .round-summary{padding:9px 0 10px;margin-bottom:9px}
   .baseball-page .round-summary dt{font-size:11px;color:#687b91;margin-bottom:4px}
   .baseball-page .round-summary dd{font-size:17px;color:#31475f}
@@ -160,3 +160,22 @@
   .baseball-page .first-tip strong{font-size:13px}
   .baseball-page .first-tip>span:last-child{font-size:10px}
 }
+
+body.baseball-dialog-open{overflow:hidden}
+.baseball-page .baseball-launch{padding:22px 20px;background:#f5f7fa;border:1px solid #e1e5eb;border-radius:13px;text-align:center;margin-bottom:18px}
+.baseball-page .baseball-launch button{min-width:180px;min-height:46px;font-size:15px}
+.baseball-page .baseball-game-dialog{padding:0;width:560px;max-width:calc(100vw - 32px);max-height:calc(100svh - 32px);overflow:auto;overscroll-behavior:contain}
+.baseball-page .baseball-game-dialog:focus{outline:none}
+.baseball-page .baseball-popup-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;padding:8px 18px;border-bottom:1px solid #e6e9ed;background:#fff;position:sticky;top:0;z-index:6}
+.baseball-page .baseball-popup-heading h2{font-size:19px;margin:0}
+.baseball-page .baseball-popup-heading button{min-height:40px;border:0;background:transparent;padding:8px;color:#65778c;font-size:13px}
+.baseball-page .baseball-game-dialog .play-panel{border:0;border-radius:0;box-shadow:none;padding:16px 24px}
+.baseball-page .baseball-game-dialog .field-wrap{width:100%;max-width:min(440px,calc(72.1311svh - 220px))}
+@media(max-width:760px){
+  .baseball-page .baseball-game-dialog{position:fixed;inset:0;margin:0;width:100vw;max-width:100vw;height:100svh;max-height:100svh;border:0;border-radius:0;padding-bottom:env(safe-area-inset-bottom,0px);background:#fff}
+  .baseball-page .baseball-popup-heading{padding-top:max(8px,env(safe-area-inset-top,0px));min-height:56px}
+  .baseball-page .baseball-game-dialog .play-panel{max-width:560px;margin:0 auto;padding:10px 16px 12px}
+  .baseball-page .baseball-game-dialog .field-wrap{width:calc(100% - 4px);max-width:max(200px,min(352px,calc(72.1311svh - 176px)))}
+  .baseball-page .baseball-game-dialog .game-actions{padding-bottom:4px}
+}
+

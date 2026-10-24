@@ -12,8 +12,19 @@ const scoreStatus=document.createElement('p');scoreStatus.id='score-status';scor
 const $=selector=>root.querySelector(selector),field=$('#field'),ctx=field.getContext('2d');
 const format=n=>new Intl.NumberFormat('ko-KR').format(n),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let best=0,runInfo=null,inputs=[],submission=null,submitted=false,resetting=false;
-let game,raf=0,last=0,accumulator=0,particles=[],pointer=null,restartResume=false,layoutRaf=0;
+let game,raf=0,last=0,accumulator=0,particles=[],pointer=null,restartResume=false;
 const {draw:drawBall,icon}=createBallArt(BALLS);
+const launch=document.createElement('section');launch.className='baseball-launch';launch.innerHTML='<button id="baseball-open" class="button-primary" type="button">게임 시작</button>';
+root.insertBefore(launch,$('.game-layout'));
+const gameDialog=document.createElement('dialog');gameDialog.className='baseball-game-dialog';gameDialog.tabIndex=-1;gameDialog.setAttribute('aria-labelledby','baseball-popup-title');
+gameDialog.innerHTML='<div class="baseball-popup-heading"><h2 id="baseball-popup-title">야구공 게임</h2><button id="baseball-close" type="button" aria-label="게임 팝업 닫기">닫기 ×</button></div>';
+gameDialog.append($('.play-panel'));root.append(gameDialog);
+function refreshLauncher(){ $('#baseball-open').textContent=game?.status==='over'?'경기 결과 보기':game?.drops?'게임 계속하기':'게임 시작'; }
+function openGame(){if(!gameDialog.open)gameDialog.showModal();document.body.classList.add('baseball-dialog-open');gameDialog.focus({preventScroll:true});if(game?.status==='paused')game.resume();}
+$('#baseball-open').onclick=openGame;$('#baseball-close').onclick=()=>gameDialog.close();
+gameDialog.addEventListener('close',()=>{document.body.classList.remove('baseball-dialog-open');game?.pause();refreshLauncher();});
+signal?.addEventListener('abort',()=>{if(gameDialog.open)gameDialog.close();document.body.classList.remove('baseball-dialog-open');},{once:true});
+openGame();
 
 function ranking(entries=[]){
   const records=memberLeaders(entries),body=$('#ranking-body');body.replaceChildren();
@@ -28,6 +39,7 @@ ranking();
 
 function readout(){
   if(!game||!alive())return;
+  refreshLauncher();
   $('#score').textContent=format(game.score);$('#best').textContent=format(best);$('#drops').textContent=game.drops;$('#merges').textContent=game.merges;
   $('#largest').textContent=game.drops||game.merges?BALLS[game.maxLevel].name:'—';
   field.setAttribute('aria-label',`${BALLS[game.current].name}. 공을 놓을 위치를 정하고 클릭하거나 손을 떼세요. 키보드 방향키와 스페이스로도 조작할 수 있습니다.`);
@@ -60,27 +72,6 @@ await refreshLeaderboard();
 if(!alive())return;
 try{await beginRound();}catch{showStartError();return;}
 if(!alive())return;
-
-// Fit the complete play panel below the site's sticky header. Only CSS size
-// changes; world dimensions and ranked simulation stay identical on all devices.
-function fitMobileBoard(){
-  layoutRaf=0;if(!alive())return;
-  const wrap=$('.field-wrap');
-  if(!matchMedia('(max-width:760px)').matches){wrap.style.removeProperty('width');return;}
-  const panel=$('.play-panel'),intro=$('.intro'),header=document.querySelector('.site-header');
-  const headerHeight=header?.getBoundingClientRect().height||0;
-  const topGap=Math.max(0,root.getBoundingClientRect().top+window.scrollY-headerHeight);
-  const viewport=window.visualViewport?.height||window.innerHeight;
-  const chrome=panel.getBoundingClientRect().height-wrap.getBoundingClientRect().height;
-  const style=getComputedStyle(panel),maxWidth=panel.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
-  const available=viewport-headerHeight-topGap-intro.getBoundingClientRect().height-chrome-12;
-  const height=Math.max(200,Math.min(420,available,maxWidth*HEIGHT/WIDTH));
-  const width=Math.floor(height*WIDTH/HEIGHT)+'px';if(wrap.style.width!==width)wrap.style.width=width;
-}
-const scheduleLayout=()=>{if(!layoutRaf)layoutRaf=requestAnimationFrame(fitMobileBoard);};
-fitMobileBoard();window.addEventListener('resize',scheduleLayout);window.visualViewport?.addEventListener('resize',scheduleLayout);
-const headerObserver=new ResizeObserver(scheduleLayout),siteHeader=document.querySelector('.site-header');if(siteHeader)headerObserver.observe(siteHeader);
-document.fonts?.ready.then(scheduleLayout);
 
 function render(){
   if(!game||!background.width)return;
@@ -145,8 +136,7 @@ document.addEventListener('visibilitychange',visibility);
 const pagehide=()=>{game.pause();last=0;};window.addEventListener('pagehide',pagehide);
 const rankingsTimer=setInterval(()=>{if(!document.hidden)void refreshLeaderboard();},15000);
 signal?.addEventListener('abort',()=>{
-  cancelAnimationFrame(raf);cancelAnimationFrame(layoutRaf);clearInterval(rankingsTimer);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',pagehide);
-  window.removeEventListener('resize',scheduleLayout);window.visualViewport?.removeEventListener('resize',scheduleLayout);headerObserver.disconnect();
+  cancelAnimationFrame(raf);clearInterval(rankingsTimer);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',pagehide);
   for(const dialog of root.querySelectorAll('dialog'))if(dialog.open)dialog.close();
   game.pause();void submitRound();game.dispose();
 },{once:true});
@@ -179,7 +169,8 @@ async function beginRound(){
   const response=await request('start');if(!alive())return;
   if(!response.run||typeof response.run.id!=='string'||!Number.isSafeInteger(response.run.seed))throw Error('Invalid run');
   game?.dispose();runInfo=response.run;inputs=[];submitted=false;particles=[];last=0;accumulator=0;saving('');$('#restart').disabled=false;$('#overlay-action').hidden=false;$('#overlay-action').onclick=()=>{if(game.status==='over')void reset();else game.resume();field.focus({preventScroll:true});};
-  game=undefined;game=new BallGame(Matter,{random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onDrop:input=>inputs.push(input),onOver:()=>{$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});readout();fitMobileBoard();
+  game=undefined;game=new BallGame(Matter,{random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onDrop:input=>inputs.push(input),onOver:()=>{$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});if(!gameDialog.open)game.pause();readout();
 }
 
 }
+
