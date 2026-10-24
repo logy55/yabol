@@ -2802,7 +2802,7 @@
       "bytes": 173655,
       "container": "ftyp",
       "avc": true,
-      "seconds": 11.0,
+      "seconds": 11,
       "width": 960,
       "height": 446
     },
@@ -2810,7 +2810,7 @@
       "bytes": 1491735,
       "container": "ftyp",
       "avc": true,
-      "seconds": 51.0,
+      "seconds": 51,
       "width": 960,
       "height": 542
     },
@@ -3040,5 +3040,110 @@
     "runtime_commit": "8623a5863d3f19a2ff50fb062e2b14774e50449e",
     "workflow_id": 40111042140,
     "workflow_conclusion": "success"
+  },
+  "baseball_performance_20261025": {
+    "cache": "20261025-baseball-performance-v3",
+    "runtime_commit": "ed4e34ccc7d0133c0f24af0b9007b0f37823f609",
+    "workflow_id": 40141267935,
+    "workflow_conclusion": "success",
+    "checks": {
+      "menu_opens_dialog": false,
+      "start_button_opens_dialog": true,
+      "deferred_run_and_artwork": true,
+      "game_surface_owns_pointer_gestures": true,
+      "canvas_touch_action": "none",
+      "mobile_board": [
+        350,
+        485.21875
+      ],
+      "mobile_buttons_bottom": 733.5625,
+      "scroll_size_stable": true,
+      "fixed_physics_hz": 60,
+      "paint_cap_hz": 60,
+      "coalesced_input_and_merge_paints": true,
+      "opaque_canvas": true,
+      "pixel_ratio_cap": 1.75,
+      "shared_artwork": true,
+      "before_start": {
+        "raf_callbacks": 0,
+        "full_paints": 0
+      },
+      "paused_observation": {
+        "raf_callbacks": 910,
+        "full_paints": 18
+      },
+      "closed_observation": {
+        "raf_callbacks": 910,
+        "full_paints": 18
+      },
+      "isolated_run": {
+        "client_score": 13,
+        "verified_score": 13,
+        "drops": 8,
+        "frames": 2297
+      },
+      "isolated_longer_run": {
+        "verified_score": 93,
+        "drops": 17
+      },
+      "nested_restart_cancel": true,
+      "restart_save": true,
+      "console_errors": 0,
+      "live_site": {
+        "cache_verified": true,
+        "menu_dialog_closed": true,
+        "start_opens_dialog": true,
+        "pause_close_reopen": true,
+        "best_before_requested_reset": 9,
+        "no_test_leaderboard_entries": true
+      }
+    },
+    "performance_sample": {
+      "startup_ms": 4,
+      "raf_callbacks": 12026,
+      "full_paints": 1354,
+      "callback_p95_ms": 0.1,
+      "long_tasks": 0,
+      "canvas": [
+        440,
+        610
+      ]
+    },
+    "paint_pacing_model": [
+      {
+        "displayHz": 60,
+        "paintHz": 60
+      },
+      {
+        "displayHz": 90,
+        "paintHz": 60
+      },
+      {
+        "displayHz": 120,
+        "paintHz": 60
+      },
+      {
+        "displayHz": 144,
+        "paintHz": 60
+      },
+      {
+        "displayHz": 165,
+        "paintHz": 60
+      },
+      {
+        "displayHz": 240,
+        "paintHz": 60
+      }
+    ],
+    "backend_changes": false,
+    "physical_device_tested": false,
+    "requested_ranking_reset": {
+      "table": "private.baseball_bests",
+      "cleared": 1,
+      "backup": false,
+      "live_empty_state_verified": true
+    },
+    "limitations": "402x874 Chrome frame tested. Callback timings exclude GPU/compositor work and are not an iPhone FPS measurement.",
+    "proof": "../repair-proof/baseball-start-button-live-20261025.png"
   }
 }
