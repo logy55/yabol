@@ -107,7 +107,7 @@ function frame(now){
   }else accumulator=0;
   if(uiDirty){uiDirty=false;updateReadout();}
   const paintDelta=now-lastPaint;
-  if(dirty&&paintDelta>=1000/60-.5){dirty=false;lastPaint=now-Math.max(0,paintDelta%(1000/60));render();}
+  if(dirty&&paintDelta>=1000/60-.5){dirty=false;lastPaint+=Math.max(1,Math.floor((paintDelta+.5)/(1000/60)))*(1000/60);render();}
   if(game.status==='playing'||dirty||uiDirty)wake();else last=0;
 }
 const point=event=>{fieldRect??=field.getBoundingClientRect();return(event.clientX-fieldRect.left)/fieldRect.width*WIDTH;};
