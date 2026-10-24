@@ -106,7 +106,8 @@ function frame(now){
     for(const p of particles){p.x+=p.vx*delta/16.667;p.y+=p.vy*delta/16.667;if(!p.text)p.vy+=.075*delta/16.667;p.life-=delta/(p.text?1050:800);}particles=particles.filter(p=>p.life>0);
   }else accumulator=0;
   if(uiDirty){uiDirty=false;updateReadout();}
-  if(dirty&&now-lastPaint>=1000/60-.5){dirty=false;lastPaint=now;render();}
+  const paintDelta=now-lastPaint;
+  if(dirty&&paintDelta>=1000/60-.5){dirty=false;lastPaint=now-Math.max(0,paintDelta%(1000/60));render();}
   if(game.status==='playing'||dirty||uiDirty)wake();else last=0;
 }
 const point=event=>{fieldRect??=field.getBoundingClientRect();return(event.clientX-fieldRect.left)/fieldRect.width*WIDTH;};

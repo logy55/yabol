@@ -9,7 +9,7 @@ const money = value => `${value.toLocaleString('ko-KR')}원`;
 export async function renderTool(main, key, context={}) {
   if (key === 'ladder') await renderOnlineLadder(main,context);
   else if (key === 'marble') await renderOnlineMarble(main,context);
-  else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261025-baseball-performance');await renderBaseballGame(main,context);}
+  else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261025-baseball-performance-v2');await renderBaseballGame(main,context);}
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
   else main.innerHTML = '<div class="empty"><strong>도구를 찾을 수 없어요.</strong><a href="#/">홈으로</a></div>';
