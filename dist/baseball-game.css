@@ -25,7 +25,7 @@
 .baseball-page .next canvas{height:38px;width:38px;margin-top:3px;display:block}
 .baseball-page .field-wrap{position:relative;isolation:isolate;overflow:hidden;border-radius:11px;border:1px solid #e0ddd4;background:#fbf8f0}
 .baseball-page .field-wrap::after{content:'';position:absolute;pointer-events:none;inset:0;border-radius:10px;box-shadow:inset 0 0 15px #766b4808}
-.baseball-page #field{display:block;width:100%;height:auto;aspect-ratio:440/610;outline-offset:2px;touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none}
+.baseball-page #field{display:block;width:100%;height:auto;aspect-ratio:440/610;outline-offset:2px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .baseball-page .first-tip{position:absolute;top:42%;left:12px;right:12px;pointer-events:none;display:grid;justify-items:center;gap:10px;text-align:center}
 .baseball-page .first-tip .tip-cross{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:#fff9;color:#a0acaf;font-size:30px;border:1px solid #e6e2d8}
 .baseball-page .first-tip strong{font-size:16px;color:#828c87}
@@ -68,13 +68,13 @@
 .baseball-page .ranking-table .this-round{background:#f7f9fc}
 .baseball-page .current-badge{display:block;font-size:8px;font-weight:500;color:#8c9cb0;margin:4px 0 -3px}
 .baseball-page .ranking-empty{text-align:center;color:#9ba5af;font-size:12px;padding:22px 0 16px}
-.baseball-page .field-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:#faf8f1b8;backdrop-filter:blur(5px);z-index:4}
+.baseball-page .field-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:#faf8f1e8;z-index:4}
 .baseball-page .overlay-card{width:100%;max-width:280px;background:#fff;border:1px solid #e6e3d9;border-radius:13px;text-align:center;padding:30px 20px;box-shadow:0 15px 50px #243d5b15}
 .baseball-page .overlay-card h2{font-size:25px;margin:13px 0 10px;letter-spacing:-.04em}
 .baseball-page .overlay-card p{font-size:13px;color:#8b95a2;line-height:1.8;white-space:pre-line}
 .baseball-page .overlay-card button{width:100%;margin-top:10px}
 .baseball-page dialog{border:1px solid #e2e7ed;border-radius:14px;background:#fff;color:var(--ink);padding:27px;max-width:440px;width:calc(100% - 32px);font-family:var(--font);box-shadow:0 20px 80px #13263f30}
-.baseball-page dialog::backdrop{background:#172b4666;backdrop-filter:blur(3px)}
+.baseball-page dialog::backdrop{background:#172b4680}
 .baseball-page dialog h2{font-size:21px;margin:0}
 .baseball-page dialog>p{font-size:13px;color:#8d98a8;line-height:1.8}
 .baseball-page .dialog-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
