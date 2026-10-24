@@ -134,3 +134,9 @@ index.html, styles.css, account.js, app.js, admin.js를 함께 배포합니다. 
 DB는 041 상태를 유지하며 추가 마이그레이션이 없습니다. 캐시는 `20261024-game-replay`입니다. index.html, app.js, tools.js, room-options.js, ladder-room.js, marble-room.js, ladder-room.css, marble-engine.js와 새 ladder-board.js, game-replay.js, game-replay-export.js, video-encoder.js, mediabunny-LICENSE.txt를 함께 배포합니다. 마블 엔진에는 저장용 수동 프레임 그리기 API만 추가하고 원본 물리·맵은 유지합니다. src/marble/player.ts와 src/replay-video-encoder.js, build-replay-video.mjs, package.json, marble-source.zip, mediabunny-source.tgz 및 라이선스 문서를 함께 보관합니다.
 
 방장이 다시하기를 선택하면 참가자의 재생·영상 생성이 즉시 닫히며 새로운 대기방의 준비는 자동으로 켜지지 않습니다. 실제 회원 데이터 대신 격리된 PGlite 두 회원으로 확인합니다. 로컬 QA HTML과 다운로드 영상은 배포 대상에서 제외합니다.
+
+## 2026-10-25 야구공 게임 배포
+041 다음 042_baseball_competition.sql만 적용합니다. begin_baseball_run, baseball_run_for_validation, complete_baseball_run은 service_role 전용이고 get_baseball_leaderboard만 승인된 authenticated 회원에게 허용합니다. private의 경기·최고점 테이블에 RLS를 적용하고 직접 접근은 차단합니다. baseball-score Edge Function은 기존 Supabase 서버 환경의 인증·서비스 역할 설정과 ALLOWED_ORIGINS를 사용합니다. 새 비밀 키는 추가하지 않습니다. 고정 Matter.js와 서버 검증 코드는 build-baseball.mjs로 빌드합니다.
+
+사이트 모듈 캐시는 20261025-baseball입니다. dist/baseball/ 리소스를 먼저 올리고 navigation.js·tools.js·app.js·index.html·baseball-game.js·baseball-game.css를 함께 배포합니다. 로컬 검증 HTML·QA 서버·프로토타입 점수·샘플 회원은 배포하지 않습니다.
+

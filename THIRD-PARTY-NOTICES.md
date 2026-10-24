@@ -52,3 +52,7 @@ MIT licensed physics adapter, map definitions, original camera, progress ranking
 Official source: https://github.com/Vanilagy/mediabunny
 
 Mediabunny 1.62.1 is bundled without library source modifications in `dist/video-encoder.js` under MPL-2.0. The complete license is `dist/mediabunny-LICENSE.txt`. The exact corresponding npm source package is included as `mediabunny-source.tgz` at the project root, also available at https://github.com/logy55/yabol/blob/main/mediabunny-source.tgz . The site-specific import entry is `src/replay-video-encoder.js`; install dependencies and run `build:replay-video` to rebuild. Replay capture uses local browser WebCodecs and does not upload recordings to a server.
+
+## 야구공 게임
+Matter.js 0.20.0 (MIT), https://github.com/liabru/matter-js . 라이선스는 dist/baseball/matter-LICENSE.txt, 공식 소스는 src/vendor/matter.cjs에 포함합니다. 물리 엔진은 브라우저와 점수 검증 서버에서 동일한 버전을 사용합니다. 스포츠공 그림·게임 규칙·UI는 자체 작성했습니다.
+

@@ -2847,5 +2847,134 @@
       "iPhone/Safari MP4 encoding not device-tested; unsupported encoder gives a visible message",
       "Finished-game multi-client test used isolated PGlite, production gameplay not created for QA"
     ]
+  },
+  "baseball_game_20261025": {
+    "route": "https://yabol.co.kr/#/tools/baseball",
+    "menu": "Tools: ladder, marble, baseball, settlement, magic-number",
+    "migration": "042_baseball_competition.sql",
+    "edge_function": "baseball-score",
+    "runtime_commit": "06a7222ecd96c57de52c5ff7274b692c24c3a63e",
+    "workflow_run": 40108589407,
+    "workflow_conclusion": "success",
+    "database": {
+      "passed": true,
+      "reports": [
+        {
+          "mode": "fresh",
+          "roleGates": true,
+          "currentProfileNames": true,
+          "oneBestPerMember": true,
+          "idempotentFinish": true,
+          "lowerScorePreservesBest": true,
+          "restrictedMembersExcluded": true,
+          "noSeedOrPrivateRunExposure": true,
+          "rateAndElapsedChecks": true
+        },
+        {
+          "mode": "upgrade041",
+          "roleGates": true,
+          "currentProfileNames": true,
+          "oneBestPerMember": true,
+          "idempotentFinish": true,
+          "lowerScorePreservesBest": true,
+          "restrictedMembersExcluded": true,
+          "noSeedOrPrivateRunExposure": true,
+          "rateAndElapsedChecks": true
+        }
+      ],
+      "replay": [
+        {
+          "seed": 1,
+          "score": 1285,
+          "maxLevel": 7,
+          "drops": 165,
+          "merges": 116,
+          "frames": 7081,
+          "status": "over",
+          "replayMs": 255
+        },
+        {
+          "seed": 17,
+          "score": 1437,
+          "maxLevel": 7,
+          "drops": 195,
+          "merges": 134,
+          "frames": 8374,
+          "status": "over",
+          "replayMs": 301
+        },
+        {
+          "seed": 555,
+          "score": 1235,
+          "maxLevel": 7,
+          "drops": 163,
+          "merges": 109,
+          "frames": 6972,
+          "status": "over",
+          "replayMs": 241
+        },
+        {
+          "seed": 4294967295,
+          "score": 1924,
+          "maxLevel": 8,
+          "drops": 206,
+          "merges": 163,
+          "frames": 8830,
+          "status": "over",
+          "replayMs": 312
+        },
+        {
+          "seed": 23456789,
+          "score": 1504,
+          "maxLevel": 7,
+          "drops": 165,
+          "merges": 126,
+          "frames": 7082,
+          "status": "over",
+          "replayMs": 234
+        }
+      ]
+    },
+    "browser_isolated": {
+      "saves": 1,
+      "run": {
+        "score": 63,
+        "maxLevel": 4,
+        "drops": 16,
+        "merges": 8,
+        "frames": 745,
+        "status": "playing"
+      },
+      "best": {
+        "userId": "isolated-browser-member",
+        "name": "격리 검증",
+        "score": 63,
+        "maxLevel": 4,
+        "drops": 16,
+        "merges": 8,
+        "frames": 745,
+        "status": "playing",
+        "at": 1792856378139
+      },
+      "requests": 14
+    },
+    "chrome_live": [
+      "Approved real member authentication",
+      "Game starts with server-issued run",
+      "One unmerged ball / zero-point finish and restart succeeded",
+      "Public ranking empty: no test scores inserted",
+      "No help button or round heading",
+      "No console errors",
+      "Tools menu position verified"
+    ],
+    "ranking_columns": [
+      "점수",
+      "이름",
+      "가장 큰 공",
+      "기록일"
+    ],
+    "private_data": "Seeds and input runs inaccessible directly to authenticated members; only service-role verification writes scores",
+    "device_limit": "402px responsive prototype layout tested; physical iPhone Safari has not been device-tested",
+    "proof": "../repair-proof/baseball-live-menu-20261025.png"
   }
 }
