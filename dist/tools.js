@@ -1,4 +1,4 @@
-import {renderBaseballGame} from './baseball-game.js?v=20261025-baseball';
+import {renderBaseballGame} from './baseball-game.js?v=20261025-baseball-mobile';
 import {renderOnlineMarble} from './marble-room.js?v=20261024-game-replay';
 import {renderOnlineLadder} from './ladder-room.js?v=20261024-game-replay';
 import {renderSettlement} from './settlement.js?v=20261024-game-records';
