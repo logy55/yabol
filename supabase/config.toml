@@ -5,3 +5,8 @@ verify_jwt = false
 # Public username login/signup is validated inside this function.
 [functions.membership-auth]
 verify_jwt = false
+
+# Also verifies the signed-in user and approved membership in function code.
+[functions.baseball-score]
+verify_jwt = true
+
