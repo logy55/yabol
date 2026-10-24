@@ -2978,61 +2978,67 @@
     "proof": "../repair-proof/baseball-live-menu-20261025.png"
   },
   "baseball_mobile_controls_20261025": {
-    "layout": {
-      "actions": {
-        "bottom": 849.578125,
-        "height": 44,
-        "left": 29,
-        "right": 373,
-        "top": 805.578125,
-        "width": 344,
-        "x": 29,
-        "y": 805.578125
+    "mode": "Game-only dialog; full mobile viewport; centered desktop dialog",
+    "checks": {
+      "layout": {
+        "board": {
+          "bottom": 610.71875,
+          "height": 485.21875,
+          "left": 26,
+          "right": 376,
+          "top": 125.5,
+          "width": 350,
+          "x": 26,
+          "y": 125.5
+        },
+        "buttons": {
+          "bottom": 733.5625,
+          "height": 48,
+          "left": 16,
+          "right": 386,
+          "top": 685.5625,
+          "width": 370,
+          "x": 16,
+          "y": 685.5625
+        },
+        "dialog": {
+          "bottom": 874,
+          "height": 874,
+          "left": 0,
+          "right": 402,
+          "top": 0,
+          "width": 402,
+          "x": 0,
+          "y": 0
+        },
+        "height": 874,
+        "open": true,
+        "pageLocked": "hidden",
+        "stats": {
+          "bottom": 676.5625,
+          "height": 64.84375,
+          "left": 16,
+          "right": 386,
+          "top": 611.71875,
+          "width": 370,
+          "x": 16,
+          "y": 611.71875
+        },
+        "width": 402
       },
-      "field": {
-        "bottom": 730.734375,
-        "height": 359.0625,
-        "left": 71.5,
-        "right": 330.5,
-        "top": 371.671875,
-        "width": 259,
-        "x": 71.5,
-        "y": 371.671875
-      },
-      "header": {
-        "bottom": 253.375,
-        "height": 253.375,
-        "left": 0,
-        "right": 402,
-        "top": 0,
-        "width": 402,
-        "x": 0,
-        "y": 0
-      },
-      "height": 874,
-      "scrollWidth": 402,
-      "stats": {
-        "bottom": 796.578125,
-        "height": 64.84375,
-        "left": 29,
-        "right": 373,
-        "top": 731.734375,
-        "width": 344,
-        "x": 29,
-        "y": 731.734375
-      },
-      "statsFont": "11px",
-      "touchAction": "pan-y pinch-zoom",
-      "width": 402
+      "keptDrops": "1",
+      "stableBoard": true,
+      "popupCloseReopen": true,
+      "pauseResume": true,
+      "nestedRestartCancel": true,
+      "consoleErrors": 0
     },
-    "canvasGesture": "pan-y pinch-zoom; touch input does not prevent native scrolling; vertical gestures cancel drops",
-    "native_browser_check": "Canvas click dropped one ball; scrolling over canvas moved page by 344px without another drop",
-    "frame_dimensions": "402x874 iframe, full site header",
-    "limitations": "No physical iPhone Safari touch-device test",
-    "changed": "Client canvas size and input; no physics, server score, ranking or DB changes",
-    "runtime_commit": "20bd9e147140ae81f84f50587d15f158146f0f10",
-    "workflow_id": 40110202267,
-    "workflow_conclusion": "success",
-    "proof": "../repair-proof/baseball-mobile-fit-20261025.png"
+    "cache": "20261025-baseball-popup",
+    "server_changes": false,
+    "limitations": "402x874 browser frame tested; physical iPhone Safari touch-device test not performed",
+    "proof": "../repair-proof/baseball-mobile-popup-20261025.png",
+    "runtime_commit": "8623a5863d3f19a2ff50fb062e2b14774e50449e",
+    "workflow_id": 40111042140,
+    "workflow_conclusion": "success"
   }
 }
