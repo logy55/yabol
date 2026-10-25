@@ -3505,5 +3505,55 @@
     "production_assets_match": true,
     "live_ranking_preserved": true,
     "proof": "../repair-proof/baseball-instant-save-live-20261025.png"
+  },
+  "baseball_legacy_cleanup_20261025": {
+    "cache": "20261025-baseball-clean-pending",
+    "runtime_commit": "57cb24c049c7c984c09022207b3e26c7f7db2faa",
+    "pages_workflow": 40175899434,
+    "database_migration": "046_retire_baseball_replay.sql",
+    "old_banner_removed": true,
+    "old_browser_input_queues_pruned_on_visit": true,
+    "new_pending_snapshots_preserved": true,
+    "new_pending_retry_without_page_banner": true,
+    "old_replay_endpoint_retired": true,
+    "server_replay_bundle_removed": true,
+    "server_bundle_bytes": 4617,
+    "server_source_matches": true,
+    "database": {
+      "passed": true,
+      "remainingLegacyCaches": 0,
+      "oldRecoveryDisabled": true,
+      "oldCheckpointDisabled": true,
+      "newSaveEnabled": true,
+      "preservedRankingRows": 2,
+      "completedAndLeaderboardFingerprintsUnchanged": true,
+      "grid": "remaining_legacy_caches\nold_recovery_disabled\nold_checkpoint_disabled\nnew_save_enabled\npreserved_ranking_rows\n0\ntrue\ntrue\ntrue\n2"
+    },
+    "cleanup_tests": {
+      "passed": true,
+      "oldLocalInputsPruned": true,
+      "newSnapshotsRetainedAndRetried": true,
+      "legacyRecoveryBannerRemoved": true,
+      "noReplayRequests": true,
+      "serverTemporaryCacheCleared": true,
+      "retiredRpcRevoked": true,
+      "completedRunsAndRankingUnchanged": true,
+      "newSnapshotCompletionWorks": true,
+      "idempotent": true
+    },
+    "handler_tests": {
+      "passed": true,
+      "oneSnapshotRequest": true,
+      "noReplayOrCheckpointRpc": true,
+      "authenticationAndOwnershipPreserved": true,
+      "untrustedScoreRejected": true,
+      "idempotent": true,
+      "legacyReplayRetired": true,
+      "legacyRecoveryReturnsEmpty": true
+    },
+    "live_new_game_started": true,
+    "live_console_errors": 0,
+    "production_assets_match": true,
+    "proof": "../repair-proof/baseball-clean-pending-live-20261025.png"
   }
 }
