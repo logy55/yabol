@@ -1,5 +1,5 @@
 export const WIDTH=440,HEIGHT=610,FLOOR=586,DANGER=124,DROP_Y=63;
-export const PHYSICS_VERSION=2;
+export const PHYSICS_VERSION=3;
 // Regulation adult ball-size order; squash and table-tennis balls are both about 40 mm.
 // Visual growth is exaggerated for playability. The final baseball is intentionally fictional.
 export const BALLS=Object.freeze([
@@ -16,11 +16,11 @@ export const BALLS=Object.freeze([
   {name:'야구공',r:132,colour:'#fff9eb',kind:'baseball'}
 ]);
 
-export function createBallRandom(seed){let state=seed>>>0;return()=>{state=(state+0x6D2B79F5)>>>0;let t=Math.imul(state^(state>>>15),1|state);t^=t+Math.imul(t^(t>>>7),61|t);return((t^(t>>>14))>>>0)/4294967296;};}
+export function createBallRandom(seed){let state=seed>>>0;const random=()=>{state=(state+0x6D2B79F5)>>>0;let t=Math.imul(state^(state>>>15),1|state);t^=t+Math.imul(t^(t>>>7),61|t);return((t^(t>>>14))>>>0)/4294967296;};random.getState=()=>state;random.setState=value=>{state=value>>>0;};return random;}
 export class BallGame{
   // Older cached clients omit this option; keep their replay on the original rules.
   constructor(Matter,{physicsVersion=1,random=Math.random,onChange=()=>{},onMerge=()=>{},onOver=()=>{},onDrop=()=>{}}={}){
-    if(physicsVersion!==1&&physicsVersion!==2)throw Error('Unsupported physics version');
+    if(![1,2,3].includes(physicsVersion))throw Error('Unsupported physics version');
     this.physicsVersion=physicsVersion;
     this.M=Matter;this.random=random;this.onChange=onChange;this.onMerge=onMerge;this.onOver=onOver;this.onDrop=onDrop;
     this.engine=Matter.Engine.create({enableSleeping:true,positionIterations:8,velocityIterations:8});
@@ -32,7 +32,7 @@ export class BallGame{
   reset(){
     const {Composite,Bodies,Engine}=this.M;Composite.clear(this.engine.world,false);Engine.clear(this.engine);
     const floorFriction=this.physicsVersion===1?.5:.14,wallFriction=this.physicsVersion===1?.16:.1;
-    const boundaries=[Bodies.rectangle(WIDTH/2,FLOOR+25,WIDTH+90,50,{isStatic:true,friction:floorFriction}),Bodies.rectangle(-14,HEIGHT/2,40,HEIGHT*4,{isStatic:true,friction:wallFriction}),Bodies.rectangle(WIDTH+14,HEIGHT/2,40,HEIGHT*4,{isStatic:true,friction:wallFriction})];this.nextBodyId=1;for(const body of boundaries)body.id=this.nextBodyId++;Composite.add(this.engine.world,boundaries);
+    const boundaries=[Bodies.rectangle(WIDTH/2,FLOOR+25,WIDTH+90,50,{isStatic:true,friction:floorFriction}),Bodies.rectangle(-14,HEIGHT/2,40,HEIGHT*4,{isStatic:true,friction:wallFriction}),Bodies.rectangle(WIDTH+14,HEIGHT/2,40,HEIGHT*4,{isStatic:true,friction:wallFriction})];this.boundaries=boundaries;this.nextBodyId=1;for(const body of boundaries)body.id=this.nextBodyId++;Composite.add(this.engine.world,boundaries);
     this.balls=[];this.queue=[];this.reserved.clear();this.time=0;this.frame=0;this.score=0;this.merges=0;this.drops=0;this.maxLevel=0;this.status='playing';this.overflow=0;this.nextDrop=0;this.pendingTurn=false;this.current=this.pick();this.next=this.pick();this.aim=WIDTH/2;this.onChange(this);
   }
   aimAt(x){const def=BALLS[this.current],edge=(def.rx||def.r)+10;this.aim=Math.max(edge,Math.min(WIDTH-edge,x));}
@@ -48,11 +48,12 @@ export class BallGame{
   }
   drop(x=this.aim){
     if(this.status!=='playing'||this.pendingTurn)return false;
-    this.aimAt(x);this.spawn(this.current,this.aim,DROP_Y);this.drops++;this.nextDrop=this.time+680;this.pendingTurn=true;this.onDrop({frame:this.frame,x:this.aim});this.onChange(this);return true;
+    this.aimAt(x);const dropped=this.spawn(this.current,this.aim,DROP_Y);if(this.physicsVersion>=3)this.wakeNearby([dropped]);this.drops++;this.nextDrop=this.time+680;this.pendingTurn=true;this.onDrop({frame:this.frame,x:this.aim});this.onChange(this);return true;
   }
   collisions(pairs){
     if(this.status!=='playing')return;
     for(const pair of pairs){const a=pair.bodyA,b=pair.bodyB,aa=a.plugin.ball,bb=b.plugin.ball;
+      if(this.physicsVersion>=3&&aa&&bb&&a.isSleeping!==b.isSleeping)this.M.Sleeping.set(a.isSleeping?a:b,false);
       if(!aa||!bb||aa.dead||bb.dead||aa.level!==bb.level||this.reserved.has(a.id)||this.reserved.has(b.id))continue;
       this.reserved.add(a.id);this.reserved.add(b.id);this.queue.push([a,b]);
     }
@@ -67,9 +68,24 @@ export class BallGame{
       const points=level<BALLS.length?(level+1)*(level+2)/2:500;
       this.score+=points;this.merges++;this.overflow=0;this.onMerge({x,y,level:Math.min(level,BALLS.length-1),points,cleared:level>=BALLS.length});this.onChange(this);
     }
+    if(pending.length&&this.physicsVersion>=3)this.wakeNearby(pending.flat());
+  }
+  wakeNearby(changed){for(const body of this.balls)if(body.isSleeping)for(const neighbour of changed){const a=body.bounds,b=neighbour.bounds;if(a.max.x+2>=b.min.x&&a.min.x-2<=b.max.x&&a.max.y+2>=b.min.y&&a.min.y-2<=b.max.y){this.M.Sleeping.set(body,false);break;}}}
+  wakeUnsupported(){
+    if(!this.balls.some(body=>body.isSleeping))return;
+    // Sleeping bodies do not wake from gravity when their support disappears.
+    // Follow current geometric contacts from the static floor/walls, rather than
+    // cached collision pairs that may still refer to removed merge parents.
+    const supported=new Set(),frontier=[...this.boundaries];
+    for(let at=0;at<frontier.length;at++)for(const body of this.balls){
+      if(supported.has(body))continue;const anchor=frontier[at],a=body.bounds,b=anchor.bounds;
+      if(a.max.x<b.min.x||a.min.x>b.max.x||a.max.y<b.min.y||a.min.y>b.max.y)continue;
+      if(this.M.Collision.collides(body,anchor)){supported.add(body);frontier.push(body);}
+    }
+    for(const body of this.balls)if(body.isSleeping&&!supported.has(body))this.M.Sleeping.set(body,false);
   }
   step(dt=1000/60){
-    if(this.status!=='playing')return;this.frame++;this.time+=dt;this.M.Engine.update(this.engine,dt);this.mergeQueued();
+    if(this.status!=='playing')return;this.frame++;this.time+=dt;if(this.physicsVersion>=3&&this.frame%30===0)this.wakeUnsupported();this.M.Engine.update(this.engine,dt);this.mergeQueued();
     if(this.pendingTurn&&this.time>=this.nextDrop){this.current=this.next;this.next=this.pick();this.pendingTurn=false;this.aimAt(this.aim);this.onChange(this);}
     let danger=false;
     for(const body of this.balls){
