@@ -1,5 +1,5 @@
 export const WIDTH=440,HEIGHT=610,FLOOR=586,DANGER=124,DROP_Y=63;
-export const PHYSICS_VERSION=3;
+export const PHYSICS_VERSION=4;
 // Regulation adult ball-size order; squash and table-tennis balls are both about 40 mm.
 // Visual growth is exaggerated for playability. The final baseball is intentionally fictional.
 export const BALLS=Object.freeze([
@@ -20,7 +20,7 @@ export function createBallRandom(seed){let state=seed>>>0;const random=()=>{stat
 export class BallGame{
   // Older cached clients omit this option; keep their replay on the original rules.
   constructor(Matter,{physicsVersion=1,random=Math.random,onChange=()=>{},onMerge=()=>{},onOver=()=>{},onDrop=()=>{}}={}){
-    if(![1,2,3].includes(physicsVersion))throw Error('Unsupported physics version');
+    if(![1,2,3,4].includes(physicsVersion))throw Error('Unsupported physics version');
     this.physicsVersion=physicsVersion;
     this.M=Matter;this.random=random;this.onChange=onChange;this.onMerge=onMerge;this.onOver=onOver;this.onDrop=onDrop;
     this.engine=Matter.Engine.create({enableSleeping:true,positionIterations:8,velocityIterations:8});
@@ -64,7 +64,13 @@ export class BallGame{
       aa.dead=bb.dead=true;const level=aa.level+1,x=(a.position.x+b.position.x)/2,y=(a.position.y+b.position.y)/2;
       const vx=(a.velocity.x+b.velocity.x)/2,vy=(a.velocity.y+b.velocity.y)/2;
       this.M.Composite.remove(this.engine.world,[a,b]);this.balls=this.balls.filter(ball=>ball!==a&&ball!==b);
-      if(level<BALLS.length){const def=BALLS[level],rx=def.rx||def.r;const made=this.spawn(level,Math.max(rx+7,Math.min(WIDTH-rx-7,x)),Math.min(FLOOR-(def.ry||def.r),y));const legacy=this.physicsVersion===1;this.M.Body.setVelocity(made,{x:Math.max(legacy?-3:-6,Math.min(legacy?3:6,vx)),y:Math.max(legacy?-2:-4,Math.min(legacy?3:6,vy))});if(!legacy){this.M.Body.setAngle(made,(a.angle+b.angle)/2);this.M.Body.setAngularVelocity(made,Math.max(-.14,Math.min(.14,(a.angularVelocity+b.angularVelocity)*.35)));}this.maxLevel=Math.max(this.maxLevel,level);}
+      if(level<BALLS.length){
+        const def=BALLS[level],rx=def.rx||def.r,made=this.spawn(level,Math.max(rx+7,Math.min(WIDTH-rx-7,x)),Math.min(FLOOR-(def.ry||def.r),y)),legacy=this.physicsVersion===1;
+        this.M.Body.setVelocity(made,{x:Math.max(legacy?-3:-6,Math.min(legacy?3:6,vx)),y:Math.max(legacy?-2:-4,Math.min(legacy?3:6,vy))});
+        if(!legacy){this.M.Body.setAngle(made,(a.angle+b.angle)/2);this.M.Body.setAngularVelocity(made,Math.max(-.14,Math.min(.14,(a.angularVelocity+b.angularVelocity)*.35)));}
+        if(this.physicsVersion>=4){const bottom=Math.max(...made.vertices.map(vertex=>vertex.y));if(bottom>FLOOR)this.M.Body.translate(made,{x:0,y:FLOOR-bottom});}
+        this.maxLevel=Math.max(this.maxLevel,level);
+      }
       const points=level<BALLS.length?(level+1)*(level+2)/2:500;
       this.score+=points;this.merges++;this.overflow=0;this.onMerge({x,y,level:Math.min(level,BALLS.length-1),points,cleared:level>=BALLS.length});this.onChange(this);
     }
@@ -76,7 +82,7 @@ export class BallGame{
     // Sleeping bodies do not wake from gravity when their support disappears.
     // Follow current geometric contacts from the static floor/walls, rather than
     // cached collision pairs that may still refer to removed merge parents.
-    const supported=new Set(),frontier=[...this.boundaries];
+    const supported=new Set(),frontier=this.boundaries.slice(0,this.physicsVersion>=4?1:this.boundaries.length);
     for(let at=0;at<frontier.length;at++)for(const body of this.balls){
       if(supported.has(body))continue;const anchor=frontier[at],a=body.bounds,b=anchor.bounds;
       if(a.max.x<b.min.x||a.min.x>b.max.x||a.max.y<b.min.y||a.min.y>b.max.y)continue;
