@@ -3204,5 +3204,212 @@
     },
     "proof": "../repair-proof/baseball-physics-v2-live-20261025.png",
     "physical_device_tested": false
+  },
+  "baseball_support_and_saving_20261025": {
+    "cache": "20261025-baseball-recovery-v4",
+    "runtime_commit": "0b39be0cfd43c965e1eff0f286d6dd19f084841d",
+    "workflow_id": 40155440405,
+    "workflow_conclusion": "success",
+    "physics_version": 4,
+    "migrations": [
+      "044_baseball_recovery_and_verification.sql",
+      "045_baseball_wall_support.sql"
+    ],
+    "collision": {
+      "ball_types": 11,
+      "largest_outline_error_game_px": 0.660172621099234,
+      "rotated_visual_audit": true,
+      "geometry": [
+        {
+          "name": "스쿼시공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.0703883160432317,
+          "maxFaceInsetPx": -0.0025861734107570644,
+          "rx": 14,
+          "ry": 14
+        },
+        {
+          "name": "탁구공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.09030138636573626,
+          "maxFaceInsetPx": -0.003325080099544797,
+          "rx": 18,
+          "ry": 18
+        },
+        {
+          "name": "골프공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.12046203721918847,
+          "maxFaceInsetPx": -0.004433440132726396,
+          "rx": 24,
+          "ry": 24
+        },
+        {
+          "name": "테니스공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.15531809514218275,
+          "maxFaceInsetPx": -0.005726526838104928,
+          "rx": 31,
+          "ry": 31
+        },
+        {
+          "name": "핸드볼공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.20025756167079134,
+          "maxFaceInsetPx": -0.007389066887877327,
+          "rx": 40,
+          "ry": 40
+        },
+        {
+          "name": "배구공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.2505820066127151,
+          "maxFaceInsetPx": -0.009236333609846659,
+          "rx": 50,
+          "ry": 50
+        },
+        {
+          "name": "볼링공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.3052862288366759,
+          "maxFaceInsetPx": -0.011268327004012924,
+          "rx": 61,
+          "ry": 61
+        },
+        {
+          "name": "축구공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.37037808687195484,
+          "maxFaceInsetPx": -0.013669773742573055,
+          "rx": 74,
+          "ry": 74
+        },
+        {
+          "name": "농구공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.43525023527234163,
+          "maxFaceInsetPx": -0.016071220481133186,
+          "rx": 87,
+          "ry": 87
+        },
+        {
+          "name": "럭비공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.5655824437458846,
+          "maxFaceInsetPx": -0.02087411395825345,
+          "rx": 113,
+          "ry": 64
+        },
+        {
+          "name": "야구공",
+          "sides": 32,
+          "maxVertexErrorPx": 0.660172621099234,
+          "maxFaceInsetPx": -0.02438392072999518,
+          "rx": 132,
+          "ry": 132
+        }
+      ]
+    },
+    "float_fix": {
+      "support_removal": [
+        {
+          "physicsVersion": 2,
+          "upperY": 487,
+          "sleeping": true,
+          "merges": 1,
+          "supportRemoved": true
+        },
+        {
+          "physicsVersion": 3,
+          "upperY": 555.078888164971,
+          "sleeping": false,
+          "merges": 1,
+          "supportRemoved": true
+        },
+        {
+          "physicsVersion": 4,
+          "upperY": 555.078888164971,
+          "sleeping": false,
+          "merges": 1,
+          "supportRemoved": true
+        }
+      ],
+      "wall_and_rugby": [
+        {
+          "physicsVersion": 3,
+          "wallY": 300,
+          "rugbyBottom": 611.4563444444444
+        },
+        {
+          "physicsVersion": 4,
+          "wallY": 405.9138032492475,
+          "rugbyBottom": 586
+        }
+      ],
+      "nearby_wake_only": true,
+      "orphan_contact_scan_every_frames": 30
+    },
+    "replay": {
+      "versions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "seeds_per_version": 5,
+      "passed": true,
+      "legacy_results_unchanged": true,
+      "json_roundtrip_checkpoint_matches": true
+    },
+    "private_database_checks": {
+      "passed": true,
+      "legacyRunPreserved": true,
+      "storedVersion": 4,
+      "jsonbCheckpointReplaysExactly": true,
+      "inputsFrozen": true,
+      "staleRevisionRejected": true,
+      "idempotentFinish": true,
+      "privateStateClearedOnFinish": true,
+      "otherMembersCannotAccess": true,
+      "guestAndClientWritesBlocked": true
+    },
+    "client_core_cost": {
+      "physicsVersion": 4,
+      "frames": 11379,
+      "peakBalls": 49,
+      "stepMedianMs": 0.1790000000000873,
+      "stepP95Ms": 0.3485000000000582,
+      "stepP99Ms": 0.43830000000025393,
+      "maxStepMs": 0.6693000000000211,
+      "over16ms": 0
+    },
+    "save_failure_cause": "Live HTTP 546 and CPU Time exceeded while replaying an entire long run in one request",
+    "save_fix": {
+      "bounded_replay_cpu_budget_ms": 120,
+      "max_steps_per_request": 1800,
+      "server_owned_checkpoint": true,
+      "frozen_inputs": true,
+      "optimistic_revision": true,
+      "client_pending_queue": true,
+      "server_pending_recovery": true,
+      "qa_route_leave_and_reload": true,
+      "live": {
+        "physicsVersion": 4,
+        "frames": 60000,
+        "score": 0,
+        "drops": 3,
+        "checkpoints": 33,
+        "finished": true,
+        "privateCacheCleared": true,
+        "clientErrors": 0,
+        "publicTestScores": 0,
+        "cache": "20261025-baseball-recovery-v4"
+      }
+    },
+    "deployed_server_source_matches": true,
+    "physical_iphone_fps_tested": false,
+    "timing_limit": "CPU-only local benchmark excludes browser graphics and device-specific FPS.",
+    "proof": "../repair-proof/baseball-save-recovery-live-20261025.png",
+    "collision_proof": "../repair-proof/baseball-collision-rotated-20261025.png"
   }
 }
