@@ -3,6 +3,7 @@ import {BallGame,BALLS,WIDTH,HEIGHT,FLOOR,DANGER,DROP_Y,createBallRandom} from '
 import {createBallArt} from './baseball/ball-art.js';
 import {memberLeaders} from './baseball/leaderboard.js';
 import {gameMarkup} from './baseball/markup.js';
+import {recordRoundMerge,makeRoundResult,isRoundResult}from'./baseball/round-result.js?v=20261025-instant-result';
 let sharedArt,sharedBackground;
 export async function renderBaseballGame(main,context={}){
 const{db,actor,signal,isCurrent=()=>true}=context,alive=()=>!signal?.aborted&&isCurrent();
@@ -15,7 +16,8 @@ const $=selector=>root.querySelector(selector),field=$('#field'),scale=Math.min(
 field.width=Math.round(WIDTH*scale);field.height=Math.round(HEIGHT*scale);
 const ctx=field.getContext('2d',{alpha:false});
 const format=n=>new Intl.NumberFormat('ko-KR').format(n),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let best=0,runInfo=null,inputs=[],submission=null,submitted=false,resetting=false,recovering=false;
+let best=0,runInfo=null,mergeCounts=Array(BALLS.length).fill(0),endedNaturally=false,resetting=false,recovering=false;
+const saveJobs=new Map(),savedRuns=new Set();
 const pendingKey=`yabol.baseball.pending.${actor.id}`;let volatilePending=[],pendingStorage=true;
 let game,raf=0,last=0,lastPaint=0,accumulator=0,particles=[],pointer=null,restartResume=false,starting=null;
 let dirty=true,uiDirty=false,fieldRect=null,drawBall,icon,background,lastNext=-1,lastStatus='';
@@ -43,7 +45,7 @@ ranking();
 
 function readout(){uiDirty=true;dirty=true;wake();}
 function updateReadout(){
-  if(!game||!alive())return;
+  if(!game||!alive()||resetting||starting)return;
   refreshLauncher();
   $('#score').textContent=format(game.score);$('#best').textContent=format(best);$('#drops').textContent=game.drops;$('#merges').textContent=game.merges;
   $('#largest').textContent=game.drops||game.merges?BALLS[game.maxLevel].name:'—';
@@ -57,6 +59,7 @@ function updateReadout(){
   else{$('#overlay-eyebrow').textContent='TIME OUT';$('#overlay-title').textContent='잠깐 쉬는 중';$('#overlay-message').textContent='준비되면 이어서 해요.';$('#overlay-action').textContent='계속하기 →';}
 }
 function merged(event){
+  recordRoundMerge(mergeCounts,event);
   const count=reduced?0:event.level===10?42:11;
   for(let i=0;i<count;i++){const angle=i*2.399;particles.push({x:event.x,y:event.y,vx:Math.cos(angle)*(1.3+Math.random()*2.8),vy:-1.8-Math.random()*3.2,life:1,colour:event.level===10?'#c3a15d':BALLS[event.level].colour});}
   particles.push({x:event.x,y:event.y-15,vx:0,vy:-.55,life:1.3,text:`+${event.points}`,colour:'#587f68'});
@@ -133,8 +136,8 @@ field.addEventListener('pointercancel',()=>{pointer=null;});
 field.addEventListener('lostpointercapture',()=>{pointer=null;});
 field.addEventListener('keydown',event=>{if(game?.status==='playing'&&['ArrowLeft','ArrowRight',' ','Enter'].includes(event.key)){event.preventDefault();if(event.key==='ArrowLeft')game.aimAt(game.aim-15);else if(event.key==='ArrowRight')game.aimAt(game.aim+15);else if(!event.repeat)game.drop();dirty=true;wake();}});
 async function reset(){
-  if(resetting)return;resetting=true;game.status='over';readout();$('#overlay-action').disabled=true;
-  try{if(!await submitRound())return;await beginRound();if(alive())field.focus({preventScroll:true});}
+  if(resetting)return;resetting=true;if(endedNaturally)void submitRound();game?.pause();stopLoop();uiDirty=false;$('#overlay-action').disabled=true;
+  try{await beginRound();if(alive())field.focus({preventScroll:true});}
   catch{if(alive())showStartError();}
   finally{resetting=false;if(alive())$('#overlay-action').disabled=false;}
 }
@@ -152,7 +155,7 @@ const rankingsTimer=setInterval(()=>{if(!document.hidden&&!gameDialog.open)void 
 signal?.addEventListener('abort',()=>{
   stopLoop();clearInterval(rankingsTimer);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',pagehide);window.removeEventListener('resize',invalidateRect);
   for(const dialog of root.querySelectorAll('dialog'))if(dialog.open)dialog.close();
-  document.body.classList.remove('baseball-dialog-open');game?.pause();void submitRound();game?.dispose();
+  document.body.classList.remove('baseball-dialog-open');game?.pause();if(endedNaturally)void submitRound();game?.dispose();
 },{once:true});
 void refreshLeaderboard();
 void recoverPending();
@@ -174,20 +177,22 @@ function saving(message,retry=false){
   if(retry){const button=document.createElement('button');button.type='button';button.textContent='다시 저장';button.onclick=()=>void submitRound();area.append(button);}
 }
 async function submitRound(){
-  if(submitted||!runInfo||!game||!inputs.length)return true;if(submission)return submission;
-  const snapshot=rememberPending({runId:runInfo.id,frames:game.frame,inputs:inputs.map(input=>({...input}))}),submittedGame=game;
-  submission=(async()=>{saving('기록 저장 중…');try{const result=await finishSnapshot(snapshot,percent=>saving(`기록 확인 중… ${percent}%`));if(!result)return false;submitted=true;forgetPending(snapshot.runId);if(alive()){if(game===submittedGame)game.score=result.score;readout();saving('기록을 저장했습니다.');await refreshLeaderboard();}return true;}catch{saving('기록을 저장하지 못했어요. 다시 시도할 수 있습니다.',true);return false;}})();
-  try{return await submission;}finally{submission=null;}
+  if(!endedNaturally||!runInfo||!game||!game.drops||savedRuns.has(runInfo.id))return true;
+  if(saveJobs.has(runInfo.id))return saveJobs.get(runInfo.id);
+  const snapshot=rememberPending(makeRoundResult(game,runInfo.id,mergeCounts)),submittedGame=game;
+  const current=()=>alive()&&runInfo?.id===snapshot.runId&&game===submittedGame;
+  const job=(async()=>{if(current())saving('기록 저장 중…');try{const result=await finishSnapshot(snapshot,percent=>{if(current())saving(`기록 확인 중… ${percent}%`);});if(!result)return false;savedRuns.add(snapshot.runId);forgetPending(snapshot.runId);if(alive()){if(current()){game.score=result.score;readout();saving('기록을 저장했습니다.');}await refreshLeaderboard();}return true;}catch{if(current())saving('기록을 저장하지 못했어요. 다시 시도할 수 있습니다.',true);return false;}})();
+  saveJobs.set(snapshot.runId,job);try{return await job;}finally{if(saveJobs.get(snapshot.runId)===job)saveJobs.delete(snapshot.runId);}
 }
-function pendingRecords(){if(pendingStorage)try{const rows=JSON.parse(localStorage.getItem(pendingKey)||'[]');if(Array.isArray(rows))volatilePending=rows.filter(row=>typeof row?.runId==='string'&&Number.isSafeInteger(row.frames)&&Array.isArray(row.inputs)).slice(-5);}catch{pendingStorage=false;}return volatilePending;}
+function pendingRecords(){if(pendingStorage)try{const rows=JSON.parse(localStorage.getItem(pendingKey)||'[]');if(Array.isArray(rows))volatilePending=rows.filter(row=>typeof row?.runId==='string'&&Number.isSafeInteger(row.frames)&&(isRoundResult(row)||Array.isArray(row.inputs))).slice(-5);}catch{pendingStorage=false;}return volatilePending;}
 function writePending(rows){volatilePending=rows;if(pendingStorage)try{if(rows.length)localStorage.setItem(pendingKey,JSON.stringify(rows));else localStorage.removeItem(pendingKey);}catch{pendingStorage=false;}}
 function rememberPending(snapshot){const rows=pendingRecords(),existing=rows.find(row=>row.runId===snapshot.runId);if(existing)return existing;writePending([...rows,snapshot].slice(-5));return snapshot;}
 function forgetPending(id){writePending(pendingRecords().filter(row=>row.runId!==id));}
 async function finishSnapshot(snapshot,progress){
-  let fields=snapshot,retries=0;
+  let fields=snapshot,retries=0;const action=isRoundResult(snapshot)?'snapshot':'finish';
   for(let attempts=0;attempts<10000;attempts++){
-    let response;try{response=await request('finish',fields);retries=0;}
-    catch(error){if(!alive()||['invalid_run','result_rejected','game_unavailable','login_required','member_required'].includes(error.message)||++retries>3)throw error;await new Promise(resolve=>setTimeout(resolve,400*retries));continue;}
+    let response;try{response=await request(action,fields);retries=0;}
+    catch(error){if(!alive()||['invalid_run','invalid_result','invalid_request','result_rejected','game_unavailable','login_required','member_required'].includes(error.message)||++retries>3)throw error;await new Promise(resolve=>setTimeout(resolve,400*retries));continue;}
     if(response.result)return response.result;
     progress?.(Math.min(99,Math.floor(100*(response.verifiedFrames||0)/Math.max(1,response.totalFrames||1))));
     if(!alive())return null;fields={runId:snapshot.runId};
@@ -199,8 +204,9 @@ async function recoverPending(){
     const remote=await request('recover');if(!alive())return;
     jobs=[...local,...remote.runs.filter(row=>!local.some(saved=>saved.runId===row.runId))];
     if(!jobs.length)return;recovery.hidden=false;
-    for(const job of jobs){const result=await finishSnapshot(job,percent=>{if(alive())recovery.textContent=`이전 경기 기록 확인 중… ${percent}%`;});if(!result)return;forgetPending(job.runId);}
-    if(alive()){recovery.textContent='이전 경기 기록을 저장했습니다.';await refreshLeaderboard();}
+    recovery.textContent='미저장 기록을 동기화하고 있습니다.';
+    for(const job of jobs){const result=await finishSnapshot(job,percent=>{if(alive())recovery.textContent=`미저장 기록 동기화 중… ${percent}%`;});if(!result)return;forgetPending(job.runId);}
+    if(alive()){recovery.hidden=true;await refreshLeaderboard();}
   }catch{if(alive()&&(local.length||jobs.length)){recovery.hidden=false;recovery.replaceChildren(document.createTextNode('저장하지 못한 경기 기록이 있습니다. '));const button=document.createElement('button');button.type='button';button.textContent='다시 저장';button.onclick=()=>void recoverPending();recovery.append(button);}}
   finally{recovering=false;}
 }
@@ -212,8 +218,8 @@ async function beginRound(){
   $('#overlay').hidden=false;$('#overlay-title').textContent='경기 준비 중';$('#overlay-message').textContent='';$('#overlay-action').hidden=true;$('#pause').disabled=true;$('#restart').disabled=true;
   const response=await request('start',{physicsVersion:4});if(!alive())return;
   if(!response.run||typeof response.run.id!=='string'||!Number.isSafeInteger(response.run.seed))throw Error('Invalid run');
-  prepareArtwork();game?.dispose();runInfo=response.run;inputs=[];submitted=false;particles=[];last=0;lastPaint=0;lastNext=-1;lastStatus='';accumulator=0;saving('');$('#restart').disabled=false;$('#overlay-action').hidden=false;$('#overlay-action').onclick=()=>{if(game.status==='over')void reset();else game.resume();field.focus({preventScroll:true});};
-  game=undefined;game=new BallGame(Matter,{physicsVersion:[2,3,4].includes(runInfo.physicsVersion)?runInfo.physicsVersion:1,random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onDrop:input=>inputs.push(input),onOver:()=>{$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});if(!gameDialog.open)game.pause();readout();
+  prepareArtwork();game?.dispose();runInfo=response.run;mergeCounts=Array(BALLS.length).fill(0);endedNaturally=false;particles=[];last=0;lastPaint=0;lastNext=-1;lastStatus='';accumulator=0;saving('');$('#restart').disabled=false;$('#overlay-action').hidden=false;$('#overlay-action').onclick=()=>{if(game.status==='over')void reset();else game.resume();field.focus({preventScroll:true});};
+  game=undefined;game=new BallGame(Matter,{physicsVersion:[2,3,4].includes(runInfo.physicsVersion)?runInfo.physicsVersion:1,random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onOver:()=>{endedNaturally=true;$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});if(!gameDialog.open)game.pause();readout();
 }
 
 }
