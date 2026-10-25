@@ -1,5 +1,6 @@
 import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import {validateBaseballInputs,verifyBaseballChunk} from './baseball-verify.js';
+import {validateRoundResult} from './baseball-result.js';
 const env=(name:string)=>{const value=Deno.env.get(name);if(!value)throw Error('Configuration unavailable');return value;};
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 Deno.serve(async(request:Request)=>{
@@ -27,10 +28,15 @@ Deno.serve(async(request:Request)=>{
    const{data,error}=await admin.rpc('pending_baseball_verifications',{p_user:actor});
    return error?json({code:'member_required'},403):json({runs:data});
   }
-  if(input?.action!=='finish'||typeof input.runId!=='string'||!uuid.test(input.runId))return json({code:'invalid_request'},400);
+  if(!['finish','snapshot'].includes(input?.action)||typeof input.runId!=='string'||!uuid.test(input.runId))return json({code:'invalid_request'},400);
   const{data:run,error:runError}=await admin.rpc('baseball_run_for_validation',{p_user:actor,p_run:input.runId});
   if(runError||!run)return json({code:'game_unavailable'},403);
   if(run.finished_at)return json({result:{score:run.score,maxLevel:run.max_level,drops:run.drops,merges:run.merges}});
+  if(input.action==='snapshot'){
+   let result;try{result=validateRoundResult(Number(run.seed),input,Number(run.physics_version)||1);}catch{return json({code:'invalid_result'},400);}
+   const{data,error}=await admin.rpc('complete_baseball_run',{p_user:actor,p_run:run.id,p_score:result.score,p_level:result.maxLevel,p_frames:result.frames,p_drops:result.drops,p_merges:result.merges});
+   if(error)return json({code:'result_rejected'},400);return json({result:data});
+  }
   const frames=run.verification_target??input.frames,inputs=run.verification_inputs??input.inputs;
   let chunk;try{validateBaseballInputs(Number(run.seed),inputs,frames);chunk=verifyBaseballChunk(Number(run.seed),inputs,frames,Number(run.physics_version)||1,run.verification_state??null);}catch(error){console.warn('baseball verification rejected',String(error instanceof Error?error.message:'invalid'));return json({code:'invalid_run'},400);}
   if(chunk.done){
