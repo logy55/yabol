@@ -1,5 +1,5 @@
 import Matter from './baseball/matter.js';
-import {BallGame,BALLS,WIDTH,HEIGHT,FLOOR,DANGER,DROP_Y,createBallRandom} from './baseball/game-core.js';
+import {BallGame,BALLS,WIDTH,HEIGHT,FLOOR,DANGER,DROP_Y,createBallRandom} from './baseball/game-core.js?v=20261025-physics-v2';
 import {createBallArt} from './baseball/ball-art.js';
 import {memberLeaders} from './baseball/leaderboard.js';
 import {gameMarkup} from './baseball/markup.js';
@@ -179,10 +179,10 @@ function showStartError(){
 async function startGame(){if(starting)return starting;starting=beginRound().catch(showStartError).finally(()=>{starting=null;});return starting;}
 async function beginRound(){
   $('#overlay').hidden=false;$('#overlay-title').textContent='경기 준비 중';$('#overlay-message').textContent='';$('#overlay-action').hidden=true;$('#pause').disabled=true;$('#restart').disabled=true;
-  const response=await request('start');if(!alive())return;
+  const response=await request('start',{physicsVersion:2});if(!alive())return;
   if(!response.run||typeof response.run.id!=='string'||!Number.isSafeInteger(response.run.seed))throw Error('Invalid run');
   prepareArtwork();game?.dispose();runInfo=response.run;inputs=[];submitted=false;particles=[];last=0;lastPaint=0;lastNext=-1;lastStatus='';accumulator=0;saving('');$('#restart').disabled=false;$('#overlay-action').hidden=false;$('#overlay-action').onclick=()=>{if(game.status==='over')void reset();else game.resume();field.focus({preventScroll:true});};
-  game=undefined;game=new BallGame(Matter,{random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onDrop:input=>inputs.push(input),onOver:()=>{$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});if(!gameDialog.open)game.pause();readout();
+  game=undefined;game=new BallGame(Matter,{physicsVersion:runInfo.physicsVersion===2?2:1,random:createBallRandom(runInfo.seed),onChange:readout,onMerge:merged,onDrop:input=>inputs.push(input),onOver:()=>{$('#announcer').textContent=`게임 종료. ${game.score}점입니다.`;void submitRound();}});if(!gameDialog.open)game.pause();readout();
 }
 
 }
