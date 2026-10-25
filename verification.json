@@ -3555,5 +3555,234 @@
     "live_console_errors": 0,
     "production_assets_match": true,
     "proof": "../repair-proof/baseball-clean-pending-live-20261025.png"
+  },
+  "baseball_monthly_ranking_20261025": {
+    "cache": "20261025-baseball-monthly",
+    "runtime_commit": "3377b6673379963837a12bbe2254bc7e5256e21d",
+    "pages_workflow": 40203183964,
+    "database_migration": "047_baseball_monthly_ranking.sql",
+    "top_limit": 30,
+    "time_zone": "Asia/Seoul",
+    "reset": "monthly day 1 at 00:00",
+    "retention": "current month only; one best per member; purge previous-month finished games and expired unfinished runs",
+    "rankings_not_archived": true,
+    "cron_job": "baseball-monthly-ranking-maintenance",
+    "cron_schedule_utc": "0 15 * * *",
+    "normal_day_cleanup_preserves_current_month": true,
+    "podium_trophies": [
+      "gold",
+      "silver",
+      "bronze"
+    ],
+    "trophies_scoped_to_baseball_ranking": true,
+    "reset_note": "랭킹은 매월 1일 초기화됩니다.",
+    "month_boundary_live_refresh": true,
+    "database": {
+      "passed": true,
+      "preservedCurrentRankings": "15",
+      "archivedRankingRows": "0",
+      "activeMaintenanceJobs": "1",
+      "utcSchedule": "0 15 * * *",
+      "cronTimezone": "GMT",
+      "beforeMidnightKst": "2026-10-01",
+      "afterMidnightKst": "2026-11-01",
+      "memberResetBlocked": "true",
+      "currentMonthFingerprintsUnchanged": true
+    },
+    "db_tests": {
+      "passed": true,
+      "reports": [
+        {
+          "mode": "upgrade046",
+          "top30": true,
+          "kstMidnightRollover": true,
+          "yearAndLeapBoundaries": true,
+          "currentMonthOnly": true,
+          "previousMonthRecordsPurged": true,
+          "oneBestPerMember": true,
+          "activeBoundaryGamePreserved": true,
+          "expiredIdleRunsPurged": true,
+          "newLowerScoreAcceptedNextMonth": true,
+          "duplicateOldRunDoesNotEnterNewMonth": true,
+          "authAndPrivateAccessPreserved": true,
+          "existingBestsUnchangedOnMigration": true,
+          "normalDayPreservesCurrentScores": true,
+          "scheduledDailyKstMidnight": true,
+          "schedulerRegistrationStubbedLocally": true
+        },
+        {
+          "mode": "fresh",
+          "top30": true,
+          "kstMidnightRollover": true,
+          "yearAndLeapBoundaries": true,
+          "currentMonthOnly": true,
+          "previousMonthRecordsPurged": true,
+          "oneBestPerMember": true,
+          "activeBoundaryGamePreserved": true,
+          "expiredIdleRunsPurged": true,
+          "newLowerScoreAcceptedNextMonth": true,
+          "duplicateOldRunDoesNotEnterNewMonth": true,
+          "authAndPrivateAccessPreserved": true,
+          "existingBestsUnchangedOnMigration": true,
+          "normalDayPreservesCurrentScores": true,
+          "scheduledDailyKstMidnight": true,
+          "schedulerRegistrationStubbedLocally": true
+        }
+      ]
+    },
+    "client_tests": {
+      "passed": true,
+      "top30": true,
+      "memberDeduplicationPreserved": true,
+      "longMonthTimeoutRearms": true,
+      "liveBoundaryClearsRanking": true,
+      "stalePreviousResponseIgnored": true,
+      "resetNoticePresent": true
+    },
+    "mobile_layout_tests": {
+      "passed": true,
+      "requestedWidths": [
+        320,
+        360,
+        402
+      ],
+      "layouts": [
+        {
+          "card": {
+            "client": 271,
+            "left": 16,
+            "right": 289,
+            "scroll": 271
+          },
+          "headingWidth": 237,
+          "notice": {
+            "height": 16.5,
+            "left": 133.484375,
+            "right": 271,
+            "width": 137.515625
+          },
+          "rows": 30,
+          "text": "랭킹은 매월 1일 초기화됩니다.",
+          "trophies": [
+            {
+              "color": "rgb(201, 154, 40)",
+              "label": "1위 금트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(139, 154, 171)",
+              "label": "2위 은트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(177, 119, 73)",
+              "label": "3위 동트로피",
+              "width": 14
+            }
+          ],
+          "width": 305
+        },
+        {
+          "card": {
+            "client": 311,
+            "left": 16,
+            "right": 329,
+            "scroll": 311
+          },
+          "headingWidth": 277,
+          "notice": {
+            "height": 16.5,
+            "left": 173.484375,
+            "right": 311,
+            "width": 137.515625
+          },
+          "rows": 30,
+          "text": "랭킹은 매월 1일 초기화됩니다.",
+          "trophies": [
+            {
+              "color": "rgb(201, 154, 40)",
+              "label": "1위 금트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(139, 154, 171)",
+              "label": "2위 은트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(177, 119, 73)",
+              "label": "3위 동트로피",
+              "width": 14
+            }
+          ],
+          "width": 345
+        },
+        {
+          "card": {
+            "client": 353,
+            "left": 16,
+            "right": 371,
+            "scroll": 353
+          },
+          "headingWidth": 319,
+          "notice": {
+            "height": 16.5,
+            "left": 215.484375,
+            "right": 353,
+            "width": 137.515625
+          },
+          "rows": 30,
+          "text": "랭킹은 매월 1일 초기화됩니다.",
+          "trophies": [
+            {
+              "color": "rgb(201, 154, 40)",
+              "label": "1위 금트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(139, 154, 171)",
+              "label": "2위 은트로피",
+              "width": 14
+            },
+            {
+              "color": "rgb(177, 119, 73)",
+              "label": "3위 동트로피",
+              "width": 14
+            }
+          ],
+          "width": 387
+        }
+      ],
+      "consoleErrors": 0
+    },
+    "production_assets_match": true,
+    "proof": "../repair-proof/baseball-monthly-live-20261025.png",
+    "mobile_proof": "../repair-proof/baseball-monthly-mobile-live-20261025.png",
+    "live_desktop": {
+      "passed": true,
+      "title": "랭킹\nTOP 30",
+      "notice": "랭킹은 매월 1일 초기화됩니다.",
+      "rows": 15,
+      "trophies": [
+        "1위 금트로피",
+        "2위 은트로피",
+        "3위 동트로피"
+      ],
+      "consoleErrors": 0
+    },
+    "live_mobile": {
+      "passed": true,
+      "requestedWidth": 402,
+      "cardClient": 353,
+      "cardLeft": 16,
+      "cardRight": 371,
+      "cardScroll": 353,
+      "noteHeight": 16.5,
+      "noteLeft": 215.484375,
+      "noteRight": 353,
+      "rows": 15,
+      "trophies": 3,
+      "width": 387
+    }
   }
 }
