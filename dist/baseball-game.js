@@ -23,7 +23,6 @@ let game,raf=0,last=0,lastPaint=0,accumulator=0,particles=[],pointer=null,restar
 let dirty=true,uiDirty=false,fieldRect=null,drawBall,icon,background,lastNext=-1,lastStatus='';
 const launch=document.createElement('section');launch.className='baseball-launch';launch.innerHTML='<button id="baseball-open" class="button-primary" type="button">게임 시작</button>';
 root.insertBefore(launch,$('.game-layout'));
-const recovery=document.createElement('p');recovery.className='score-status';recovery.hidden=true;recovery.setAttribute('aria-live','polite');root.insertBefore(recovery,$('.game-layout'));
 const gameDialog=document.createElement('dialog');gameDialog.className='baseball-game-dialog';gameDialog.tabIndex=-1;gameDialog.setAttribute('aria-labelledby','baseball-popup-title');
 gameDialog.innerHTML='<div class="baseball-popup-heading"><h2 id="baseball-popup-title">야구공 게임</h2><button id="baseball-close" type="button" aria-label="게임 팝업 닫기">닫기 ×</button></div>';
 gameDialog.append($('.play-panel'));root.append(gameDialog);
@@ -163,7 +162,7 @@ void recoverPending();
 
 async function request(action,fields={}){
   const{data,error}=await db.functions.invoke('baseball-score',{body:{action,...fields}});
-  if(error||!data||(action==='start'?!data.run:action==='recover'?!Array.isArray(data.runs):!data.result&&!data.pending)){
+  if(error||!data||(action==='start'?!data.run:!data.result)){
     let code=data?.code;try{if(!code&&error?.context)code=(await error.context.clone().json())?.code;}catch{}
     throw Error(code||'connection_failed');
   }return data;
@@ -181,33 +180,26 @@ async function submitRound(){
   if(saveJobs.has(runInfo.id))return saveJobs.get(runInfo.id);
   const snapshot=rememberPending(makeRoundResult(game,runInfo.id,mergeCounts)),submittedGame=game;
   const current=()=>alive()&&runInfo?.id===snapshot.runId&&game===submittedGame;
-  const job=(async()=>{if(current())saving('기록 저장 중…');try{const result=await finishSnapshot(snapshot,percent=>{if(current())saving(`기록 확인 중… ${percent}%`);});if(!result)return false;savedRuns.add(snapshot.runId);forgetPending(snapshot.runId);if(alive()){if(current()){game.score=result.score;readout();saving('기록을 저장했습니다.');}await refreshLeaderboard();}return true;}catch{if(current())saving('기록을 저장하지 못했어요. 다시 시도할 수 있습니다.',true);return false;}})();
+  const job=(async()=>{if(current())saving('기록 저장 중…');try{const result=await finishSnapshot(snapshot);if(!result)return false;savedRuns.add(snapshot.runId);forgetPending(snapshot.runId);if(alive()){if(current()){game.score=result.score;readout();saving('기록을 저장했습니다.');}await refreshLeaderboard();}return true;}catch{if(current())saving('기록을 저장하지 못했어요. 다시 시도할 수 있습니다.',true);return false;}})();
   saveJobs.set(snapshot.runId,job);try{return await job;}finally{if(saveJobs.get(snapshot.runId)===job)saveJobs.delete(snapshot.runId);}
 }
-function pendingRecords(){if(pendingStorage)try{const rows=JSON.parse(localStorage.getItem(pendingKey)||'[]');if(Array.isArray(rows))volatilePending=rows.filter(row=>typeof row?.runId==='string'&&Number.isSafeInteger(row.frames)&&(isRoundResult(row)||Array.isArray(row.inputs))).slice(-5);}catch{pendingStorage=false;}return volatilePending;}
+function pendingRecords(){
+  if(pendingStorage)try{const rows=JSON.parse(localStorage.getItem(pendingKey)||'[]');if(Array.isArray(rows)){volatilePending=rows.filter(row=>typeof row?.runId==='string'&&Number.isSafeInteger(row.frames)&&isRoundResult(row)).slice(-5);if(volatilePending.length!==rows.length)writePending(volatilePending);}}catch{pendingStorage=false;}
+  return volatilePending;
+}
 function writePending(rows){volatilePending=rows;if(pendingStorage)try{if(rows.length)localStorage.setItem(pendingKey,JSON.stringify(rows));else localStorage.removeItem(pendingKey);}catch{pendingStorage=false;}}
 function rememberPending(snapshot){const rows=pendingRecords(),existing=rows.find(row=>row.runId===snapshot.runId);if(existing)return existing;writePending([...rows,snapshot].slice(-5));return snapshot;}
 function forgetPending(id){writePending(pendingRecords().filter(row=>row.runId!==id));}
-async function finishSnapshot(snapshot,progress){
-  let fields=snapshot,retries=0;const action=isRoundResult(snapshot)?'snapshot':'finish';
-  for(let attempts=0;attempts<10000;attempts++){
-    let response;try{response=await request(action,fields);retries=0;}
-    catch(error){if(!alive()||['invalid_run','invalid_result','invalid_request','result_rejected','game_unavailable','login_required','member_required'].includes(error.message)||++retries>3)throw error;await new Promise(resolve=>setTimeout(resolve,400*retries));continue;}
-    if(response.result)return response.result;
-    progress?.(Math.min(99,Math.floor(100*(response.verifiedFrames||0)/Math.max(1,response.totalFrames||1))));
-    if(!alive())return null;fields={runId:snapshot.runId};
-  }throw Error('verification_pending');
+async function finishSnapshot(snapshot){
+  if(!isRoundResult(snapshot))throw Error('invalid_request');
+  for(let retries=0;retries<=3;retries++){
+    try{return(await request('snapshot',snapshot)).result;}
+    catch(error){if(!alive()||['invalid_result','invalid_request','result_rejected','game_unavailable','login_required','member_required'].includes(error.message)||retries===3)throw error;await new Promise(resolve=>setTimeout(resolve,400*(retries+1)));}
+  }
 }
 async function recoverPending(){
-  if(recovering||!alive())return;recovering=true;const local=pendingRecords();let jobs=local;
-  try{
-    const remote=await request('recover');if(!alive())return;
-    jobs=[...local,...remote.runs.filter(row=>!local.some(saved=>saved.runId===row.runId))];
-    if(!jobs.length)return;recovery.hidden=false;
-    recovery.textContent='미저장 기록을 동기화하고 있습니다.';
-    for(const job of jobs){const result=await finishSnapshot(job,percent=>{if(alive())recovery.textContent=`미저장 기록 동기화 중… ${percent}%`;});if(!result)return;forgetPending(job.runId);}
-    if(alive()){recovery.hidden=true;await refreshLeaderboard();}
-  }catch{if(alive()&&(local.length||jobs.length)){recovery.hidden=false;recovery.replaceChildren(document.createTextNode('저장하지 못한 경기 기록이 있습니다. '));const button=document.createElement('button');button.type='button';button.textContent='다시 저장';button.onclick=()=>void recoverPending();recovery.append(button);}}
+  if(recovering||!alive())return;const jobs=pendingRecords();if(!jobs.length)return;recovering=true;let restored=false;
+  try{for(const job of jobs){if(!alive())break;try{await finishSnapshot(job);forgetPending(job.runId);savedRuns.add(job.runId);restored=true;}catch{/* Keep this result for the next retry; no obsolete recovery banner. */}}if(restored&&alive())await refreshLeaderboard();}
   finally{recovering=false;}
 }
 function showStartError(){
