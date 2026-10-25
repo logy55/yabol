@@ -179,3 +179,15 @@ body.baseball-dialog-open{overflow:hidden}
   .baseball-page .baseball-game-dialog .game-actions{padding-bottom:4px}
 }
 
+
+.baseball-page .ranking-heading>div{width:100%;min-width:0}
+.baseball-page .ranking-title-row{display:flex;align-items:baseline;gap:7px 12px;flex-wrap:wrap;min-width:0}
+.baseball-page .ranking-title-row h2{flex-shrink:0}
+.baseball-page .ranking-reset-note{flex:0 1 auto;min-width:0;max-width:100%;margin:0 0 0 auto;font-size:11px;line-height:1.5;color:#7e8b9b;text-align:right;white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+
+.baseball-page .ranking-member-label{display:inline-flex;align-items:center;justify-content:center;gap:4px;max-width:100%;vertical-align:middle}
+.baseball-page .ranking-name{min-width:0;overflow-wrap:anywhere}
+.baseball-page .ranking-trophy{display:inline-flex;flex:none;width:16px;height:16px}
+.baseball-page .ranking-trophy svg{display:block;width:100%;height:100%;fill:currentColor}
+.baseball-page .trophy-1{color:#c99a28}.baseball-page .trophy-2{color:#8b9aab}.baseball-page .trophy-3{color:#b17749}
+@media(max-width:760px){.baseball-page .ranking-trophy{width:14px;height:14px}}

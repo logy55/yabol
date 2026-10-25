@@ -1,8 +1,8 @@
 import Matter from './baseball/matter.js';
 import {BallGame,BALLS,WIDTH,HEIGHT,FLOOR,DANGER,DROP_Y,createBallRandom} from './baseball/game-core.js?v=20261025-physics-v4';
 import {createBallArt} from './baseball/ball-art.js';
-import {memberLeaders} from './baseball/leaderboard.js';
-import {gameMarkup} from './baseball/markup.js';
+import {memberLeaders} from './baseball/leaderboard.js?v=20261025-baseball-monthly';
+import {gameMarkup} from './baseball/markup.js?v=20261025-baseball-monthly';
 import {recordRoundMerge,makeRoundResult,isRoundResult}from'./baseball/round-result.js?v=20261025-instant-result';
 let sharedArt,sharedBackground;
 export async function renderBaseballGame(main,context={}){
@@ -18,6 +18,7 @@ const ctx=field.getContext('2d',{alpha:false});
 const format=n=>new Intl.NumberFormat('ko-KR').format(n),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let best=0,runInfo=null,mergeCounts=Array(BALLS.length).fill(0),endedNaturally=false,resetting=false,recovering=false;
 const saveJobs=new Map(),savedRuns=new Set();
+let monthResetTimer=0,monthResetDeadline=0,leaderboardRequest=0;
 const pendingKey=`yabol.baseball.pending.${actor.id}`;let volatilePending=[],pendingStorage=true;
 let game,raf=0,last=0,lastPaint=0,accumulator=0,particles=[],pointer=null,restartResume=false,starting=null;
 let dirty=true,uiDirty=false,fieldRect=null,drawBall,icon,background,lastNext=-1,lastStatus='';
@@ -33,9 +34,13 @@ gameDialog.addEventListener('close',()=>{document.body.classList.remove('basebal
 
 function ranking(entries=[]){
   const records=memberLeaders(entries),body=$('#ranking-body');body.replaceChildren();
-  for(const record of records){
-    const row=document.createElement('tr'),date=new Intl.DateTimeFormat('ko-KR',{month:'numeric',day:'numeric'}).format(record.at);
-    for(const value of [format(record.score),record.name,BALLS[record.maxLevel].name,date]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}
+  for(const [position,record] of records.entries()){
+    const row=document.createElement('tr'),date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric'}).format(record.at);
+    for(const [column,value] of [format(record.score),record.name,BALLS[record.maxLevel].name,date].entries()){
+      const cell=document.createElement('td');
+      if(column===1&&position<3){const label=document.createElement('span'),trophy=document.createElement('span'),name=document.createElement('span');label.className='ranking-member-label';trophy.className='ranking-trophy trophy-'+(position+1);trophy.setAttribute('role','img');trophy.setAttribute('aria-label',['1위 금트로피','2위 은트로피','3위 동트로피'][position]);trophy.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h4v3a5 5 0 0 1-5 5 5 5 0 0 1-3 2v3h4v2H7v-2h4v-3a5 5 0 0 1-3-2 5 5 0 0 1-5-5V6h4V3zm0 5H5v1a3 3 0 0 0 2 3V8zm10 0v4a3 3 0 0 0 2-3V8z"/></svg>';name.className='ranking-name';name.textContent=value;label.append(trophy,name);cell.append(label);}else cell.textContent=value;
+      row.append(cell);
+    }
     body.append(row);
   }
   $('#ranking-empty').textContent='아직 등록된 기록이 없습니다.';$('#ranking-empty').hidden=records.length>0;
@@ -146,13 +151,13 @@ $('#restart').onclick=()=>{if(!game||starting||resetting)return;if(!game.drops||
 $('#restart-cancel').onclick=()=>$('#restart-dialog').close();
 $('#restart-confirm').onclick=()=>{restartResume=false;$('#restart-dialog').close();void reset();};
 $('#restart-dialog').addEventListener('close',()=>{if(restartResume)game.resume();restartResume=false;});
-const visibility=()=>{fieldRect=null;if(document.hidden){game?.pause();stopLoop();}else{if(!gameDialog.open)void refreshLeaderboard();readout();}};
+const visibility=()=>{fieldRect=null;if(document.hidden){game?.pause();stopLoop();}else{if(monthResetDeadline&&Date.now()>=monthResetDeadline)clearMonthRanking();void refreshLeaderboard();readout();}};
 document.addEventListener('visibilitychange',visibility);
 const pagehide=()=>{game?.pause();stopLoop();};window.addEventListener('pagehide',pagehide);
 const invalidateRect=()=>{fieldRect=null;};window.addEventListener('resize',invalidateRect);gameDialog.addEventListener('scroll',invalidateRect,{passive:true});
 const rankingsTimer=setInterval(()=>{if(!document.hidden&&!gameDialog.open)void refreshLeaderboard();},15000);
 signal?.addEventListener('abort',()=>{
-  stopLoop();clearInterval(rankingsTimer);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',pagehide);window.removeEventListener('resize',invalidateRect);
+  stopLoop();clearInterval(rankingsTimer);clearTimeout(monthResetTimer);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',pagehide);window.removeEventListener('resize',invalidateRect);
   for(const dialog of root.querySelectorAll('dialog'))if(dialog.open)dialog.close();
   document.body.classList.remove('baseball-dialog-open');game?.pause();if(endedNaturally)void submitRound();game?.dispose();
 },{once:true});
@@ -167,9 +172,15 @@ async function request(action,fields={}){
     throw Error(code||'connection_failed');
   }return data;
 }
+function clearMonthRanking(){best=0;ranking();$('#best').textContent='0';readout();}
+function armMonthReset(){
+  clearTimeout(monthResetTimer);if(!monthResetDeadline||!alive())return;
+  monthResetTimer=setTimeout(()=>{monthResetTimer=0;if(!alive())return;if(Date.now()<monthResetDeadline){armMonthReset();return;}clearMonthRanking();void refreshLeaderboard();},Math.min(2147483647,Math.max(0,monthResetDeadline-Date.now())));
+}
 async function refreshLeaderboard(){
-  try{const{data,error}=await db.rpc('get_baseball_leaderboard');if(!alive())return;if(error||!data)throw error||Error('Missing ranking');best=Number(data.personalBest)||0;ranking(data.entries);$('#best').textContent=format(best);$('#ranking-empty').classList.remove('ranking-error');readout();}
-  catch{if(alive()){$('#ranking-empty').hidden=false;$('#ranking-empty').classList.add('ranking-error');$('#ranking-empty').textContent='랭킹을 불러오지 못했어요. 잠시 뒤 다시 확인해 주세요.';}}
+  const requestId=++leaderboardRequest;
+  try{const{data,error}=await db.rpc('get_baseball_leaderboard');if(!alive()||requestId!==leaderboardRequest)return;if(error||!data)throw error||Error('Missing ranking');best=Number(data.personalBest)||0;ranking(data.entries);$('#best').textContent=format(best);$('#ranking-empty').classList.remove('ranking-error');if(Number.isFinite(data.resetsAt)&&Number.isFinite(data.serverNow)&&data.resetsAt>data.serverNow){monthResetDeadline=Date.now()+data.resetsAt-data.serverNow;armMonthReset();}readout();}
+  catch{if(alive()&&requestId===leaderboardRequest){$('#ranking-empty').hidden=false;$('#ranking-empty').classList.add('ranking-error');$('#ranking-empty').textContent='랭킹을 불러오지 못했어요. 잠시 뒤 다시 확인해 주세요.';}}
 }
 function saving(message,retry=false){
   if(!alive())return;const area=$('#score-status');area.replaceChildren();area.hidden=!message;area.append(document.createTextNode(message));
