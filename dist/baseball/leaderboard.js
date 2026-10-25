@@ -7,5 +7,5 @@ export function memberLeaders(entries){
     const value={userId:row.userId,name:row.name.trim(),score:row.score,maxLevel:row.maxLevel,at:row.at},previous=members.get(row.userId);
     if(!previous||value.score>previous.score||(value.score===previous.score&&value.at<previous.at))members.set(value.userId,value);
   }
-  return [...members.values()].sort((a,b)=>b.score-a.score||a.at-b.at||a.userId.localeCompare(b.userId)).slice(0,10);
+  return [...members.values()].sort((a,b)=>b.score-a.score||a.at-b.at||a.userId.localeCompare(b.userId)).slice(0,30);
 }
