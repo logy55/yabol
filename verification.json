@@ -3145,5 +3145,64 @@
     },
     "limitations": "402x874 Chrome frame tested. Callback timings exclude GPU/compositor work and are not an iPhone FPS measurement.",
     "proof": "../repair-proof/baseball-start-button-live-20261025.png"
+  },
+  "baseball_physics_20261025": {
+    "cache": "20261025-baseball-physics-v2",
+    "runtime_commit": "107069c38f3af51a5c75b0d62755d4bef906702b",
+    "workflow_id": 40150823273,
+    "workflow_conclusion": "success",
+    "physics_version": 2,
+    "database_migration": "043_baseball_physics_versions.sql",
+    "deployed_server_source_matches": true,
+    "motion": [
+      {
+        "physicsVersion": 1,
+        "contactFrame": 58,
+        "bounceHeight": 4.5,
+        "maxSpeed": 15,
+        "rollDistance": 86.4,
+        "sleepingAfter3s": true,
+        "stepP95ms": 0.051
+      },
+      {
+        "physicsVersion": 2,
+        "contactFrame": 57,
+        "bounceHeight": 30.7,
+        "maxSpeed": 16.2,
+        "rollDistance": 116,
+        "sleepingAfter3s": false,
+        "stepP95ms": 0.016
+      }
+    ],
+    "deterministic_replay": {
+      "passed": true,
+      "versions": [
+        1,
+        2
+      ],
+      "seeds_per_version": 5,
+      "legacy_results_unchanged": true
+    },
+    "browser_qa": {
+      "drops": 12,
+      "client_score": 50,
+      "verified_score": 50,
+      "console_errors": 0
+    },
+    "live": {
+      "new_run_version": 2,
+      "finished_score": 0,
+      "finished_drops": 1,
+      "finished": true,
+      "client_can_issue_runs_directly": false,
+      "guest_can_issue_runs": false
+    },
+    "requested_ranking_reset": {
+      "cleared": 1,
+      "backup": false,
+      "live_empty_verified": true
+    },
+    "proof": "../repair-proof/baseball-physics-v2-live-20261025.png",
+    "physical_device_tested": false
   }
 }
