@@ -18,7 +18,7 @@ Deno.serve(async(request:Request)=>{
   let input;try{input=JSON.parse(text);}catch{return json({code:'invalid_request'},400);}
   const admin=createClient(env('SUPABASE_URL'),env('SUPABASE_SERVICE_ROLE_KEY'),{auth:{persistSession:false,autoRefreshToken:false}}),actor=identity.user.id;
   if(input?.action==='start'){
-   const name=input.physicsVersion===3?'begin_baseball_run_v3':input.physicsVersion===2?'begin_baseball_run_v2':'begin_baseball_run';
+   const name=input.physicsVersion===4?'begin_baseball_run_v4':input.physicsVersion===3?'begin_baseball_run_v3':input.physicsVersion===2?'begin_baseball_run_v2':'begin_baseball_run';
    const{data,error}=await admin.rpc(name,{p_user:actor});
    if(error)return json({code:error.message.includes('Too many')?'rate_limited':'member_required'},error.message.includes('Too many')?429:403);
    return json({run:data});
