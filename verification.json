@@ -3411,5 +3411,99 @@
     "timing_limit": "CPU-only local benchmark excludes browser graphics and device-specific FPS.",
     "proof": "../repair-proof/baseball-save-recovery-live-20261025.png",
     "collision_proof": "../repair-proof/baseball-collision-rotated-20261025.png"
+  },
+  "baseball_instant_result_20261025": {
+    "cache": "20261025-baseball-instant-result",
+    "runtime_commit": "423d14fbdc85e8755d362c29c65e6007b51409ca",
+    "pages_workflow": 40172888855,
+    "physics_version": 4,
+    "new_database_migrations": [],
+    "normal_game_over_only": true,
+    "current_result_snapshot": true,
+    "no_full_physics_replay_for_new_results": true,
+    "nonblocking_restart": true,
+    "local_pending_retry": true,
+    "legacy_pending_recovery_preserved": true,
+    "authentication_ownership_and_duplicate_checks": true,
+    "strong_physics_anticheat": false,
+    "deployed_server_source_matches": true,
+    "result_tests": {
+      "passed": true,
+      "normalGameOverCaptured": true,
+      "scoreAndInventoryChecks": true,
+      "noPhysicsReplay": true,
+      "checks": [
+        {
+          "seed": 1,
+          "score": 2066,
+          "drops": 225,
+          "frames": 9668,
+          "packetBytes": 219,
+          "validationMs": 0.162
+        },
+        {
+          "seed": 17,
+          "score": 4240,
+          "drops": 377,
+          "frames": 16209,
+          "packetBytes": 220,
+          "validationMs": 0.032
+        },
+        {
+          "seed": 555,
+          "score": 2189,
+          "drops": 217,
+          "frames": 9319,
+          "packetBytes": 218,
+          "validationMs": 0.021
+        },
+        {
+          "seed": 4294967295,
+          "score": 1450,
+          "drops": 177,
+          "frames": 7609,
+          "packetBytes": 219,
+          "validationMs": 0.019
+        },
+        {
+          "seed": 23456789,
+          "score": 2740,
+          "drops": 265,
+          "frames": 11379,
+          "packetBytes": 221,
+          "validationMs": 0.048
+        }
+      ]
+    },
+    "handler_tests": {
+      "passed": true,
+      "oneSnapshotRequest": true,
+      "noReplayOrCheckpointRpc": true,
+      "authenticationAndOwnershipPreserved": true,
+      "untrustedScoreRejected": true,
+      "idempotent": true
+    },
+    "controller_tests": {
+      "passed": true,
+      "normalFinishOnly": true,
+      "snapshotCapturedSynchronously": true,
+      "restartDoesNotWait": true,
+      "perRunSaveJobs": true,
+      "oldResponseCannotMarkNewRoundSaved": true,
+      "duplicateRequestsCoalesced": true
+    },
+    "browser_tests": {
+      "passed": true,
+      "snapshot_requests": 2,
+      "legacy_replay_requests": 0,
+      "saves": 2,
+      "delayed_ack_ms": 10000,
+      "restart_before_previous_ack": true,
+      "unfinished_restarts_not_saved": true,
+      "console_errors": 0
+    },
+    "production_assets_match": true,
+    "live_ranking_preserved": true,
+    "proof": "../repair-proof/baseball-instant-save-live-20261025.png"
   }
 }
