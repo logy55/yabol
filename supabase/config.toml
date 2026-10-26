@@ -10,3 +10,7 @@ verify_jwt = false
 [functions.baseball-score]
 verify_jwt = true
 
+
+# Verifies the signed-in user and approved membership in code as well.
+[functions.game2048-score]
+verify_jwt = true
