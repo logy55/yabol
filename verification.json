@@ -3784,5 +3784,380 @@
       "trophies": 3,
       "width": 387
     }
+  },
+  "game2048_20261027": {
+    "cache": "20261026-game2048",
+    "runtime_commit": "a8492e4eb6d75c13603682d82aada4c968a4247d",
+    "pages_workflow": 40349512076,
+    "route": "#/tools/2048",
+    "menu_after": "야구공 게임",
+    "migration": "048_game2048.sql",
+    "function": "game2048-score",
+    "keyboard": true,
+    "wasd": true,
+    "pointer_swipe": true,
+    "open_with_start_button": true,
+    "popup_close_preserves_session": true,
+    "no_continuous_game_loop": true,
+    "save_without_full_game_replay": true,
+    "auto_save_at_2048_and_game_over": true,
+    "continue_after_2048": true,
+    "ranking_limit": 30,
+    "podium_trophies": true,
+    "time_zone": "Asia/Seoul",
+    "monthly_reset": "day 1 at 00:00",
+    "current_month_only": true,
+    "nonblocking_restart": true,
+    "core": {
+      "passed": true,
+      "directionalMerges": true,
+      "mergeOncePerTurn": true,
+      "unchangedMovesDoNotSpawn": true,
+      "seededDeterminism": true,
+      "naturalGameOverSnapshots": 30,
+      "scoreInventoryValidation": true,
+      "winningTransition": true,
+      "top30AndMemberDeduplication": true,
+      "checks": [
+        {
+          "seed": 0,
+          "moves": 208,
+          "score": 2428,
+          "maxTile": 256
+        },
+        {
+          "seed": 1,
+          "moves": 85,
+          "score": 620,
+          "maxTile": 64
+        },
+        {
+          "seed": 17,
+          "moves": 142,
+          "score": 1352,
+          "maxTile": 128
+        },
+        {
+          "seed": 555,
+          "moves": 117,
+          "score": 1172,
+          "maxTile": 128
+        },
+        {
+          "seed": 4294967295,
+          "moves": 116,
+          "score": 1028,
+          "maxTile": 64
+        },
+        {
+          "seed": 41,
+          "moves": 95,
+          "score": 708,
+          "maxTile": 64
+        },
+        {
+          "seed": 42,
+          "moves": 69,
+          "score": 424,
+          "maxTile": 32
+        },
+        {
+          "seed": 43,
+          "moves": 82,
+          "score": 608,
+          "maxTile": 64
+        },
+        {
+          "seed": 44,
+          "moves": 132,
+          "score": 1280,
+          "maxTile": 128
+        },
+        {
+          "seed": 45,
+          "moves": 83,
+          "score": 612,
+          "maxTile": 64
+        },
+        {
+          "seed": 46,
+          "moves": 152,
+          "score": 1532,
+          "maxTile": 128
+        },
+        {
+          "seed": 47,
+          "moves": 170,
+          "score": 2024,
+          "maxTile": 256
+        },
+        {
+          "seed": 48,
+          "moves": 89,
+          "score": 656,
+          "maxTile": 64
+        },
+        {
+          "seed": 49,
+          "moves": 134,
+          "score": 1296,
+          "maxTile": 128
+        },
+        {
+          "seed": 50,
+          "moves": 140,
+          "score": 1380,
+          "maxTile": 128
+        },
+        {
+          "seed": 51,
+          "moves": 80,
+          "score": 584,
+          "maxTile": 64
+        },
+        {
+          "seed": 52,
+          "moves": 134,
+          "score": 1248,
+          "maxTile": 128
+        },
+        {
+          "seed": 53,
+          "moves": 138,
+          "score": 1328,
+          "maxTile": 128
+        },
+        {
+          "seed": 54,
+          "moves": 95,
+          "score": 752,
+          "maxTile": 64
+        },
+        {
+          "seed": 55,
+          "moves": 173,
+          "score": 2060,
+          "maxTile": 256
+        },
+        {
+          "seed": 56,
+          "moves": 128,
+          "score": 1224,
+          "maxTile": 128
+        },
+        {
+          "seed": 57,
+          "moves": 96,
+          "score": 732,
+          "maxTile": 64
+        },
+        {
+          "seed": 58,
+          "moves": 89,
+          "score": 684,
+          "maxTile": 64
+        },
+        {
+          "seed": 59,
+          "moves": 121,
+          "score": 1084,
+          "maxTile": 128
+        },
+        {
+          "seed": 60,
+          "moves": 151,
+          "score": 1452,
+          "maxTile": 128
+        },
+        {
+          "seed": 61,
+          "moves": 58,
+          "score": 336,
+          "maxTile": 32
+        },
+        {
+          "seed": 62,
+          "moves": 117,
+          "score": 1152,
+          "maxTile": 128
+        },
+        {
+          "seed": 63,
+          "moves": 110,
+          "score": 908,
+          "maxTile": 64
+        },
+        {
+          "seed": 64,
+          "moves": 131,
+          "score": 1300,
+          "maxTile": 128
+        },
+        {
+          "seed": 65,
+          "moves": 127,
+          "score": 1204,
+          "maxTile": 128
+        }
+      ]
+    },
+    "database": {
+      "passed": true,
+      "approvedMembersOnly": true,
+      "ownerOnly": true,
+      "privateWritesBlocked": true,
+      "milestoneCanContinueToFinal": true,
+      "staleAndDuplicateSavesIdempotent": true,
+      "top30": true,
+      "kstMonthBoundary": true,
+      "currentMonthOnly": true,
+      "oldGameDataPurged": true,
+      "baseballUnaffected": true,
+      "jobRegistered": true
+    },
+    "handler": {
+      "passed": true,
+      "authenticationAndOriginChecked": true,
+      "ownerChecked": true,
+      "oneSnapshotSave": true,
+      "noGameplayReplay": true,
+      "mathematicalMilestoneFixtureChecked": true,
+      "naturalGameOverChecked": true,
+      "tamperedScoreRejected": true,
+      "duplicateFinishedIdempotent": true
+    },
+    "ui": {
+      "passed": true,
+      "keyboardMoves": true,
+      "wasd": true,
+      "nativePointerSwipe": {
+        "before": 22,
+        "after": 23
+      },
+      "pauseResume": true,
+      "restartConfirmation": true,
+      "popupCloseReopenPreservesGame": true,
+      "top30Rows": true,
+      "layouts": [
+        {
+          "requested": {
+            "width": 320,
+            "height": 568
+          },
+          "actionsBottom": 533.1875,
+          "board": {
+            "bottom": 414.4375,
+            "height": 273,
+            "left": 16,
+            "right": 289,
+            "top": 141.4375,
+            "width": 273
+          },
+          "dialog": {
+            "border": "0px",
+            "client": 305,
+            "left": 0,
+            "radius": "0px",
+            "right": 305,
+            "scroll": 305
+          },
+          "viewport": [
+            320,
+            568
+          ]
+        },
+        {
+          "requested": {
+            "width": 360,
+            "height": 740
+          },
+          "actionsBottom": 579.828125,
+          "board": {
+            "bottom": 450.4375,
+            "height": 305,
+            "left": 20,
+            "right": 325,
+            "top": 145.4375,
+            "width": 305
+          },
+          "dialog": {
+            "border": "0px",
+            "client": 345,
+            "left": 0,
+            "radius": "0px",
+            "right": 345,
+            "scroll": 345
+          },
+          "viewport": [
+            360,
+            740
+          ]
+        },
+        {
+          "requested": {
+            "width": 402,
+            "height": 874
+          },
+          "actionsBottom": 621.828125,
+          "board": {
+            "bottom": 492.4375,
+            "height": 347,
+            "left": 20,
+            "right": 367,
+            "top": 145.4375,
+            "width": 347
+          },
+          "dialog": {
+            "border": "0px",
+            "client": 387,
+            "left": 0,
+            "radius": "0px",
+            "right": 387,
+            "scroll": 387
+          },
+          "viewport": [
+            402,
+            874
+          ]
+        }
+      ],
+      "physicalIphoneTouchTested": false,
+      "consoleErrors": 0
+    },
+    "live_db": {
+      "passed": true,
+      "newRankingRows": "0",
+      "activeMonthlyJobs": "1",
+      "privateTablesRls": "true",
+      "memberWritesBlocked": "true",
+      "newSaveEnabled": "true",
+      "cronTimezone": "GMT",
+      "baseballRankingFingerprintUnchanged": true
+    },
+    "deployed_server": {
+      "passed": true,
+      "sourceMatches": true,
+      "verifyJwt": true,
+      "functionName": "game2048-score",
+      "bytes": 3440
+    },
+    "live_ui": {
+      "passed": true,
+      "signedInStart": true,
+      "moves": "4",
+      "score": "4",
+      "consoleErrors": 0,
+      "publicTestScores": 0
+    },
+    "isolated_save_test": {
+      "passed": true,
+      "saves": 2,
+      "normalGameOver": true,
+      "syntheticMilestoneUiFixture": true,
+      "delayedAckMs": 4000,
+      "restartBeforePreviousAck": true
+    },
+    "production_assets_match": true,
+    "proof": "../repair-proof/game2048-live-20261027.png"
   }
 }
