@@ -1,5 +1,5 @@
 import{SnakeGame,validateSnakeResult}from'./snake/core.js?v=20261027-snake';
-import{drawSnakeScene}from'./snake/art.js?v=20261027-snake-smooth';
+import{drawSnakeScene}from'./snake/art.js?v=20261027-snake-edge';
 import{GameClock}from'./game-clock.js?v=20261027-snake-retired';
 const trophy='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h4v3a5 5 0 0 1-5 5 5 5 0 0 1-3 2v3h4v2H7v-2h4v-3a5 5 0 0 1-3-2 5 5 0 0 1-5-5V6h4V3zm0 5H5v1a3 3 0 0 0 2 3V8zm10 0v4a3 3 0 0 0 2-3V8z"/></svg>';
 export const snakeTime=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
