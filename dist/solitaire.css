@@ -33,3 +33,29 @@ body.solitaire-dialog-open{overflow:hidden}.solitaire-page dialog{font-family:in
 .sol-pips{inset:26% 28%}.sol-pips i{font-size:18px}.sol-pips[data-ace] i{font-size:38px}
 .sol-portrait .sol-court[data-team="2"][data-rank="12"]{transform:scale(1.08)}
 @media(max-width:760px){.sol-portrait{padding:1px}.sol-corner{font-size:12px}.sol-corner>i{font-size:9px}.sol-pips{inset:28% 32%}.sol-pips i{font-size:9px}.sol-pips[data-ace] i{font-size:23px}}
+
+/* Fixed SVG indices avoid wrapping and mobile text autosizing. */
+.sol-card .sol-face{position:absolute;inset:0;width:100%;height:100%;display:block;fill:currentColor;stroke:none;pointer-events:none;overflow:visible;-webkit-text-size-adjust:none;text-size-adjust:none}.sol-face .sol-rank{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-style:normal;letter-spacing:-.35px;fill:currentColor;stroke:none}.sol-face path{fill:currentColor;stroke:none}.sol-card{-webkit-text-size-adjust:none;text-size-adjust:none}
+.sol-portrait{left:20%;top:12%;width:60%;height:76%;padding:1px}
+.sol-drag-stack{position:absolute;z-index:100;pointer-events:none;user-select:none;filter:drop-shadow(0 8px 8px #192d4640)}.sol-drag-stack .sol-card{opacity:1;pointer-events:none}.sol-card.sol-drag-source{opacity:.22}
+.solitaire-page #sol-mobile-close{display:none}
+@media(max-width:760px){
+ .sol-popup-heading #sol-close{display:none}.solitaire-page #sol-mobile-close{display:inline-flex}
+ .solitaire-page .sol-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.sol-controls button{min-height:44px}
+ .sol-portrait{padding:.5px}.sol-dialog{touch-action:pan-y}.sol-play{overflow:visible}.solitaire-board{touch-action:pan-y}.sol-card{touch-action:none}
+}
+
+/* Equal columns keep moves at the exact center with unequal score/time widths. */
+.sol-scoreboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.sol-scoreboard>div{min-width:0}.sol-scoreboard>div:nth-child(2){text-align:center}.sol-scoreboard strong{white-space:nowrap}
+@media(max-width:760px){.sol-play{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
+
+.solitaire-intro .sol-eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;color:#9a8c73;margin:0 0 11px}
+
+/* Reserve play space from the start; long columns scroll within the field. */
+.solitaire-page .sol-field{height:clamp(400px,calc(100svh - 280px),820px);min-height:0}
+.solitaire-page .solitaire-board{height:100%;display:flex;flex-direction:column}.sol-top{flex:none}
+.sol-tableau-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;scrollbar-width:thin;touch-action:pan-y;overscroll-behavior:auto}
+.sol-portrait{top:17%;height:66%}.sol-notice:empty{display:none}
+@media(max-width:760px){.solitaire-page .sol-field{height:clamp(320px,calc(100svh - 380px),510px)}}
+.sol-tableau{box-sizing:content-box;padding-bottom:12px}
+@media(max-width:760px){.solitaire-page .sol-controls{grid-template-columns:repeat(3,minmax(0,1fr))}.solitaire-page #sol-mobile-close{grid-column:3}}

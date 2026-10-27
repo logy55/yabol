@@ -11,7 +11,7 @@ export async function renderTool(main, key, context={}) {
   else if (key === 'marble') await renderOnlineMarble(main,context);
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261025-baseball-monthly');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261026-game2048');await render2048(main,context);}
-  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261027-solitaire');await renderSolitaire(main,context);}
+  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261027-solitaire-touch');await renderSolitaire(main,context);}
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
   else main.innerHTML = '<div class="empty"><strong>도구를 찾을 수 없어요.</strong><a href="#/">홈으로</a></div>';
