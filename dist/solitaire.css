@@ -38,10 +38,8 @@ body.solitaire-dialog-open{overflow:hidden}.solitaire-page dialog{font-family:in
 .sol-card .sol-face{position:absolute;inset:0;width:100%;height:100%;display:block;fill:currentColor;stroke:none;pointer-events:none;overflow:visible;-webkit-text-size-adjust:none;text-size-adjust:none}.sol-face .sol-rank{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-style:normal;letter-spacing:-.35px;fill:currentColor;stroke:none}.sol-face path{fill:currentColor;stroke:none}.sol-card{-webkit-text-size-adjust:none;text-size-adjust:none}
 .sol-portrait{left:20%;top:12%;width:60%;height:76%;padding:1px}
 .sol-drag-stack{position:absolute;z-index:100;pointer-events:none;user-select:none;filter:drop-shadow(0 8px 8px #192d4640)}.sol-drag-stack .sol-card{opacity:1;pointer-events:none}.sol-card.sol-drag-source{opacity:.22}
-.solitaire-page #sol-mobile-close{display:none}
 @media(max-width:760px){
- .sol-popup-heading #sol-close{display:none}.solitaire-page #sol-mobile-close{display:inline-flex}
- .solitaire-page .sol-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.sol-controls button{min-height:44px}
+ .solitaire-page .sol-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.sol-controls button{min-height:44px}
  .sol-portrait{padding:.5px}.sol-dialog{touch-action:pan-y}.sol-play{overflow:visible}.solitaire-board{touch-action:pan-y}.sol-card{touch-action:none}
 }
 
@@ -58,4 +56,3 @@ body.solitaire-dialog-open{overflow:hidden}.solitaire-page dialog{font-family:in
 .sol-portrait{top:17%;height:66%}.sol-notice:empty{display:none}
 @media(max-width:760px){.solitaire-page .sol-field{height:clamp(320px,calc(100svh - 380px),510px)}}
 .sol-tableau{box-sizing:content-box;padding-bottom:12px}
-@media(max-width:760px){.solitaire-page .sol-controls{grid-template-columns:repeat(3,minmax(0,1fr))}.solitaire-page #sol-mobile-close{grid-column:3}}
