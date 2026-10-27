@@ -1,3 +1,12 @@
+## Snake · 2026-10-27
+
+- Route `#/tools/snake` follows Solitaire in Tools. Opens only from Game Start.
+- PC arrows/WASD and mobile swipes; 20×20 board, wall/body collision, +10 per baseball, gradual 160–85 ms movement. Flat blue snake with large eyes; baseball has no face.
+- SCORE and TIME only. Pause, close, blur and background stop the game and active clock; opaque pause cover. New game confirms before discarding an active run.
+- Completed snapshot saves through approved-member/owner-only RPCs, with bounded retries; no server replay. Score first, active time second; one best/member, TOP 30 and trophies.
+- Apply `050_snake.sql` before publishing. KST current-month visibility and daily midnight maintenance remove prior-month records. Existing game data is unchanged.
+- Canvas interpolates between fixed movement ticks, caps DPR at 1.75, and stops requestAnimationFrame while paused/closed. No external artwork dependency.
+
 # 배포 상태
 
 2026-10-10에 [yabol.co.kr](https://yabol.co.kr/)로 배포했습니다. 소스 저장소는 [logy55/yabol](https://github.com/logy55/yabol)이며 GitHub Actions가 `main`의 `dist/` 변경을 GitHub Pages에 자동 배포합니다.
