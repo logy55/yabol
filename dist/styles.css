@@ -86,8 +86,8 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* The main container is a skip-link target, not an interactive control. */
 #main:focus{outline:none}
 @media(max-width:760px){
-  #main:has(>.ladder-room-page,>.baseball-page,>.game2048-page,>.solitaire-page){padding-top:22px}
-  #main>:is(.ladder-room-page,.baseball-page,.game2048-page,.solitaire-page) h1{margin:0;font-family:var(--font-ui);font-size:24px;font-weight:700;line-height:1.55;letter-spacing:-.8px}
+  #main:has(>.ladder-room-page,>.baseball-page,>.game2048-page,>.solitaire-page,>.snake-page){padding-top:22px}
+  #main>:is(.ladder-room-page,.baseball-page,.game2048-page,.solitaire-page,.snake-page) h1{margin:0;font-family:var(--font-ui);font-size:24px;font-weight:700;line-height:1.55;letter-spacing:-.8px}
   #main>:is(.baseball-page,.game2048-page)>:is(.intro,.game2048-intro){padding:0 0 25px}
 }
 
