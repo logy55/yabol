@@ -4159,5 +4159,109 @@
     },
     "production_assets_match": true,
     "proof": "../repair-proof/game2048-live-20261027.png"
+  },
+  "solitaire": {
+    "core": {
+      "passed": true,
+      "drawThree": true,
+      "stockOrderAfterRecycle": true,
+      "validSequencesOnly": true,
+      "undoPenalty": true,
+      "pauseExcludesTime": true,
+      "naturalSeededWin": {
+        "seed": 17,
+        "moves": 226,
+        "score": 1170
+      },
+      "scoreTamperRejected": true,
+      "rankingScoreThenTime": true,
+      "top30": true
+    },
+    "database": {
+      "passed": true,
+      "approvedOnly": true,
+      "ownerOnly": true,
+      "noDirectTableAccess": true,
+      "validatesCompletedSnapshot": true,
+      "scoreThenElapsedRanking": true,
+      "top30": true,
+      "duplicateSaveIdempotent": true,
+      "kstMonthReset": true,
+      "currentMonthOnly": true,
+      "existingGamesUnaffected": true,
+      "maintenanceRegistered": true
+    },
+    "productionDatabase": {
+      "existing_game_rankings_unchanged": true,
+      "approved_member_start": true,
+      "anonymous_start_blocked": true,
+      "anonymous_save_blocked": true,
+      "direct_table_access_blocked": true,
+      "monthly_reset_registered": true,
+      "rankings_initially_empty": true
+    },
+    "productionUI": {
+      "signedInStart": true,
+      "drawThree": true,
+      "mobileColumns": 7,
+      "noOverflow": true,
+      "dragMovedCard": true,
+      "moves": 2,
+      "livePause": {
+        "boardInert": true,
+        "boardVisibility": "hidden",
+        "coverColor": "rgb(37, 61, 91)",
+        "covered": true,
+        "time": "02:25"
+      },
+      "liveRank": "아직 등록된 기록이 없습니다.",
+      "publicTestScores": 0,
+      "consoleErrors": []
+    },
+    "mobile": {
+      "pausedTime": "00:35",
+      "resumedAfterLongPause": "00:35",
+      "screens": [
+        {
+          "actionsBottom": 509.59375,
+          "cardWidth": 32,
+          "columns": 7,
+          "dialogWidth": 305,
+          "disabledCardOpacity": [
+            "1",
+            "1"
+          ],
+          "hiddenHint": true,
+          "overflow": false,
+          "width": 320
+        },
+        {
+          "actionsBottom": 509.59375,
+          "cardWidth": 45.84375,
+          "columns": 7,
+          "dialogWidth": 387,
+          "disabledCardOpacity": [
+            "1",
+            "1"
+          ],
+          "hiddenHint": true,
+          "overflow": false,
+          "width": 402
+        }
+      ]
+    },
+    "isolatedSave": {
+      "saves": 1,
+      "naturalSeededCompletion": true,
+      "moves": 226,
+      "score": 1170,
+      "delayedAckMs": 2000,
+      "restartBeforePreviousAck": true
+    },
+    "cache": "20261027-solitaire",
+    "route": "#/tools/solitaire",
+    "migration": "049_solitaire.sql",
+    "physicalMobileDeviceTested": false,
+    "proof": "../repair-proof/solitaire-live-mobile.png"
   }
 }
