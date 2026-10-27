@@ -140,7 +140,6 @@
 @media(max-width:760px){.baseball-page .intro{padding:0 2px 16px}.baseball-page h1{font-size:26px}.baseball-page .subtitle{font-size:11px}.baseball-page .play-panel{padding:13px 11px 11px}.baseball-page .scoreboard{padding-bottom:11px}}
 
 @media(max-width:760px){
-  #main:has(>.baseball-page){padding-top:12px}
   .baseball-page .intro{padding:0 2px 9px}
   .baseball-page .intro .eyebrow,.baseball-page .subtitle,.baseball-page .input-hint{display:none}
   .baseball-page h1{font-size:24px;line-height:1.2}
