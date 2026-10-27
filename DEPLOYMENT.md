@@ -1,6 +1,10 @@
+## Solitaire retired · 2026-10-27
+
+Solitaire has been removed from the tools menu and client. Its old route forwards to Snake. The shared active-time clock now lives at `dist/game-clock.js`, so Snake does not depend on the retired game. Historical database migration 049 and existing records are retained; no member data is changed.
+
 ## Snake · 2026-10-27
 
-- Route `#/tools/snake` follows Solitaire in Tools. Opens only from Game Start.
+- Route `#/tools/snake` follows 2048 in Tools. Opens only from Game Start.
 - PC arrows/WASD and mobile swipes; 20×20 board, wall/body collision, +10 per baseball, gradual 160–85 ms movement. Flat blue snake with large eyes; baseball has no face.
 - SCORE and TIME only. Pause, close, blur and background stop the game and active clock; opaque pause cover. New game confirms before discarding an active run.
 - Completed snapshot saves through approved-member/owner-only RPCs, with bounded retries; no server replay. Score first, active time second; one best/member, TOP 30 and trophies.
@@ -240,8 +244,3 @@ Supabase pg_cron을 활성화하고 baseball-monthly-ranking-maintenance 작업 
 30개 시드의 실제 자연 종료 점수·수량, 이동/한 번 합치기/무효 입력/승리 전환, 서버 인증·소유권·중복·변조, DB 승인/권한/달성 후 최종 저장/월 경계/타 게임 보존을 검사했습니다. Chrome 격리 화면에서 자연 종료와 수학적으로 일관된 합성 달성 UI fixture를 사용했고, 응답을 4초 늦춰도 다음 게임이 먼저 시작됨을 확인했습니다. 320×568·360×740·402×874에서 게임판/버튼 넘침이 없으며 키보드·네이티브 포인터 드래그·일시정지·닫기/재개를 확인했습니다. 실제 iPhone 터치 실기기 검증은 별도입니다. 운영 화면에서는 로그인 상태의 게임 생성과 이동 및 빈 랭킹을 확인했으며 공개 테스트 점수는 추가하지 않았습니다.
 
 화면 캐시는 20261026-game2048, Pages 40349512076, 런타임 커밋 a8492e4eb6d75c13603682d82aada4c968a4247d입니다. src/game2048-score.ts와 src/game2048-result.js를 build-game2048.mjs로 단일 함수 파일에 빌드합니다.
-# Solitaire deployment
-
-Apply `supabase/migrations/049_solitaire.sql` once before publishing the new navigation. It creates private run/best tables, authenticated start/save/ranking RPCs, and Korea-time monthly ranking maintenance. Existing game tables are unchanged. No Edge Function or new secrets are required.
-
-Publish `dist/solitaire/` (including four PNG strips), `dist/solitaire.js`, `dist/solitaire.css`, and the updated app/tools/navigation/styles/index files. Cache version: `20261027-solitaire`. Avoid publishing partial navigation before the new assets and modules exist.
