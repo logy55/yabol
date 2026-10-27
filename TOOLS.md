@@ -116,3 +116,14 @@ Whozzie의 MIT 사다리 생성·경로 엔진을 사용합니다. 해당 출처
 
 ## 2048
 도구 메뉴의 야구공 게임 다음에 #/tools/2048을 배치합니다. 시작 버튼으로 게임 팝업을 열고 방향키·WASD 또는 스와이프로 같은 숫자를 합칩니다. 2048 달성 시 자동 기록 후 계속 도전할 수 있으며 게임 오버에서도 현재 결과를 자동 저장합니다. 플레이 전체의 재검산이나 별도 업로드 버튼은 없습니다. 닫기 후에는 일시정지하고 같은 페이지에서 이어갑니다. 월간 TOP 30의 열은 점수·이름·최대 숫자·기록일이며 상위 3명에게 금·은·동 트로피를 표시합니다. 이번 달 회원별 최고점 한 건만 보관하고 한국 매월 1일 0시에 초기화하며 지난달 데이터는 정리합니다.
+# 솔리테어 (클론다이크)
+
+`#/tools/solitaire` is below 2048. Draw three, alternating descending tableau, K-only empty columns, and same-suit A–K foundations. Click/tap to select and place, or drag; double click sends a single eligible card to a foundation. Undo costs 5 points. There is no hint button. Auto-complete is offered after all cards are face up and stock/waste are empty.
+
+The timer runs only during active play. Pause, window blur, backgrounding, and closing the popup pause the clock; pause covers the entire card board with an opaque panel and removes it from interaction/accessibility. Same-page reopening resumes the in-memory game. Refreshing or leaving the route starts over.
+
+Completed games save a small result snapshot through authenticated Supabase RPCs, with member/owner/completion/counter/score/time bounds checks. No full move replay is uploaded or simulated. The monthly TOP 30 stores one best per member, sorted by score descending, active time ascending, then achievement time. Korea-time month reset and current-month-only cleanup follow the other single-player games. No public sample scores are inserted.
+
+Points: foundation +10, waste→tableau +5, reveal +5, win +500; foundation→tableau −15, stock recycle −20, undo −5, minimum zero. Higher score is primary; time breaks ties. This is a community leaderboard with lightweight consistency checks, not a strong anti-cheat system.
+
+Card art and exact generation prompts are documented under `dist/solitaire/ASSETS.md` and `IMAGE_PROMPTS.md`. Royal art uses KT/Samsung/KIA/LG for spades/diamonds/hearts/clubs. Per-card SVG viewBoxes fit measured alpha bounds inside centered frames. Card backs use a small rotated gold outline baseball. Overlapped waste cards remain opaque.
