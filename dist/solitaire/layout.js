@@ -5,7 +5,7 @@ export function solitaireLayout(width,height,piles,{compact=false}={}){
  const gap=compact?5:8,topGap=compact?10:18,ratio=1.43;
  const maximum=Math.max(10,Math.min(114,(width-gap*6)/7));
  const counts=piles.map(p=>({hidden:p.slice(0,-1).filter(c=>!c.up).length,up:p.slice(0,-1).filter(c=>c.up).length}));
- const minimum=w=>({hidden:2,up:Math.max(9,Math.min(18,w*.22))});
+ const minimum=w=>({hidden:2,up:Math.max(9,w*.24+1)});
  const fits=w=>{const step=minimum(w);return counts.every(c=>2*w*ratio+topGap+c.hidden*step.hidden+c.up*step.up<=height-.5);};
  let cardWidth=maximum;while(cardWidth>10&&!fits(cardWidth))cardWidth-=.5;
  cardWidth=Math.max(10,cardWidth);const cardHeight=cardWidth*ratio,tableauHeight=Math.max(cardHeight,height-cardHeight-topGap),min=minimum(cardWidth);
