@@ -2,7 +2,7 @@ import Matter from './baseball/matter.js';
 import {BallGame,BALLS,WIDTH,HEIGHT,FLOOR,DANGER,DROP_Y,createBallRandom} from './baseball/game-core.js?v=20261025-physics-v4';
 import {createBallArt} from './baseball/ball-art.js';
 import {memberLeaders} from './baseball/leaderboard.js?v=20261025-baseball-monthly';
-import {gameMarkup} from './baseball/markup.js?v=20261025-baseball-monthly';
+import {gameMarkup} from './baseball/markup.js?v=20261028-clean-heading';
 import {recordRoundMerge,makeRoundResult,isRoundResult}from'./baseball/round-result.js?v=20261025-instant-result';
 let sharedArt,sharedBackground;
 export async function renderBaseballGame(main,context={}){
