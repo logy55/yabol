@@ -3,8 +3,8 @@ import {deleteContent,bindCommentActions,renderTrash} from './content-management
 import {uploadCommunityPhoto} from './media.js?v=20261010-member-fixes';
 import {recruitmentPanel,bindRecruitment,previewRecruitmentComments,updateRecruitmentMember} from './recruitment.js?v=20261022-late-response';
 import { boards, galleryCategories, freeCategories, staffCategories } from './sample.js?v=20261022-room-controls-v2';
-import './navigation.js?v=20261028-rummikub-final';
-import {renderTool} from './tools.js?v=20261028-rummikub-final';
+import './navigation.js?v=20261028-solitaire-wide';
+import {renderTool} from './tools.js?v=20261028-solitaire-wide';
 import {accountBar, renderAccount, accountActions} from './account.js?v=20261024-member-records';
 import {restrictionActive,restrictionView} from './restrictions.js?v=20261010-member-fixes';
 import {accessDenied} from './access.js?v=20261010-member-fixes';

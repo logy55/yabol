@@ -12,7 +12,7 @@ export async function renderTool(main, key, context={}) {
   else if (key === 'rummikub') {const {renderRummikubRoom}=await import('./rummikub/rummikub-room.js?v=20261028-rummikub-final');await renderRummikubRoom(main,context);}
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261028-clean-heading');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261028-clean-heading');await render2048(main,context);}
-  else if (key === 'solitaire') location.replace('#/tools/snake');
+  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261028-solitaire-wide');await renderSolitaire(main,context);}
   else if (key === 'snake') {const {renderSnake}=await import('./snake.js?v=20261027-snake-edge');await renderSnake(main,context);}
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
