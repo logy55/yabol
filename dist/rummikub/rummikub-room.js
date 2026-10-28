@@ -12,7 +12,7 @@ export async function renderRummikubRoom(main,{db,actor,onAuth=()=>{},signal,isC
  const popup=document.createElement('dialog');popup.className='rummi-online-modal';popup.setAttribute('aria-label','루미큐브 게임');
  const frame=document.createElement('iframe');frame.title='루미큐브 게임판';
  const previewMobile=new URLSearchParams(location.search).get('mobile')==='1';if(previewMobile)popup.dataset.mobilePreview='true';
- frame.src=new URL('./play.html?online=1'+(previewMobile?'&mobile=1':''),import.meta.url).href;popup.append(frame);document.body.append(popup);
+ frame.src=new URL('./play.html?online=1&v=20261028-rummikub-final'+(previewMobile?'&mobile=1':''),import.meta.url).href;popup.append(frame);document.body.append(popup);
  const store=id=>{try{if(id)localStorage.setItem(key,id);else localStorage.removeItem(key);}catch{}};
  const error=text=>{$('.rummi-error').textContent=text;};
  function sendView(force=false,message=''){if(room?.game)frame.contentWindow?.postMessage({type:'rummi-snapshot',room,force,error:message},location.origin);}

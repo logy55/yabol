@@ -1,12 +1,12 @@
 import{TileGame,tile,COLOURS,COLOUR_NAMES,setInfo,restoreGame}from'./core.js';
-import{renderRoundResult}from'./result-view.js';
+import{renderRoundResult}from'./result-view.js?v=20261028-rummikub-final';
 const $=s=>document.querySelector(s),dialog=$('#game-dialog'),phone=/Android|iPhone|iPod/i.test(navigator.userAgent)||matchMedia('(pointer:coarse)').matches||new URLSearchParams(location.search).get('mobile')==='1';
 let game=null,selected=[],drag=null,suppress=false,phase='idle',remaining=60000,limit=60000,lastTick=0,flash='',flashKind='',practice=true,options=null;
 const onlineMode=new URLSearchParams(location.search).has('online');
 let remoteRoom=null,remoteOffset=0,remoteTurn='',draftTimer=0,onlineSaving=false,remoteSort='colour';
-const resultPanel=document.createElement('section');resultPanel.id='round-result';resultPanel.className='round-result-panel';resultPanel.hidden=true;resultPanel.setAttribute('aria-label','경기 결과');dialog.append(resultPanel);
-function toggleResult(show){resultPanel.hidden=!show;$('.game-shell').hidden=show;}
-function closeCurrentGame(){if(onlineMode){if(remoteRoom?.phase==='finished'){$('#close-game').disabled=true;sendRemote('leave');}else sendRemote('close');}else dialog.close();}
+const resultPanel=document.createElement('section');resultPanel.id='round-result';resultPanel.className='round-result-panel';resultPanel.hidden=true;resultPanel.setAttribute('role','dialog');resultPanel.setAttribute('aria-modal','true');resultPanel.setAttribute('aria-labelledby','round-result-title');dialog.append(resultPanel);resultPanel.addEventListener('click',event=>{if(event.target.closest('[data-result-close]'))closeCurrentGame();});
+function toggleResult(show){resultPanel.hidden=!show;dialog.toggleAttribute('data-result-open',show);$('.game-shell').hidden=false;$('.game-shell').inert=show;$('.popup-heading').inert=show;}
+function closeCurrentGame(){if(onlineMode){if(remoteRoom?.phase==='finished'){$('#close-game').disabled=true;const close=resultPanel.querySelector('[data-result-close]');if(close)close.disabled=true;sendRemote('leave');}else sendRemote('close');}else dialog.close();}
 function sendRemote(action,fields={}){if(onlineMode)parent.postMessage({type:'rummi-action',action,...fields},location.origin);}
 function scheduleRemoteDraft(){if(!onlineMode||phase!=='playing'||onlineSaving)return;clearTimeout(draftTimer);draftTimer=setTimeout(()=>sendRemote('draft',{turn:game.turn,draft:structuredClone(game.draft)}),180);}
 function remoteSubmit(action){clearTimeout(draftTimer);consumeTime();if(phase!=='playing'||remaining<=0||onlineSaving)return;if(action==='commit'){try{game.validate();}catch(error){announce(error.message,'error');return;}}onlineSaving=true;selected=[];cleanDrag();paint();sendRemote(action,{turn:game.turn,draft:structuredClone(game.draft)});}
