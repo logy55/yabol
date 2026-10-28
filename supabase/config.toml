@@ -14,3 +14,7 @@ verify_jwt = true
 # Verifies the signed-in user and approved membership in code as well.
 [functions.game2048-score]
 verify_jwt = true
+
+[functions.rummikub-room]
+# JWT and approved membership are verified inside the handler on every request.
+verify_jwt = false
