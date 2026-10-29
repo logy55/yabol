@@ -125,3 +125,8 @@ body.solitaire-dialog-open{overflow:hidden}.solitaire-page dialog{font-family:in
 
 /* Transform-only foundation flights; pausing cancels before committing the move. */
 .sol-auto-flight{position:absolute;z-index:110;pointer-events:none;will-change:transform;filter:drop-shadow(0 5px 6px #192d4633)}.sol-auto-flight .sol-card{opacity:1;pointer-events:none}.sol-card.sol-auto-source{opacity:0}
+
+/* Keep no-move advice centered on the playfield, including rotated mobile play. */
+.sol-toast{position:absolute;inset:0;z-index:40;display:grid;place-items:center;pointer-events:none;padding:16px}.sol-toast[hidden]{display:none}.sol-toast>span{box-sizing:border-box;max-width:min(360px,100%);padding:14px 20px;border:1px solid #ffffff24;border-radius:12px;background:rgba(25,44,66,.88);box-shadow:0 6px 22px #172a4630;color:#fff;font-size:15px;font-weight:700;line-height:1.7;text-align:center;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;pointer-events:none}.sol-field[data-covered]>.sol-toast{display:none}
+@media(prefers-reduced-motion:no-preference){.sol-toast>span{animation:sol-toast-in .15s ease-out}}
+@keyframes sol-toast-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
