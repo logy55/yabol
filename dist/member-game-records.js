@@ -1,5 +1,5 @@
-import {gameRecordSections,validateGameRecords,activitySections} from './account.js?v=20261107-member-info';
-import{memberName,getTeam}from'./teams.js?v=20261024-member-records';
+import {gameRecordSections,validateGameRecords,activitySections} from './account.js?v=20261107-rummikub-bets';
+import{memberName}from'./teams.js?v=20261024-member-records';
 import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 const approved=actor=>actor?.user_metadata?.status==='approved'&&!restrictionActive(actor.user_metadata);
 export function createMemberGameRecords({context,onAuth=()=>{}}){
@@ -50,4 +50,4 @@ export function createMemberGameRecords({context,onAuth=()=>{}}){
 }
 
 const memberInfoEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function memberInfoMarkup(data){const p=data.profile;if(!p||typeof p.nickname!=='string'||!Number.isFinite(Date.parse(p.created_at)))throw Error('Invalid member profile');const joined=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date(p.created_at));return `<div class="member-info-profile"><strong class="member-identity">${memberName(p.nickname,p.team,p.region,p.staff_role,p.is_yb_member)}</strong><dl><div><dt>응원 구단</dt><dd>${memberInfoEscape(getTeam(p.team)?.name||'—')}</dd></div><div><dt>가입일</dt><dd>${memberInfoEscape(joined)}</dd></div></dl></div>${activitySections(data.activity,{prefix:'member'})}${gameRecordSections(data,{prefix:'member'})}`;}
+export function memberInfoMarkup(data){const p=data.profile;if(!p||typeof p.nickname!=='string'||!Number.isFinite(Date.parse(p.created_at)))throw Error('Invalid member profile');const joined=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date(p.created_at));return `<div class="member-info-profile"><strong class="member-identity">${memberName(p.nickname,p.team,p.region,p.staff_role,p.is_yb_member)}</strong><dl><div><dt>가입일</dt><dd>${memberInfoEscape(joined)}</dd></div></dl></div>${activitySections(data.activity,{prefix:'member'})}${gameRecordSections(data,{prefix:'member'})}`;}

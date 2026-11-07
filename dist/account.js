@@ -24,7 +24,8 @@ export function accountView(user, {preview=false,gameRecords=null}={}) {
 }
 
 export function emptyGameRecords(){
-  return {...Object.fromEntries(['marble'].map(game=>[game,{wins:0,losses:0,bets:Object.fromEntries(Object.keys(roomBets).map(bet=>[bet,{wins:0,losses:0,received:0,sent:0}])),unclassified:{wins:0,losses:0}}])),rummikub:{games:0,wins:0,losses:0,lasts:0},activity:{posts:0,comments:0}};
+ const empty=()=>({wins:0,losses:0,bets:Object.fromEntries(Object.keys(roomBets).map(bet=>[bet,{wins:0,losses:0,received:0,sent:0}])),unclassified:{wins:0,losses:0}});
+ return{marble:empty(),rummikub:{...empty(),games:0,firsts:0,lasts:0},activity:{posts:0,comments:0}};
 }
 export function gameWinRate(wins,losses){
   return wins+losses?String(Math.round(wins/(wins+losses)*1000)/10):'0';
@@ -32,16 +33,15 @@ export function gameWinRate(wins,losses){
 export function gameRecordSections(records,{prefix='account'}={}){
   return `<div class="account-game-records" id="${prefix}-game-records" aria-live="polite">${['marble','rummikub'].map(game=>{
     const data=records?.[game],label=game==='rummikub'?'루미큐브 전적':'마블룰렛 전적';
-    if(game==='rummikub')return `<section class="account-game-record" aria-labelledby="${prefix}-rummikub-record-heading"><div class="game-record-heading"><h2 id="${prefix}-rummikub-record-heading">루미큐브 전적</h2><p class="game-record-total" id="${prefix}-rummikub-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<p class="account-rummikub-detail">총 ${data.games}판 · 꼴찌 ${data.lasts}회</p>`:''}</section>`;
     return `<section class="account-game-record" aria-labelledby="${prefix}-${game}-record-heading"><div class="game-record-heading"><h2 id="${prefix}-${game}-record-heading">${label}</h2><p class="game-record-total" id="${prefix}-${game}-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<table class="game-bet-records"><caption class="sr-only">${label} 내기별 상세 전적</caption><colgroup><col class="game-bet-name-col"><col class="game-bet-result-col"><col><col></colgroup><thead><tr><th scope="col">내기</th><th scope="col">승 / 패</th><th scope="col">받은 수</th><th scope="col">보낸 수</th></tr></thead><tbody>${Object.entries(roomBets).map(([bet,details])=>{
       const row=data.bets[bet],name=bet==='none'?details.name:details.name.replace(' 아이스 아메리카노','<small>아이스 아메리카노</small>');
       return `<tr><th scope="row">${name}</th><td>${row.wins}승 ${row.losses}패</td><td>${bet==='none'?'—':row.received+'개'}</td><td>${bet==='none'?'—':row.sent+'개'}</td></tr>`;
-    }).join('')}${data.unclassified&&(data.unclassified.wins+data.unclassified.losses)>0?`<tr><th scope="row">이전 기록<small>내기 정보 없음</small></th><td>${data.unclassified.wins}승 ${data.unclassified.losses}패</td><td>—</td><td>—</td></tr>`:''}</tbody></table>`:''}</section>`;
+    }).join('')}${data.unclassified&&(data.unclassified.wins+data.unclassified.losses)>0?`<tr><th scope="row">이전 기록<small>내기 정보 없음</small></th><td>${data.unclassified.wins}승 ${data.unclassified.losses}패</td><td>—</td><td>—</td></tr>`:''}</tbody></table>${game==='rummikub'?`<p class="account-rummikub-detail">총 ${data.games}판 · 1위 ${data.firsts}회 · 꼴찌 ${data.lasts}회</p>`:''}`:''}</section>`;
   }).join('')}</div>`;
 }
 export function validateGameRecords(data){
   const valid=value=>Number.isSafeInteger(value)&&value>=0;
-  for(const game of ['marble']){
+  for(const game of ['marble','rummikub']){
     const record=data?.[game];
     if(!valid(record?.wins)||!valid(record?.losses))throw Error('Invalid game records');
     let wins=0,losses=0;
@@ -52,7 +52,7 @@ export function validateGameRecords(data){
     }
     if(!valid(record.unclassified?.wins)||!valid(record.unclassified?.losses)||wins+record.unclassified.wins!==record.wins||losses+record.unclassified.losses!==record.losses)throw Error('Invalid game record totals');
   }
-  const r=data?.rummikub;if(!r||!['games','wins','losses','lasts'].every(k=>valid(r[k]))||r.wins+r.losses!==r.games||r.lasts>r.games)throw Error('Invalid Rummikub records');
+  const r=data?.rummikub;if(!r||!['games','wins','losses','lasts','firsts'].every(k=>valid(r[k]))||r.wins+r.losses!==r.games||r.lasts>r.games||r.firsts>r.games||r.losses!==r.lasts)throw Error('Invalid Rummikub records');
   if(data.activity&&!['posts','comments'].every(k=>valid(data.activity[k])))throw Error('Invalid activity');
   return data;
 }
