@@ -20,18 +20,19 @@ export function accountView(user, {preview=false,gameRecords=null}={}) {
   const joinedText = joined && !Number.isNaN(joined.getTime()) ? joined.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'}) : '—';
   const profile = user.user_metadata || {};
   const records=gameRecords||(preview?emptyGameRecords():null);
-  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member, user.id)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div></dl>${gameRecordSections(records)}</div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
+  return `<section class="account-page"><div class="board-heading"><div><h1>내 정보</h1><p>내 회원 정보를 확인하세요.</p></div>${preview?'':'<button type="button" class="secondary" id="account-edit">정보 수정</button>'}</div><div class="account-card"><dl class="account-details"><div><dt>아이디</dt><dd>${escapeHtml(profile.username || '—')}</dd></div><div><dt>이름</dt><dd class="member-identity">${memberName(nickname(user), profile.team, profile.region, profile.staff_role, profile.is_yb_member, user.id)}</dd></div><div><dt>응원 구단</dt><dd>${escapeHtml(getTeam(profile.team)?.name || '—')}</dd></div><div><dt>지역</dt><dd>${escapeHtml(profile.region || '—')}</dd></div><div><dt>가입일</dt><dd>${escapeHtml(joinedText)}</dd></div></dl>${activitySections(records?.activity)}${gameRecordSections(records)}</div><div class="account-content-actions"><a class="secondary" href="#/trash">삭제한 글·댓글</a></div></section>`;
 }
 
 export function emptyGameRecords(){
-  return Object.fromEntries(['ladder','marble'].map(game=>[game,{wins:0,losses:0,bets:Object.fromEntries(Object.keys(roomBets).map(bet=>[bet,{wins:0,losses:0,received:0,sent:0}])),unclassified:{wins:0,losses:0}}]));
+  return {...Object.fromEntries(['marble'].map(game=>[game,{wins:0,losses:0,bets:Object.fromEntries(Object.keys(roomBets).map(bet=>[bet,{wins:0,losses:0,received:0,sent:0}])),unclassified:{wins:0,losses:0}}])),rummikub:{games:0,wins:0,losses:0,lasts:0},activity:{posts:0,comments:0}};
 }
 export function gameWinRate(wins,losses){
   return wins+losses?String(Math.round(wins/(wins+losses)*1000)/10):'0';
 }
 export function gameRecordSections(records,{prefix='account'}={}){
-  return `<div class="account-game-records" id="${prefix}-game-records" aria-live="polite">${['ladder','marble'].map(game=>{
-    const data=records?.[game],label=game==='ladder'?'사다리 게임 전적':'마블룰렛 전적';
+  return `<div class="account-game-records" id="${prefix}-game-records" aria-live="polite">${['marble','rummikub'].map(game=>{
+    const data=records?.[game],label=game==='rummikub'?'루미큐브 전적':'마블룰렛 전적';
+    if(game==='rummikub')return `<section class="account-game-record" aria-labelledby="${prefix}-rummikub-record-heading"><div class="game-record-heading"><h2 id="${prefix}-rummikub-record-heading">루미큐브 전적</h2><p class="game-record-total" id="${prefix}-rummikub-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<p class="account-rummikub-detail">총 ${data.games}판 · 꼴찌 ${data.lasts}회</p>`:''}</section>`;
     return `<section class="account-game-record" aria-labelledby="${prefix}-${game}-record-heading"><div class="game-record-heading"><h2 id="${prefix}-${game}-record-heading">${label}</h2><p class="game-record-total" id="${prefix}-${game}-record">${data?`${data.wins}승 ${data.losses}패 <span>(승률 ${gameWinRate(data.wins,data.losses)}%)</span>`:'불러오는 중…'}</p></div>${data?`<table class="game-bet-records"><caption class="sr-only">${label} 내기별 상세 전적</caption><colgroup><col class="game-bet-name-col"><col class="game-bet-result-col"><col><col></colgroup><thead><tr><th scope="col">내기</th><th scope="col">승 / 패</th><th scope="col">받은 수</th><th scope="col">보낸 수</th></tr></thead><tbody>${Object.entries(roomBets).map(([bet,details])=>{
       const row=data.bets[bet],name=bet==='none'?details.name:details.name.replace(' 아이스 아메리카노','<small>아이스 아메리카노</small>');
       return `<tr><th scope="row">${name}</th><td>${row.wins}승 ${row.losses}패</td><td>${bet==='none'?'—':row.received+'개'}</td><td>${bet==='none'?'—':row.sent+'개'}</td></tr>`;
@@ -40,7 +41,7 @@ export function gameRecordSections(records,{prefix='account'}={}){
 }
 export function validateGameRecords(data){
   const valid=value=>Number.isSafeInteger(value)&&value>=0;
-  for(const game of ['ladder','marble']){
+  for(const game of ['marble']){
     const record=data?.[game];
     if(!valid(record?.wins)||!valid(record?.losses))throw Error('Invalid game records');
     let wins=0,losses=0;
@@ -51,6 +52,8 @@ export function validateGameRecords(data){
     }
     if(!valid(record.unclassified?.wins)||!valid(record.unclassified?.losses)||wins+record.unclassified.wins!==record.wins||losses+record.unclassified.losses!==record.losses)throw Error('Invalid game record totals');
   }
+  const r=data?.rummikub;if(!r||!['games','wins','losses','lasts'].every(k=>valid(r[k]))||r.wins+r.losses!==r.games||r.lasts>r.games)throw Error('Invalid Rummikub records');
+  if(data.activity&&!['posts','comments'].every(k=>valid(data.activity[k])))throw Error('Invalid activity');
   return data;
 }
 
@@ -103,10 +106,12 @@ export function renderAccount(main,{user,db,preview=false,isCurrent,onSaved,noti
     try{
       const {data,error}=await db.rpc('get_my_game_records');if(error)throw error;
       validateGameRecords(data);if(!isCurrent())return;gameRecords=data;
-      const panel=main.querySelector('#account-game-records');if(panel)panel.outerHTML=gameRecordSections(data);
+      const panel=main.querySelector('#account-game-records');if(panel)panel.outerHTML=gameRecordSections(data);const activity=main.querySelector('#account-activity');if(activity)activity.outerHTML=activitySections(data.activity);
     }catch{
-      if(isCurrent())for(const kind of ['ladder','marble']){const el=main.querySelector('#account-'+kind+'-record');if(el)el.textContent='전적을 불러오지 못했습니다.';}
+      if(isCurrent())for(const kind of ['marble','rummikub']){const el=main.querySelector('#account-'+kind+'-record');if(el)el.textContent='전적을 불러오지 못했습니다.';}
     }
   })();
 }
 
+
+export function activitySections(activity){return `<dl class="account-activity" id="account-activity" aria-label="작성 활동"><div><dt>작성 게시글 수</dt><dd>${activity?activity.posts.toLocaleString('ko-KR')+'개':'—'}</dd></div><div><dt>작성 댓글 수</dt><dd>${activity?activity.comments.toLocaleString('ko-KR')+'개':'—'}</dd></div></dl>`;}

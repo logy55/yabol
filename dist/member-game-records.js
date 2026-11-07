@@ -1,4 +1,4 @@
-import {gameRecordSections,validateGameRecords} from './account.js?v=20261024-member-records';
+import {gameRecordSections,validateGameRecords} from './account.js?v=20261107-members';
 import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 const approved=actor=>actor?.user_metadata?.status==='approved'&&!restrictionActive(actor.user_metadata);
 export function createMemberGameRecords({context,onAuth=()=>{}}){

@@ -1,0 +1,26 @@
+.member-directory{max-width:1100px;margin:0 auto;color:var(--ink)}
+.member-directory .board-heading h1{font-size:27px;font-weight:700;line-height:1.55}
+.member-directory .board-heading p{font-size:13px;margin:6px 0 0}
+.member-directory-search{display:flex;gap:8px;max-width:400px;margin:0 0 22px}
+.member-directory-search input{flex:1;min-width:0;width:100%;font:inherit;font-size:16px;border:1px solid #d4deea;border-radius:6px;padding:10px 12px;background:#fff;color:var(--ink)}
+.member-directory-search button{flex:none;min-height:44px}
+.member-directory-status{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 18px}
+.member-directory-status:empty{display:none}
+.member-directory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:0;margin:0;list-style:none}
+.member-directory-card{min-width:0;border:1px solid #e0e6ee;border-radius:10px;padding:20px;background:#fff}
+.member-directory-identity{min-width:0}
+.member-directory-identity .member-record-trigger{display:flex;align-items:center;justify-content:flex-start;gap:5px;flex-wrap:wrap;width:100%;text-align:left;border-radius:5px}
+.member-directory-identity .member-name-text{flex:1 0 100%;min-width:0;font-size:16px;font-weight:700;line-height:1.5;margin-top:7px;white-space:normal;text-overflow:clip;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.member-directory-identity :is(.staff-role-icon,.yb-member-icon,.member-logo-crop){flex:none;width:22px;height:22px}
+.member-directory-identity .member-record-trigger:focus-visible{outline:2px solid #7e9cbe;outline-offset:5px}
+.member-directory-region{font-size:13px;color:#65758b;line-height:1.6;margin:5px 0 12px;overflow-wrap:anywhere}
+.member-directory-card time{font-size:11px;color:#8a98aa;font-variant-numeric:tabular-nums;line-height:1.6;display:block;overflow-wrap:anywhere}
+.member-directory-team+.member-directory-team{margin-top:28px}
+.member-directory-team h2{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;margin:0 0 16px;line-height:1.5;min-width:0;flex-wrap:wrap}
+.member-directory-team h2 span{font-size:13px;font-weight:400;color:var(--muted);white-space:nowrap}
+.member-directory-team h2:after{content:'';height:1px;background:#e1e7ef;flex:1;min-width:18px;margin-left:5px}
+@media(max-width:900px){.member-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.member-directory .board-heading h1{font-size:24px}.member-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.member-directory-card{padding:14px}.member-directory-identity .member-name-text{font-size:14px}.member-directory-region{font-size:12px}.member-directory-card time{font-size:10px}.member-directory-search{max-width:none}}
+
+.account-activity{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 0;padding:22px 0 0;border-top:1px solid var(--line)}.account-activity>div{padding:15px 16px;border:1px solid #e2e8ef;border-radius:8px;min-width:0}.account-activity dt{font-size:13px;color:var(--muted);margin-bottom:9px}.account-activity dd{font-size:20px;font-weight:700;margin:0;color:var(--primary);font-variant-numeric:tabular-nums}.account-rummikub-detail{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
+@media(max-width:640px){.account-activity{gap:10px}.account-activity>div{padding:13px}.account-activity dt{font-size:12px}.account-activity dd{font-size:18px}}

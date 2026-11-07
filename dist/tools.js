@@ -1,5 +1,4 @@
 import {renderOnlineMarble} from './marble-room.js?v=20261024-game-replay';
-import {renderOnlineLadder} from './ladder-room.js?v=20261024-game-replay';
 import {renderSettlement} from './settlement.js?v=20261024-game-records';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261024-member-records';
@@ -7,8 +6,7 @@ const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;',
 const money = value => `${value.toLocaleString('ko-KR')}원`;
 
 export async function renderTool(main, key, context={}) {
-  if (key === 'ladder') await renderOnlineLadder(main,context);
-  else if (key === 'marble') await renderOnlineMarble(main,context);
+  if (key === 'marble') await renderOnlineMarble(main,context);
   else if (key === 'rummikub') {const {renderRummikubRoom}=await import('./rummikub/rummikub-room.js?v=20261028-rummikub-final');await renderRummikubRoom(main,context);}
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261028-clean-heading');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261028-clean-heading');await render2048(main,context);}
