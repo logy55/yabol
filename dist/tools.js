@@ -12,11 +12,24 @@ export async function renderTool(main, key, context={}) {
   else if (key === 'rummikub') {const {renderRummikubRoom}=await import('./rummikub/rummikub-room.js?v=20261028-rummikub-final');await renderRummikubRoom(main,context);}
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261028-clean-heading');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261028-clean-heading');await render2048(main,context);}
-  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261029-solitaire-controls');await renderSolitaire(main,context);}
+  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261107-game-consistency');await renderSolitaire(main,context);}
   else if (key === 'snake') {const {renderSnake}=await import('./snake.js?v=20261027-snake-edge');await renderSnake(main,context);}
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
   else main.innerHTML = '<div class="empty"><strong>도구를 찾을 수 없어요.</strong><a href="#/">홈으로</a></div>';
+  normalizeGameHeading(main);
+}
+
+// One heading contract for every mini game, including room-based games.
+function normalizeGameHeading(main){
+  const page=main.querySelector(':scope > :is(.ladder-room-page,.rummikub-room-page,.baseball-page,.game2048-page,.solitaire-page,.snake-page)');
+  if(!page)return;
+  const heading=page.querySelector(':scope > :is(.board-heading,.intro,.game2048-intro,.solitaire-intro,.snake-intro)'),title=heading?.querySelector('h1');
+  if(!title)return;
+  heading.classList.add('mini-game-heading');
+  let eyebrow=heading.querySelector('.eyebrow,.g-eyebrow,.sol-eyebrow,.sn-eyebrow');
+  if(!eyebrow){eyebrow=document.createElement('p');title.before(eyebrow);}
+  eyebrow.classList.add('mini-game-eyebrow');eyebrow.textContent='YABOL MINI GAME';
 }
 function renderMagicNumber(main) {
   const options = '<option value="">구단 선택</option>'+teams.map(team=>`<option value="${team.id}">${team.name}</option>`).join('');
