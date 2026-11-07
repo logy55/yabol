@@ -1,5 +1,5 @@
-import{Klondike,seededRandom,suit}from'./core.js?v=20261029-solitaire-play';
-import{positionKey}from'./strategy.js?v=20261029-solitaire-play';
+import{Klondike,seededRandom,suit}from'./core.js?v=20261107-game-consistency';
+import{positionKey}from'./strategy.js?v=20261107-game-consistency';
 // Runs in a worker before play. Only a deal with a complete legal draw-three path is accepted.
 export function solveDeal(seed){
  const game=new Klondike(seed),seen=new Set(),steps=[];
