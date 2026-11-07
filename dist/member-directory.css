@@ -9,12 +9,11 @@
 .member-directory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:0;margin:0;list-style:none}
 .member-directory-card{min-width:0;border:1px solid #e0e6ee;border-radius:10px;padding:20px;background:#fff}
 .member-directory-identity{min-width:0}
+.member-directory-region{font-size:13px;line-height:1.6;color:var(--muted);margin:5px 0 0;overflow-wrap:anywhere}
 .member-directory-identity .member-record-trigger{display:flex;align-items:center;justify-content:flex-start;gap:5px;flex-wrap:wrap;width:100%;text-align:left;border-radius:5px}
 .member-directory-identity .member-name-text{flex:1 0 100%;min-width:0;font-size:16px;font-weight:700;line-height:1.5;margin-top:7px;white-space:normal;text-overflow:clip;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .member-directory-identity :is(.staff-role-icon,.yb-member-icon,.member-logo-crop){flex:none;width:22px;height:22px}
 .member-directory-identity .member-record-trigger:focus-visible{outline:2px solid #7e9cbe;outline-offset:5px}
-.member-directory-region{font-size:13px;color:#65758b;line-height:1.6;margin:5px 0 12px;overflow-wrap:anywhere}
-.member-directory-card time{font-size:11px;color:#8a98aa;font-variant-numeric:tabular-nums;line-height:1.6;display:block;overflow-wrap:anywhere}
 .member-directory-team+.member-directory-team{margin-top:28px}
 .member-directory-team h2{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;margin:0 0 16px;line-height:1.5;min-width:0;flex-wrap:wrap}
 .member-directory-team h2 span{font-size:13px;font-weight:400;color:var(--muted);white-space:nowrap}
@@ -24,3 +23,5 @@
 
 .account-activity{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 0;padding:22px 0 0;border-top:1px solid var(--line)}.account-activity>div{padding:15px 16px;border:1px solid #e2e8ef;border-radius:8px;min-width:0}.account-activity dt{font-size:13px;color:var(--muted);margin-bottom:9px}.account-activity dd{font-size:20px;font-weight:700;margin:0;color:var(--primary);font-variant-numeric:tabular-nums}.account-rummikub-detail{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
 @media(max-width:640px){.account-activity{gap:10px}.account-activity>div{padding:13px}.account-activity dt{font-size:12px}.account-activity dd{font-size:18px}}
+
+.member-directory-identity .member-region{font-size:.86em;color:var(--muted);font-weight:400;white-space:normal}.member-info-profile>.member-identity{display:flex;align-items:center;flex-wrap:wrap;gap:5px;font-size:16px}.member-info-profile dl{display:grid;gap:11px;margin:19px 0 0;font-size:13px}.member-info-profile dl>div{display:flex;gap:16px}.member-info-profile dt{color:var(--muted);min-width:64px}.member-info-profile dd{margin:0;overflow-wrap:anywhere}.member-game-dialog .account-activity{margin-top:20px;padding-top:20px}.member-game-dialog .account-game-records{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}

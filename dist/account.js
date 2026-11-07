@@ -114,4 +114,4 @@ export function renderAccount(main,{user,db,preview=false,isCurrent,onSaved,noti
 }
 
 
-export function activitySections(activity){return `<dl class="account-activity" id="account-activity" aria-label="작성 활동"><div><dt>작성 게시글 수</dt><dd>${activity?activity.posts.toLocaleString('ko-KR')+'개':'—'}</dd></div><div><dt>작성 댓글 수</dt><dd>${activity?activity.comments.toLocaleString('ko-KR')+'개':'—'}</dd></div></dl>`;}
+export function activitySections(activity,{prefix='account'}={}){return `<dl class="account-activity" id="${prefix}-activity" aria-label="작성 활동"><div><dt>작성 게시글 수</dt><dd>${activity?activity.posts.toLocaleString('ko-KR')+'개':'—'}</dd></div><div><dt>작성 댓글 수</dt><dd>${activity?activity.comments.toLocaleString('ko-KR')+'개':'—'}</dd></div></dl>`;}

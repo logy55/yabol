@@ -1,6 +1,6 @@
 import{memberName,getTeam}from'./teams.js?v=20261024-member-records';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}),collator=new Intl.Collator('ko-KR',{sensitivity:'base',numeric:true});
+const collator=new Intl.Collator('ko-KR',{sensitivity:'base',numeric:true});
 export function normalizeDirectory(data){
  if(!data||!Number.isSafeInteger(data.total)||data.total<0||!Array.isArray(data.members)||data.total!==data.members.length)throw Error('Invalid directory');
  const members=data.members.map(m=>{
@@ -14,7 +14,7 @@ export function groupDirectory(members,query=''){
  const bucket=g=>g.team==='none'?2:/^[가-힣ㄱ-ㅎ]/.test(g.name)?0:1;
  return[...groups.values()].sort((a,b)=>bucket(a)-bucket(b)||collator.compare(a.name,b.name)).map(g=>({...g,members:g.members.sort((a,b)=>collator.compare(a.nickname,b.nickname)||a.id.localeCompare(b.id))}));
 }
-export function memberCards(members){return members.map(m=>`<li class="member-directory-card"><div class="member-directory-identity">${memberName(m.nickname,m.team,'',m.staff_role,m.is_yb_member,m.id)}</div><p class="member-directory-region">${esc(m.region||'지역 미등록')}</p><time datetime="${esc(m.created_at)}">가입 ${date.format(new Date(m.created_at))}</time></li>`).join('');}
+export function memberCards(members){return members.map(m=>`<li class="member-directory-card"><div class="member-directory-identity">${memberName(m.nickname,m.team,'',m.staff_role,m.is_yb_member,m.id)}</div><p class="member-directory-region">${esc(m.region||'지역 미등록')}</p></li>`).join('');}
 export async function renderMemberDirectory(main,{db,signal,isCurrent=()=>true}={}){
  const alive=()=>!signal?.aborted&&isCurrent();if(!alive())return;
  main.innerHTML=`<section class="member-directory"><div class="board-heading"><div><h1>회원목록</h1><p>전체 회원 <strong id="directory-total">—</strong>명</p></div></div><form class="member-directory-search" role="search"><label class="sr-only" for="directory-query">회원 이름·지역 검색</label><input id="directory-query" name="query" type="search" maxlength="80" placeholder="이름·지역 검색" autocomplete="off"><button type="submit" class="primary">검색</button></form><p class="member-directory-status" role="status" aria-live="polite"></p><div class="member-directory-groups"></div></section>`;
