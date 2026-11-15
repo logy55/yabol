@@ -7,10 +7,10 @@ const money = value => `${value.toLocaleString('ko-KR')}원`;
 
 export async function renderTool(main, key, context={}) {
   if (key === 'marble') await renderOnlineMarble(main,context);
-  else if (key === 'stack') {const {renderStackTower}=await import('./stack-tower.js?v=20261115-stack-floors');await renderStackTower(main,context);}
+  else if (key === 'stack') {const {renderStackTower}=await import('./stack-tower.js?v=20261115-free-recycle');await renderStackTower(main,context);}
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261028-clean-heading');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261028-clean-heading');await render2048(main,context);}
-  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261107-game-consistency');await renderSolitaire(main,context);}
+  else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261115-free-recycle');await renderSolitaire(main,context);}
   else if (key === 'snake') {const {renderSnake}=await import('./snake.js?v=20261027-snake-edge');await renderSnake(main,context);}
   else if (key === 'settlement') renderSettlement(main,context);
   else if (key === 'magic-number') renderMagicNumber(main);
