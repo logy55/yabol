@@ -1,4 +1,4 @@
-import{solitaireScore}from'./result.js?v=20261029-solitaire-play';
+import{solitaireScore,SOLITAIRE_SCORING_VERSION}from'./result.js?v=20261115-free-recycle';
 import{helpfulHint,nextFoundation,positionKey}from'./strategy.js?v=20261029-solitaire-play';
 export const SUITS=['♠','♦','♥','♣'],SUIT_NAMES=['스페이드','다이아','하트','클로버'];
 export const rank=id=>id%13+1,suit=id=>Math.floor(id/13),red=id=>suit(id)===1||suit(id)===2;
@@ -19,5 +19,5 @@ export class Klondike{
  nextFoundation(){return nextFoundation(this);}
  takeHint(){const hint=this.hint();let charged=false;if(hint?.source){const key=positionKey(this)+'|'+JSON.stringify(hint);if(!this.hintCharges.has(key)){this.hintCharges.add(key);this.stats.hints=(this.stats.hints||0)+1;charged=true;}}return{hint,charged};}
  get canAutoComplete(){return !this.won&&!this.stock.length&&!this.waste.length&&this.tableau.every(p=>p.every(c=>c.up));}
- snapshot(runId,elapsedMs){return{runId,foundations:this.foundations.map(p=>[...p]),stats:{...this.stats},score:this.score,moves:this.moves,elapsedMs:Math.floor(elapsedMs)};}
+ snapshot(runId,elapsedMs){return{runId,scoringVersion:SOLITAIRE_SCORING_VERSION,foundations:this.foundations.map(p=>[...p]),stats:{...this.stats},score:this.score,moves:this.moves,elapsedMs:Math.floor(elapsedMs)};}
 }

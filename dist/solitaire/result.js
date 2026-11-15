@@ -1,6 +1,8 @@
-export const SCORE_RULES={foundation:10,waste:5,flip:5,return:15,recycle:20,undo:5,hint:5,win:500};
-export function solitaireScore(stats,won=false){return Math.max(0,stats.foundation*10+stats.waste*5+stats.flips*5-stats.returns*15-stats.recycles*20-stats.undos*5-(stats.hints||0)*5+(won?500:0));}
+export const SOLITAIRE_SCORING_VERSION=2;
+export const SCORE_RULES={foundation:10,waste:5,flip:5,return:15,recycle:0,undo:5,hint:5,win:500};
+export function solitaireScore(stats,won=false){return Math.max(0,stats.foundation*10+stats.waste*5+stats.flips*5-stats.returns*15-stats.undos*5-(stats.hints||0)*5+(won?500:0));}
 export function validateSolitaireResult(input){
+ if(input?.scoringVersion!==undefined&&input.scoringVersion!==SOLITAIRE_SCORING_VERSION)throw Error('Invalid scoring version');
  const s=input?.stats;if(!s||!['foundation','waste','flips','returns','recycles','undos'].every(k=>Number.isSafeInteger(s[k])&&s[k]>=0&&s[k]<=10000))throw Error('Invalid counters');
  if(s.hints!==undefined&&(!Number.isSafeInteger(s.hints)||s.hints<0||s.hints>10000))throw Error('Invalid hint count');
  if(s.flips!==21||s.waste>24||s.foundation!==52+s.returns)throw Error('Invalid completed game');
