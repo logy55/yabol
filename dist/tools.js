@@ -1,4 +1,4 @@
-import {renderOnlineMarble} from './marble-room.js?v=20261024-game-replay';
+import {renderOnlineMarble} from './marble-room.js?v=20261115-stack';
 import {renderSettlement} from './settlement.js?v=20261024-game-records';
 import {parseNames, settleExpenses, makeLadder, traceLadder, magicNumber} from './tool-logic.js?v=20261010-member-fixes';
 import {teams} from './teams.js?v=20261024-member-records';
@@ -7,7 +7,7 @@ const money = value => `${value.toLocaleString('ko-KR')}원`;
 
 export async function renderTool(main, key, context={}) {
   if (key === 'marble') await renderOnlineMarble(main,context);
-  else if (key === 'rummikub') {const {renderRummikubRoom}=await import('./rummikub/rummikub-room.js?v=20261028-rummikub-final');await renderRummikubRoom(main,context);}
+  else if (key === 'stack') {const {renderStackTower}=await import('./stack-tower.js?v=20261115-stack');await renderStackTower(main,context);}
   else if (key === 'baseball') {const {renderBaseballGame}=await import('./baseball-game.js?v=20261028-clean-heading');await renderBaseballGame(main,context);}
   else if (key === '2048') {const {render2048}=await import('./game2048.js?v=20261028-clean-heading');await render2048(main,context);}
   else if (key === 'solitaire') {const {renderSolitaire}=await import('./solitaire.js?v=20261107-game-consistency');await renderSolitaire(main,context);}
@@ -20,12 +20,12 @@ export async function renderTool(main, key, context={}) {
 
 // One heading contract for every mini game, including room-based games.
 function normalizeGameHeading(main){
-  const page=main.querySelector(':scope > :is(.ladder-room-page,.rummikub-room-page,.baseball-page,.game2048-page,.solitaire-page,.snake-page)');
+  const page=main.querySelector(':scope > :is(.ladder-room-page,.rummikub-room-page,.baseball-page,.game2048-page,.solitaire-page,.snake-page,.stack-page)');
   if(!page)return;
-  const heading=page.querySelector(':scope > :is(.board-heading,.intro,.game2048-intro,.solitaire-intro,.snake-intro)'),title=heading?.querySelector('h1');
+  const heading=page.querySelector(':scope > :is(.board-heading,.intro,.game2048-intro,.solitaire-intro,.snake-intro,.stack-intro)'),title=heading?.querySelector('h1');
   if(!title)return;
   heading.classList.add('mini-game-heading');
-  let eyebrow=heading.querySelector('.eyebrow,.g-eyebrow,.sol-eyebrow,.sn-eyebrow');
+  let eyebrow=heading.querySelector('.eyebrow,.g-eyebrow,.sol-eyebrow,.sn-eyebrow,.mini-game-eyebrow');
   if(!eyebrow){eyebrow=document.createElement('p');title.before(eyebrow);}
   eyebrow.classList.add('mini-game-eyebrow');eyebrow.textContent='YABOL MINI GAME';
 }

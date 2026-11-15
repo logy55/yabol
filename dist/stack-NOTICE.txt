@@ -1,0 +1,7 @@
+Stack Up
+Copyright 2026 DevCol
+Apache License 2.0; see stack-LICENSE.txt.
+Source: https://github.com/devcol-main/Stack-Up
+
+YABOL adaptations: own member UI, monthly rankings, input/lifecycle and navy palette.
+Original core/view modules are included in src/stack-up. DevCol logos, fonts, analytics and online services are not used.

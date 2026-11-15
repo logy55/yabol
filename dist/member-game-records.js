@@ -1,4 +1,4 @@
-import {gameRecordSections,validateGameRecords,activitySections} from './account.js?v=20261107-rummikub-bets';
+import {gameRecordSections,validateGameRecords,activitySections} from './account.js?v=20261115-stack';
 import{memberName}from'./teams.js?v=20261024-member-records';
 import {restrictionActive} from './restrictions.js?v=20261010-member-fixes';
 const approved=actor=>actor?.user_metadata?.status==='approved'&&!restrictionActive(actor.user_metadata);
